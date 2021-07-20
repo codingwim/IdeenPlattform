@@ -5,7 +5,7 @@ import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import com.codingschool.ideabase.ui.data.User
 
-@Database(entities = arrayOf((User::class)), version =3)
+@Database(entities = arrayOf((User::class)), version =1)
 abstract class AppDataBase: RoomDatabase() {
 
     abstract fun useryDao(): UserDao
