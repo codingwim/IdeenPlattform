@@ -34,9 +34,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="textEmailAddress"
-                android:text="@={vm.username}"
                 android:onTextChanged="@{vm.onUsernameTextChanged}"
-                />
+                android:text="@={vm.username}" />
 
         </com.google.android.material.textfield.TextInputLayout>
 
