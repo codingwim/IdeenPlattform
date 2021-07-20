@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/navigation_top_ranked"
+        android:icon="@drawable/ic_favorite_filled"
+        android:title="@string/top_ranked" />
+
+    <item
+        android:id="@+id/navigation_ideas"
+        android:icon="@drawable/ic_lightbulb"
+        android:title="@string/ideas_bottom_nav" />
+
+    <item
+        android:id="@+id/navigation_profile"
+        android:icon="@drawable/ic_baseline_person_24"
+        android:title="@string/profile_bot_nav" />
+
+</menu>
