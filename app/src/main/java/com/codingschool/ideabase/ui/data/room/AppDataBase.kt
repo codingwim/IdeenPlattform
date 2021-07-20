@@ -8,6 +8,6 @@ import com.codingschool.ideabase.ui.data.User
 @Database(entities = arrayOf((User::class)), version =1)
 abstract class AppDataBase: RoomDatabase() {
 
-    abstract fun useryDao(): UserDao
+    abstract fun userDao(): UserDao
 
 }
