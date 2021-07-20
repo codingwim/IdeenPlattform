@@ -11,6 +11,6 @@ interface UserDao {
     suspend fun addUser(user: User)
 
     @Query("SELECT * FROM user")
-    suspend fun getAllCities(): List<User>
+    suspend fun getAllUser(): List<User>
 
 }
