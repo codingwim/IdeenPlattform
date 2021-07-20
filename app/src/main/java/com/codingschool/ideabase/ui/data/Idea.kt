@@ -1,7 +1,9 @@
 package com.codingschool.ideabase.ui.data
 
 import androidx.room.ColumnInfo
+import androidx.room.Entity
 
+@Entity(tableName = "idea")
 data class Idea(
 
 

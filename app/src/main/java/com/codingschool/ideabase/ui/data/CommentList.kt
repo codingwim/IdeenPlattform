@@ -2,7 +2,7 @@ package com.codingschool.ideabase.ui.data
 
 import androidx.room.ColumnInfo
 
-class CommentList (
+data class CommentList (
 
     val id: String,
 
