@@ -14,9 +14,6 @@ class LoginViewModel: BaseObservable() {
     @get:Bindable
     var username: String = ""
 
-   /* @get: Bindable
-    var error: String? = null*/
-
     @get:Bindable
     var password: String = ""
 
@@ -30,7 +27,7 @@ class LoginViewModel: BaseObservable() {
 
     }
 
-    fun onUsernameTextChanged() {
+    fun onUsernameTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
         view?.resetError()
     }
 }
