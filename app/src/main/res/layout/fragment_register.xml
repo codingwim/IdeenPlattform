@@ -1,12 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-
         <variable
             name="vm"
             type="com.codingschool.ideabase.ui.register.RegisterViewModel" />
@@ -34,7 +31,7 @@
                 android:id="@+id/etUsername"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:onTextChanged="@{vm.onFirstnameTextChanged}"
+                android:onTextChanged="@{vm::onFirstnameTextChanged}"
                 android:text="@={vm.firstname}" />
 
         </com.google.android.material.textfield.TextInputLayout>
@@ -47,8 +44,6 @@
             android:layout_margin="@dimen/margin_standard"
             android:hint="@string/lastname"
 
-
-
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tilFirstname">
@@ -57,6 +52,7 @@
                 android:id="@+id/etLastName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:onTextChanged="@{vm::onLastnameTextChanged}"
                 android:text="@={vm.lastname}"
                 />
 
@@ -70,8 +66,6 @@
             android:layout_margin="@dimen/margin_standard"
             android:hint="@string/email"
 
-
-
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tilLastname">
@@ -81,6 +75,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="textEmailAddress"
+                android:onTextChanged="@{vm::onEmailTextChanged}"
                 android:text="@={vm.email}"
                 />
 
@@ -104,6 +99,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="textPassword"
+                android:onTextChanged="@{vm::onPasswordTextChanged}"
                 android:text="@={vm.password}"
                 />
 
@@ -126,7 +122,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="textPassword"
-                android:text="@={vm.password}"
+                android:onTextChanged="@{vm::onPassword2TextChanged}"
+                android:text="@={vm.password2}"
                 />
 
         </com.google.android.material.textfield.TextInputLayout>
@@ -137,7 +134,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/margin_standard"
             android:backgroundTint="@color/yellow"
-            android:onClick="@{() -> vm.onLoginClick()}"
+            android:onClick="@{() -> vm.onRegisterClick()}"
             android:text="@string/register"
             android:textColor="@color/black"
 
@@ -152,7 +149,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/margin_standard"
-            android:onClick="@{() -> vm.onRegisterClick()}"
+            android:onClick="@{() -> vm.onCancelClick()}"
             android:text="@string/cancel"
             android:textColor="@color/black"
             app:layout_constraintBottom_toBottomOf="parent"

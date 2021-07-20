@@ -1,4 +1,4 @@
-package com.codingschool.ideabase.ui.data
+package com.codingschool.ideabase.model.data
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
@@ -7,8 +7,7 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName = "user")
 data class User(
-
-
+    @PrimaryKey
     @ColumnInfo(name = "user_id")
     val id: String,
 
@@ -22,10 +21,14 @@ data class User(
     val lastname: String,
 
     @ColumnInfo(name = "profilepic")
-    val profilepic: String,
+    val profilePicture: String?,
 
     @ColumnInfo(name = "isManager")
-    val isManager: Boolean,
-
-
+    val isManager: Boolean
 )
+
+{
+    override fun toString(): String {
+        return let { it.id + it.firstname + it.lastname }
+    }
+}

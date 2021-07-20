@@ -1,9 +1,14 @@
 package com.codingschool.ideabase
 
 import androidx.room.Room
+import com.ashokvarma.gander.GanderInterceptor
+import com.codingschool.ideabase.model.data.room.AppDataBase
+import com.codingschool.ideabase.model.remote.IdeaApi
+import com.codingschool.ideabase.ui.login.LoginViewModel
 import com.codingschool.ideabase.utils.baseUrl
 import io.reactivex.schedulers.Schedulers
 import okhttp3.OkHttpClient
+import org.koin.android.ext.koin.androidApplication
 import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
 import retrofit2.Retrofit
@@ -12,11 +17,11 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 val appModule = module {
 
-    /*  single<AppDatabase> { (
+      single<AppDataBase> { (
           Room
               .databaseBuilder(
                   androidContext(),
-                  AppDatabase::class.java,
+                  AppDataBase::class.java,
                   "app-db"
               )
               // REMOVE ON PRODUCTION VERSION
@@ -24,7 +29,7 @@ val appModule = module {
               .allowMainThreadQueries()
               .build()
               )
-      }*/
+      }
     single {
         OkHttpClient.Builder()
             .addNetworkInterceptor { chain ->
@@ -37,22 +42,30 @@ val appModule = module {
                         .build()
                 )
             }
+            .addInterceptor(
+                GanderInterceptor(androidApplication())
+                    .showNotification(true)
+            )
             .build()
     }
 
     single {
         Retrofit.Builder()
-            .client(OkHttpClient())
+            .client(get())
             .baseUrl(baseUrl)
             .addCallAdapterFactory(RxJava2CallAdapterFactory.createWithScheduler(Schedulers.io()))
             .addConverterFactory(GsonConverterFactory.create())
             .build()
     }
-/*
-    factory { provideUserApi(get()) }*/
+
+    factory { provideUserApi(get()) }
+
+    factory<LoginViewModel> {
+        LoginViewModel(get())
+    }
 
 
 }
 
-/*fun provideUserApi(retrofit: Retrofit): UserApi = retrofit.create(UserApi::class.java)*/
+fun provideUserApi(retrofit: Retrofit): IdeaApi = retrofit.create(IdeaApi::class.java)
 

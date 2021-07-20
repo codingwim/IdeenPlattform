@@ -40,14 +40,11 @@ class RegisterFragment: Fragment(), RegisterView {
     }
 
     override fun showToast(text: String) {
-        TODO("Not yet implemented")
     }
 
     override fun navigateToLoginRegistered(username: String) {
-        TODO("Not yet implemented")
     }
 
     override fun navigateCancel() {
-        TODO("Not yet implemented")
     }
 }

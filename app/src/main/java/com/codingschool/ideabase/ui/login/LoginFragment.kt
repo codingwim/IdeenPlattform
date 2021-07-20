@@ -4,17 +4,21 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.core.view.isEmpty
 import androidx.core.view.isNotEmpty
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import com.codingschool.ideabase.R
 import com.codingschool.ideabase.databinding.FragmentLoginBinding
+import com.codingschool.ideabase.utils.testpwd
+import com.codingschool.ideabase.utils.toast
 import com.jakewharton.rxbinding4.widget.textChanges
+import org.koin.android.ext.android.inject
 
 class LoginFragment : Fragment(), LoginView {
 
-    private lateinit var viewModel: LoginViewModel
+    private val viewModel: LoginViewModel by inject()
     private lateinit var binding: FragmentLoginBinding
 
     override fun onCreateView(
@@ -36,9 +40,12 @@ class LoginFragment : Fragment(), LoginView {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel = LoginViewModel()
         binding.vm = viewModel
         viewModel.attachView(this)
+    }
+
+    override fun showToast(text: String) {
+        requireActivity().toast(text)
     }
 
     override fun setInputEmptyError(text: String) {
@@ -46,7 +53,6 @@ class LoginFragment : Fragment(), LoginView {
     }
 
     override fun resetError() {
-        binding.etUsername.textChanges()
         binding.tilUsername.error = null
     }
 }
