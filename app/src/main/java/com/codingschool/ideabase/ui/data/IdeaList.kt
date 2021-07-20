@@ -26,7 +26,6 @@ data class IdeaList (
 
     val imageUrl:String,
 
-    @Embedded val rating: Rating,
 
     @Embedded val ideaRating: IdeaRating,
 
