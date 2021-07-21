@@ -1,20 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<androidx.coordinatorlayout.widget.CoordinatorLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="@dimen/padding_small"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_margin="@dimen/margin_standard"
     >
 
-    <com.google.android.material.card.MaterialCardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    <com.google.android.material.card.MaterialCardView
+        xmlns:card_view="http://schemas.android.com/apk/res-auto"
         android:id="@+id/cvIdea"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-
-        card_view:layout_constraintBottom_toBottomOf="parent"
-        card_view:layout_constraintEnd_toEndOf="parent"
-        card_view:layout_constraintStart_toStartOf="parent"
-        card_view:layout_constraintTop_toTopOf="parent">
+        card_view:cardElevation="0dp"
+        >
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -42,7 +41,9 @@
                         android:layout_width="80dp"
                         android:layout_height="80dp"
                         android:scaleType="centerCrop"
-
+                        card_view:strokeColor="@color/yellow"
+                        card_view:strokeWidth="1dp"
+                        card_view:shapeAppearanceOverlay="@style/circleImageView"
                         android:layout_margin="@dimen/margin_large"
 
                         card_view:srcCompat="@drawable/profile_pic"
@@ -112,14 +113,11 @@
                 card_view:layout_constraintStart_toStartOf="parent"
                 card_view:layout_constraintTop_toBottomOf="@+id/cvTop" />
 
-
-
-            <com.google.android.material.floatingactionbutton.FloatingActionButton
+            <ImageView
                 android:id="@+id/btRate"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="bottom|end"
-                android:layout_margin="@dimen/margin_large"
+                android:layout_width="56dp"
+                android:layout_height="56dp"
+                android:layout_margin="@dimen/margin_standard"
                 android:src="@drawable/ic_favorite_filled"
                 card_view:layout_constraintBottom_toBottomOf="@id/btComment"
                 card_view:layout_constraintEnd_toEndOf="parent"
@@ -129,4 +127,4 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
     </com.google.android.material.card.MaterialCardView>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

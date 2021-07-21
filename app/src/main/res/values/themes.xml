@@ -15,5 +15,9 @@
         <!--<style name="ShapeAppearanceOverlay.App.CornerSize50Percent" parent="Theme.IdeaBase">
             <item name="cornerSize">50%</item>
         </style>-->
+        <style name="circleImageView" parent="ShapeAppearance.MaterialComponents.MediumComponent">
+            <item name="cornerFamily">rounded</item>
+            <item name="cornerSize">50%</item>
+        </style>
     </style>
 </resources>
