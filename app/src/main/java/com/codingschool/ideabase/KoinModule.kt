@@ -40,7 +40,7 @@ val appModule = module {
                     chain.request().newBuilder()
                         .header(
                             "Authorization",
-                            "Basic d2ltQG1haWwuY29tOndpbTEyMzQ1Njc4"
+                            getAuthFromPrefs()
                         )
                         .build()
                 )
@@ -64,7 +64,7 @@ val appModule = module {
     factory { provideUserApi(get()) }
 
     factory<LoginViewModel> { parameters ->
-        LoginViewModel(userName = parameters.get(), get())
+        LoginViewModel(uNameFromArgs = parameters.get(), get())
     }
 
     factory<RegisterViewModel> {
@@ -72,6 +72,10 @@ val appModule = module {
     }
 
 
+}
+
+fun getAuthFromPrefs(): String {
+    return "Basic d2ltQG1haWwuY29tOndpbTEyMzQ1Njc4"
 }
 
 fun provideUserApi(retrofit: Retrofit): IdeaApi = retrofit.create(IdeaApi::class.java)
