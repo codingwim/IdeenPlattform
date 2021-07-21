@@ -11,9 +11,11 @@ import androidx.navigation.Navigation
 import com.codingschool.ideabase.R
 import com.codingschool.ideabase.databinding.FragmentRegisterBinding
 import com.codingschool.ideabase.ui.login.LoginFragmentDirections
+import com.codingschool.ideabase.utils.getResString
+import com.codingschool.ideabase.utils.toast
 
 
-class RegisterFragment: Fragment(), RegisterView {
+class RegisterFragment : Fragment(), RegisterView {
 
     private lateinit var viewModel: RegisterViewModel
     private lateinit var binding: FragmentRegisterBinding
@@ -42,7 +44,18 @@ class RegisterFragment: Fragment(), RegisterView {
         viewModel.attachView(this)
     }
 
-    override fun showToast(text: String) {
+
+/*    override fun showToast(text: String) {
+        requireActivity().toast(text)
+    }
+
+    override fun showToast(res: Int) {
+        requireActivity().toast(res)
+        requireActivity().getResString(res)
+    }*/
+
+    override fun showToast(any: Any) {
+        requireActivity().toast(any)
     }
 
     override fun navigateToLoginRegistered(username: String) {

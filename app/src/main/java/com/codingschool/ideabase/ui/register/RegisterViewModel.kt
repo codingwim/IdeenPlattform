@@ -2,6 +2,8 @@ package com.codingschool.ideabase.ui.register
 
 import androidx.databinding.BaseObservable
 import androidx.databinding.Bindable
+import com.codingschool.ideabase.R
+import kotlinx.coroutines.withContext
 
 class RegisterViewModel : BaseObservable() {
     private var view: RegisterView? = null
@@ -33,6 +35,7 @@ class RegisterViewModel : BaseObservable() {
     }
 
     fun onCancelClick() {
+        view?.showToast(R.string.registration_cancelled)
         view?.navigateCancelRegistration()
     }
 
