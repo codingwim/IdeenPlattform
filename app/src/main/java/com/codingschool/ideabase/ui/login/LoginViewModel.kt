@@ -43,6 +43,7 @@ class LoginViewModel(private val IdeaApi: IdeaApi): BaseObservable() {
     }
 
     fun onRegisterClick() {
+        view?.navigateToRegisterFragment()
 
     }
 
