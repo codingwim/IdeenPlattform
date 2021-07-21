@@ -6,8 +6,11 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.navigation.NavDirections
+import androidx.navigation.Navigation
 import com.codingschool.ideabase.R
 import com.codingschool.ideabase.databinding.FragmentRegisterBinding
+import com.codingschool.ideabase.ui.login.LoginFragmentDirections
 
 
 class RegisterFragment: Fragment(), RegisterView {
@@ -43,8 +46,17 @@ class RegisterFragment: Fragment(), RegisterView {
     }
 
     override fun navigateToLoginRegistered(username: String) {
+        //toLogin with userName !!
+        val action: NavDirections =
+            RegisterFragmentDirections.toLogin(username)
+        Navigation.findNavController(requireView()).navigate(action)
     }
 
-    override fun navigateCancel() {
+    override fun navigateCancelRegistration() {
+        //toLogin with userName null
+        val action: NavDirections =
+            RegisterFragmentDirections.toLogin()
+        Navigation.findNavController(requireView()).navigate(action)
     }
+
 }

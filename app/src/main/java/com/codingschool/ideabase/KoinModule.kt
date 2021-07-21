@@ -10,6 +10,7 @@ import io.reactivex.schedulers.Schedulers
 import okhttp3.OkHttpClient
 import org.koin.android.ext.koin.androidApplication
 import org.koin.android.ext.koin.androidContext
+import org.koin.core.parameter.parametersOf
 import org.koin.dsl.module
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
@@ -60,8 +61,8 @@ val appModule = module {
 
     factory { provideUserApi(get()) }
 
-    factory<LoginViewModel> {
-        LoginViewModel(get())
+    factory<LoginViewModel> { parameters ->
+        LoginViewModel(userName = parameters.get(), get())
     }
 
 

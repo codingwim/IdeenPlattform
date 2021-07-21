@@ -4,29 +4,22 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
-import androidx.core.view.isEmpty
-import androidx.core.view.isNotEmpty
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavDirections
 import androidx.navigation.Navigation
 import com.codingschool.ideabase.R
 import com.codingschool.ideabase.databinding.FragmentLoginBinding
-import com.codingschool.ideabase.utils.testpwd
 import com.codingschool.ideabase.utils.toast
-import com.jakewharton.rxbinding4.widget.textChanges
 import org.koin.android.ext.android.inject
-import androidx.core.view.isInvisible
-
-import com.google.android.material.bottomnavigation.BottomNavigationView
-
-
+import org.koin.core.parameter.parametersOf
 
 
 class LoginFragment : Fragment(), LoginView {
 
-    private val viewModel: LoginViewModel by inject()
+    private val viewModel: LoginViewModel by inject<LoginViewModel> {
+        parametersOf(arguments?.let { LoginFragmentArgs.fromBundle(it).userName })
+        }
     private lateinit var binding: FragmentLoginBinding
 
     override fun onCreateView(
@@ -50,9 +43,6 @@ class LoginFragment : Fragment(), LoginView {
 
         binding.vm = viewModel
         viewModel.attachView(this)
-/*
-        val navBar: BottomNavigationView = requireActivity().findViewById(R.id.nav_view)
-        navBar.isInvisible = true*/
     }
 
     override fun showToast(text: String) {

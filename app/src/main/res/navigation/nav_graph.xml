@@ -30,9 +30,18 @@
         <action
             android:id="@+id/toRegister"
             app:destination="@id/registerFragment" />
+        <argument
+            android:name="userName"
+            app:argType="string"
+            app:nullable="true"
+            android:defaultValue="null" />
     </fragment>
     <fragment
         android:id="@+id/registerFragment"
         android:name="com.codingschool.ideabase.ui.register.RegisterFragment"
-        android:label="RegisterFragment" />
+        android:label="RegisterFragment" >
+        <action
+            android:id="@+id/toLogin"
+            app:destination="@id/loginFragment" />
+    </fragment>
 </navigation>

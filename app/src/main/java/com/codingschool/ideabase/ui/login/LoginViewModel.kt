@@ -9,7 +9,7 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.addTo
 import io.reactivex.schedulers.Schedulers
 
-class LoginViewModel(private val IdeaApi: IdeaApi): BaseObservable() {
+class LoginViewModel(private val userName: String?, private val IdeaApi: IdeaApi): BaseObservable() {
 
     private var view: LoginView? = null
 
@@ -20,7 +20,7 @@ class LoginViewModel(private val IdeaApi: IdeaApi): BaseObservable() {
     }
 
     @get:Bindable
-    var username: String = ""
+    var username = if ((userName != "null")) userName.toString() else ""
 
     @get:Bindable
     var password: String = ""
