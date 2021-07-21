@@ -12,6 +12,7 @@ import io.reactivex.Completable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.addTo
+import okhttp3.Credentials
 
 class LoginViewModel(
     private val uNameFromArgs: String?,
@@ -24,8 +25,7 @@ class LoginViewModel(
 
     private val compositeDisposable = CompositeDisposable()
 
-    fun attachView(view: LoginView) {
-        this.view = view
+    fun init() {
         if (prefs.getAuthString().isNotEmpty()) {
             // on loading viewmodel, check if we have valid credentials in shared prefs, do chek login auto login and navigate to next screen
             // TODO
@@ -34,6 +34,11 @@ class LoginViewModel(
             checkCredentialsWithAPI()
             Log.d("observer_ex", "prefs not empty")
         } else Log.d("observer_ex", "prefs empty")
+    }
+
+    fun attachView(view: LoginView) {
+        this.view = view
+
     }
 
     @get:Bindable
@@ -48,11 +53,11 @@ class LoginViewModel(
         else if (!validEmail(username)) view?.setInputUsernameError("Your username should be an e-mail address")
         else if (password.isEmpty()) view?.setInputPasswordError("Please your password ")
         else {
+            // fields are valid, letz build the encoded base Auth string, and try to "login" get own user data
             buildBasicAuthAndStoreInPrefs()
 
-            // login with getOwnUser, will use auth token from preferences !!
+            // with getOwnUser we can check credentials, will automatically use auth token from preferences !
             checkCredentialsWithAPI()
-
         }
     }
 
@@ -61,7 +66,7 @@ class LoginViewModel(
             //.subscribeOn(Schedulers.io())
             .subscribe({ user ->
                 view?.showToast("Hi ${user.firstname}, welcome back!")
-                // TODO we could log the users firstname, etc in sharedprefs if we need to
+                // TODO we could put the users firstname, etc in sharedprefs if we need to
                 view?.navigateToTopRankedFragment()
                 //Log.d("observer_ex", "Current logged in user: ${user.firstname}")
             }, { t ->
@@ -89,10 +94,10 @@ class LoginViewModel(
     // TODO could be done as completable to link these actions ?
     private fun buildBasicAuthAndStoreInPrefs() {
         val text = (username + ":" + password).toByteArray()
-        //Log.d("observer_ex", "bytearray: $text")
+        val test : String = Credentials.basic(username, password)
         val authString = "Basic " + Base64.encodeToString(text, Base64.NO_WRAP)
-        Log.d("observer_ex", "encoded: $authString")
-        prefs.setAuthString(authString)
+        //Log.d("observer_ex", "encoded: $authString")
+        prefs.setAuthString(test)
     }
 
     fun onRegisterClick() {
@@ -109,5 +114,4 @@ class LoginViewModel(
 
     private fun validEmail(email: String) =
         android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()
-
 }

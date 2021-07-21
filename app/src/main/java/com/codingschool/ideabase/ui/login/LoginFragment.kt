@@ -43,6 +43,7 @@ class LoginFragment : Fragment(), LoginView {
 
         binding.vm = viewModel
         viewModel.attachView(this)
+        viewModel.init()
     }
 
     override fun showToast(any: Any) {

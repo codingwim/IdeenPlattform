@@ -1,6 +1,7 @@
 package com.codingschool.ideabase
 
 import android.content.Context
+import android.content.SharedPreferences
 import androidx.room.Room
 import com.ashokvarma.gander.GanderInterceptor
 import com.codingschool.ideabase.model.data.room.AppDataBase
@@ -10,6 +11,7 @@ import com.codingschool.ideabase.ui.register.RegisterViewModel
 import com.codingschool.ideabase.utils.Preferences
 import com.codingschool.ideabase.utils.baseUrl
 import io.reactivex.schedulers.Schedulers
+import okhttp3.Credentials
 import okhttp3.OkHttpClient
 import org.koin.android.ext.koin.androidApplication
 import org.koin.android.ext.koin.androidContext
@@ -20,6 +22,10 @@ import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 
 val appModule = module {
+
+    single<Preferences> {
+        Preferences(androidContext())
+    }
 
     single<AppDataBase> {
         (
@@ -42,7 +48,7 @@ val appModule = module {
                     chain.request().newBuilder()
                         .header(
                             "Authorization",
-                            getAuthFromPrefs(androidContext())
+                            getAuthFromPrefs(get())
                         )
                         .build()
                 )
@@ -63,10 +69,6 @@ val appModule = module {
             .build()
     }
 
-    single<Preferences> {
-        Preferences(androidContext())
-    }
-
     factory { provideUserApi(get()) }
 
     factory<LoginViewModel> { parameters ->
@@ -76,12 +78,16 @@ val appModule = module {
     factory<RegisterViewModel> {
         RegisterViewModel(get())
     }
+
+
+
 }
 
-fun getAuthFromPrefs(context: Context): String {
-    val prefs = Preferences(context)
-    return prefs.getAuthString()
-}
+fun getAuthFromPrefs(prefs: Preferences) = prefs.getAuthString()
 
 fun provideUserApi(retrofit: Retrofit): IdeaApi = retrofit.create(IdeaApi::class.java)
+
+
+
+
 
