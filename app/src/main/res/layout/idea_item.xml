@@ -45,9 +45,8 @@
 
                         android:layout_margin="@dimen/margin_large"
 
-                        card_view:srcCompat="@drawable/profilePic"
-                        card_view:shapeAppearanceOverlay="@Style/ShapeAppearanceOverlay.App.CornerSize50Percent"
-                        card_view:layout_constraintStart_toStartOf="parent"
+                        card_view:srcCompat="@drawable/profile_pic"
+                         card_view:layout_constraintStart_toStartOf="parent"
                         card_view:layout_constraintTop_toTopOf="parent"
                         card_view:layout_constraintBottom_toTopOf="@+id/ivIdea"
                         card_view:layout_constraintEnd_toStartOf="@id/tvIdeaTitle"
@@ -78,7 +77,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="200dp"
                         android:scaleType="centerCrop"
-                        card_view:srcCompat="@drawable/IdeaImage"
+                        card_view:srcCompat="@drawable/idea_image"
                         card_view:layout_constraintBottom_toTopOf="@id/tvIdeaDescription"
                         card_view:layout_constraintEnd_toEndOf="parent"
                         card_view:layout_constraintStart_toStartOf="parent"
@@ -125,7 +124,7 @@
                 card_view:layout_constraintBottom_toBottomOf="@id/btComment"
                 card_view:layout_constraintEnd_toEndOf="parent"
                 card_view:layout_constraintTop_toTopOf="@+id/btComment"
-                />
+                android:contentDescription="@string/rate_this_idea_content_description" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </com.google.android.material.card.MaterialCardView>
