@@ -4,6 +4,7 @@ import android.content.Context
 import android.widget.Toast
 import com.codingschool.ideabase.MyApplication
 
+
 fun Context.toast(text: String) {
     Toast.makeText(
         this,
@@ -32,3 +33,4 @@ fun Context.toast(any: Any) {
 fun Context.getResString(res: Int): String {
     return this.getString(res)
 }
+

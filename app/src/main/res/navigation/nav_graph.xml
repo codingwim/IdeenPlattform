@@ -35,6 +35,9 @@
             app:argType="string"
             app:nullable="true"
             android:defaultValue="null" />
+        <action
+            android:id="@+id/toTopRanked"
+            app:destination="@id/navigation_top_ranked" />
     </fragment>
     <fragment
         android:id="@+id/registerFragment"

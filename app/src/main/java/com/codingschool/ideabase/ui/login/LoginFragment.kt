@@ -43,6 +43,7 @@ class LoginFragment : Fragment(), LoginView {
 
         binding.vm = viewModel
         viewModel.attachView(this)
+        viewModel.init()
     }
 
     override fun showToast(any: Any) {
@@ -56,6 +57,12 @@ class LoginFragment : Fragment(), LoginView {
     override fun navigateToRegisterFragment() {
         val action: NavDirections =
             LoginFragmentDirections.toRegister()
+        Navigation.findNavController(requireView()).navigate(action)
+    }
+
+    override fun navigateToTopRankedFragment() {
+        val action: NavDirections =
+            LoginFragmentDirections.toTopRanked()
         Navigation.findNavController(requireView()).navigate(action)
     }
 
