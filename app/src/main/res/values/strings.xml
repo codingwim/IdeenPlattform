@@ -11,10 +11,10 @@
     <string name="password_login">password</string>
     <string name="login_bnt_login">LOGIN</string>
     <string name="register_btn_login">REGISTER</string>
-    <string name="lastname">LastName</string>
-    <string name="firstname">FirstName</string>
-    <string name="email">Email</string>
-    <string name="repeat_password">Repeat Password</string>
-    <string name="register">Register</string>
-    <string name="cancel">Cancel</string>
+    <string name="lastname">last name</string>
+    <string name="firstname">first name</string>
+    <string name="email">e-mail</string>
+    <string name="repeat_password">repeat password</string>
+    <string name="register">REGISTER</string>
+    <string name="cancel">CANCEL</string>
 </resources>

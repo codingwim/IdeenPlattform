@@ -12,6 +12,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        app:layout_constraintVertical_chainStyle="packed"
         tools:context=".ui.register.RegisterFragment">
 
 
@@ -25,10 +26,11 @@
             app:errorEnabled="true"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/tilLastname">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/etUsername"
+                android:id="@+id/etFirstname"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:onTextChanged="@{vm::onFirstnameTextChanged}"
@@ -43,13 +45,14 @@
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/margin_standard"
             android:hint="@string/lastname"
-
+            app:errorEnabled="true"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tilFirstname">
+            app:layout_constraintTop_toBottomOf="@+id/tilFirstname"
+            app:layout_constraintBottom_toTopOf="@+id/tilEmail">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/etLastName"
+                android:id="@+id/etLastname"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:onTextChanged="@{vm::onLastnameTextChanged}"
@@ -65,10 +68,11 @@
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/margin_standard"
             android:hint="@string/email"
-
+            app:errorEnabled="true"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tilLastname">
+            app:layout_constraintTop_toBottomOf="@+id/tilLastname"
+            app:layout_constraintBottom_toTopOf="@+id/tilPassword">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/etEmail"
@@ -87,12 +91,13 @@
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/margin_standard"
             android:hint="@string/password_login"
-
+            app:errorEnabled="true"
             app:endIconMode="password_toggle"
 
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tilEmail">
+            app:layout_constraintTop_toBottomOf="@+id/tilEmail"
+            app:layout_constraintBottom_toTopOf="@+id/tilPasswordagain">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/etPassword"
@@ -111,11 +116,12 @@
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/margin_standard"
             android:hint="@string/repeat_password"
-
+            app:errorEnabled="true"
             app:endIconMode="password_toggle"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tilPassword">
+            app:layout_constraintTop_toBottomOf="@+id/tilPassword"
+            app:layout_constraintBottom_toTopOf="@+id/guideline">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/etPasswordagain"
@@ -127,6 +133,13 @@
                 />
 
         </com.google.android.material.textfield.TextInputLayout>
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_percent="0.7"/>
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnRegister"
@@ -140,7 +153,8 @@
 
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tilPasswordagain" />
+            app:layout_constraintTop_toBottomOf="@+id/guideline"
+            app:layout_constraintBottom_toTopOf="@+id/btnCancel"/>
 
 
         <com.google.android.material.button.MaterialButton
@@ -152,7 +166,7 @@
             android:onClick="@{() -> vm.onCancelClick()}"
             android:text="@string/cancel"
             android:textColor="@color/black"
-            app:layout_constraintBottom_toBottomOf="parent"
+
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/btnRegister" />
