@@ -1,16 +1,23 @@
 package com.codingschool.ideabase.ui.login
 
+import android.content.SharedPreferences
 import android.util.Base64
 import android.util.Log
 import androidx.databinding.BaseObservable
 import androidx.databinding.Bindable
+import com.codingschool.ideabase.R
 import com.codingschool.ideabase.model.remote.IdeaApi
+import com.codingschool.ideabase.utils.Preferences
 import io.reactivex.Completable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.addTo
 
-class LoginViewModel(private val uNameFromArgs: String?, private val IdeaApi: IdeaApi) :
+class LoginViewModel(
+    private val uNameFromArgs: String?,
+    private val IdeaApi: IdeaApi,
+    private val prefs: Preferences
+) :
     BaseObservable() {
 
     private var view: LoginView? = null
@@ -19,6 +26,14 @@ class LoginViewModel(private val uNameFromArgs: String?, private val IdeaApi: Id
 
     fun attachView(view: LoginView) {
         this.view = view
+        if (prefs.getAuthString().isNotEmpty()) {
+            // on loading viewmodel, check if we have valid credentials in shared prefs, do chek login auto login and navigate to next screen
+            // TODO
+            // while "checking" in, rotate progressbar with info text!!
+            // nice welcome screen like the beer screen, with progress indicator while also loading idealists!!!!
+            checkCredentialsWithAPI()
+            Log.d("observer_ex", "prefs not empty")
+        } else Log.d("observer_ex", "prefs empty")
     }
 
     @get:Bindable
@@ -26,10 +41,6 @@ class LoginViewModel(private val uNameFromArgs: String?, private val IdeaApi: Id
 
     @get:Bindable
     var password: String = ""
-
-    // on loading viewmodel, check if we have valid credentials in shared prefs, do chek login auto login and navigate to next screen
-    // TODO
-    // while loggin in, rotate progressbar!!
 
     fun onLoginClick() {
 
@@ -39,28 +50,49 @@ class LoginViewModel(private val uNameFromArgs: String?, private val IdeaApi: Id
         else {
             buildBasicAuthAndStoreInPrefs()
 
-            // login with getOwnUser !!
-            IdeaApi.getOwnUser().observeOn(AndroidSchedulers.mainThread())
-                //.subscribeOn(Schedulers.io())
-                .subscribe({ user ->
-                    view?.showToast("Current logged in user: ${user.firstname}")
-                    Log.d("observer_ex", "Current logged in user: ${user.firstname}")
-                }, { t ->
-                    view?.showToast("there seems to be a connectivity problem")
-                    Log.e("observer_ex", "getting own user: $t")
-                }).addTo(compositeDisposable)
+            // login with getOwnUser, will use auth token from preferences !!
+            checkCredentialsWithAPI()
+
         }
+    }
+
+    private fun checkCredentialsWithAPI() {
+        IdeaApi.getOwnUser().observeOn(AndroidSchedulers.mainThread())
+            //.subscribeOn(Schedulers.io())
+            .subscribe({ user ->
+                view?.showToast("Hi ${user.firstname}, welcome back!")
+                // TODO we could log the users firstname, etc in sharedprefs if we need to
+                view?.navigateToTopRankedFragment()
+                //Log.d("observer_ex", "Current logged in user: ${user.firstname}")
+            }, { t ->
+                val responseMessage = t.message
+                if (responseMessage != null) {
+                    if (responseMessage.contains(
+                            "HTTP 404",
+                            ignoreCase = true
+                        )
+                    ) {
+                        view?.setInputUsernameError("")
+                        view?.setInputPasswordError("")
+                        view?.showToast("This username/password combination is not valid")
+                    } else if (responseMessage.contains(
+                            "HTTP 401",
+                            ignoreCase = true
+                        )
+                    ) view?.showToast("You are not autorized to log in")
+                    else view?.showToast(R.string.network_issue_check_network)
+                }
+                Log.e("observer_ex", "exception adding new user: $t")
+            }).addTo(compositeDisposable)
     }
 
     // TODO could be done as completable to link these actions ?
     private fun buildBasicAuthAndStoreInPrefs() {
         val text = (username + ":" + password).toByteArray()
         //Log.d("observer_ex", "bytearray: $text")
-        val auth = "Basic " + Base64.encodeToString(text, Base64.URL_SAFE)
-        Log.d("observer_ex", "encoded: $auth")
-
-        // set to shared prefs before trying login with getOwnUser
-        //TODO
+        val authString = "Basic " + Base64.encodeToString(text, Base64.NO_WRAP)
+        Log.d("observer_ex", "encoded: $authString")
+        prefs.setAuthString(authString)
     }
 
     fun onRegisterClick() {

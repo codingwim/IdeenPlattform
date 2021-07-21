@@ -7,5 +7,6 @@ interface LoginView {
     fun setInputPasswordError(text: String)
     fun resetPasswordError()
     fun navigateToRegisterFragment()
+    fun navigateToTopRankedFragment()
 
 }

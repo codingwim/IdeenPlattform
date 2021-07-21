@@ -59,6 +59,12 @@ class LoginFragment : Fragment(), LoginView {
         Navigation.findNavController(requireView()).navigate(action)
     }
 
+    override fun navigateToTopRankedFragment() {
+        val action: NavDirections =
+            LoginFragmentDirections.toTopRanked()
+        Navigation.findNavController(requireView()).navigate(action)
+    }
+
     override fun resetUsernameError() {
         binding.tilUsername.error = null
     }
