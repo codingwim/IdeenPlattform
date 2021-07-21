@@ -5,6 +5,7 @@ import com.ashokvarma.gander.GanderInterceptor
 import com.codingschool.ideabase.model.data.room.AppDataBase
 import com.codingschool.ideabase.model.remote.IdeaApi
 import com.codingschool.ideabase.ui.login.LoginViewModel
+import com.codingschool.ideabase.ui.register.RegisterViewModel
 import com.codingschool.ideabase.utils.baseUrl
 import io.reactivex.schedulers.Schedulers
 import okhttp3.OkHttpClient
@@ -18,19 +19,20 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 val appModule = module {
 
-      single<AppDataBase> { (
-          Room
-              .databaseBuilder(
-                  androidContext(),
-                  AppDataBase::class.java,
-                  "app-db"
-              )
-              // REMOVE ON PRODUCTION VERSION
-              .fallbackToDestructiveMigration()
-              .allowMainThreadQueries()
-              .build()
-              )
-      }
+    single<AppDataBase> {
+        (
+                Room
+                    .databaseBuilder(
+                        androidContext(),
+                        AppDataBase::class.java,
+                        "app-db"
+                    )
+                    // REMOVE ON PRODUCTION VERSION
+                    .fallbackToDestructiveMigration()
+                    .allowMainThreadQueries()
+                    .build()
+                )
+    }
     single {
         OkHttpClient.Builder()
             .addNetworkInterceptor { chain ->
@@ -63,6 +65,10 @@ val appModule = module {
 
     factory<LoginViewModel> { parameters ->
         LoginViewModel(userName = parameters.get(), get())
+    }
+
+    factory<RegisterViewModel> {
+        RegisterViewModel(get())
     }
 
 

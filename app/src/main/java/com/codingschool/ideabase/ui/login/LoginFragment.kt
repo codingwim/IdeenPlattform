@@ -45,11 +45,11 @@ class LoginFragment : Fragment(), LoginView {
         viewModel.attachView(this)
     }
 
-    override fun showToast(text: String) {
-        requireActivity().toast(text)
+    override fun showToast(any: Any) {
+        requireActivity().toast(any)
     }
 
-    override fun setInputEmptyError(text: String) {
+    override fun setInputUsernameError(text: String) {
         binding.tilUsername.error = text
     }
 
@@ -59,7 +59,15 @@ class LoginFragment : Fragment(), LoginView {
         Navigation.findNavController(requireView()).navigate(action)
     }
 
-    override fun resetError() {
+    override fun resetUsernameError() {
         binding.tilUsername.error = null
+    }
+
+    override fun setInputPasswordError(text: String) {
+        binding.tilPassword.error = text
+    }
+
+    override fun resetPasswordError() {
+        binding.tilPassword.error = null
     }
 }
