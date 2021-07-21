@@ -9,7 +9,7 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.addTo
 import io.reactivex.schedulers.Schedulers
 
-class LoginViewModel(private val IdeaApi: IdeaApi): BaseObservable() {
+class LoginViewModel(private val userName: String?, private val IdeaApi: IdeaApi): BaseObservable() {
 
     private var view: LoginView? = null
 
@@ -20,7 +20,7 @@ class LoginViewModel(private val IdeaApi: IdeaApi): BaseObservable() {
     }
 
     @get:Bindable
-    var username: String = ""
+    var username = if ((userName != "null")) userName.toString() else ""
 
     @get:Bindable
     var password: String = ""
@@ -28,7 +28,7 @@ class LoginViewModel(private val IdeaApi: IdeaApi): BaseObservable() {
 
     fun onLoginClick() {
 
-        if (username.isEmpty()) view?.setInputEmptyError("No empty username allowed")
+        if (username.isEmpty()) view?.setInputUsernameError("No empty username allowed")
         Log.d("observer_ex", "trying to call api getOwnUser now")
         //Dummy test for login
         IdeaApi.getOwnUser().observeOn(AndroidSchedulers.mainThread())
@@ -43,10 +43,10 @@ class LoginViewModel(private val IdeaApi: IdeaApi): BaseObservable() {
     }
 
     fun onRegisterClick() {
-
+        view?.navigateToRegisterFragment()
     }
 
     fun onUsernameTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-        view?.resetError()
+        view?.resetUsernameError()
     }
 }

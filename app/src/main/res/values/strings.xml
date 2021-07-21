@@ -17,4 +17,6 @@
     <string name="repeat_password">repeat password</string>
     <string name="register">REGISTER</string>
     <string name="cancel">CANCEL</string>
+    <string name="registration_cancelled">Registration cancelled</string>
+    <string name="network_issue_check_network">There seems to be a connectivity issue, please check your network connection</string>
 </resources>

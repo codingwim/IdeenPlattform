@@ -1,6 +1,8 @@
 package com.codingschool.ideabase
 
 import android.os.Bundle
+import android.view.View
+import androidx.appcompat.app.ActionBar
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
@@ -17,6 +19,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         val navView: BottomNavigationView = findViewById(R.id.nav_view)
+        val actionBar = this.supportActionBar
 
         navController = findNavController(R.id.nav_host_fragment)
 
@@ -26,5 +29,28 @@ class MainActivity : AppCompatActivity() {
         setupActionBarWithNavController(navController, appBarConfiguration)
 
         navView.setupWithNavController(navController)
+
+        navController.addOnDestinationChangedListener { controller, destination, arguments ->
+            when (destination.id) {
+                R.id.loginFragment, R.id.registerFragment -> hideAppBarAndBottomNaviagtionBar(navView, actionBar)
+                else -> showAppBarAndBottomNaviagtionBar(navView, actionBar)
+            }
+        }
+
+
     }
+
+    private fun showAppBarAndBottomNaviagtionBar(navView: BottomNavigationView, actionBar: ActionBar?) {
+        actionBar?.show()
+        navView.visibility = View.VISIBLE
+    }
+
+    private fun hideAppBarAndBottomNaviagtionBar(
+        navView: BottomNavigationView,
+        actionBar: ActionBar?
+    ) {
+            actionBar?.hide()
+            navView.visibility = View.INVISIBLE
+    }
+
 }

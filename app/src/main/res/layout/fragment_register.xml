@@ -91,6 +91,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/margin_standard"
             android:hint="@string/password_login"
+            android:focusable="true"
             app:errorEnabled="true"
             app:endIconMode="password_toggle"
 

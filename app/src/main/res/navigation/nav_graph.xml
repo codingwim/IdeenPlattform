@@ -22,8 +22,26 @@
         android:name="com.codingschool.ideabase.ui.profile.ProfileFragment"
         android:label="@string/profile_bot_nav"
         tools:layout="@layout/fragment_profile" />
+
     <fragment
         android:id="@+id/loginFragment"
         android:name="com.codingschool.ideabase.ui.login.LoginFragment"
-        android:label="@string/title_login" />
+        android:label="@string/title_login" >
+        <action
+            android:id="@+id/toRegister"
+            app:destination="@id/registerFragment" />
+        <argument
+            android:name="userName"
+            app:argType="string"
+            app:nullable="true"
+            android:defaultValue="null" />
+    </fragment>
+    <fragment
+        android:id="@+id/registerFragment"
+        android:name="com.codingschool.ideabase.ui.register.RegisterFragment"
+        android:label="RegisterFragment" >
+        <action
+            android:id="@+id/toLogin"
+            app:destination="@id/loginFragment" />
+    </fragment>
 </navigation>
