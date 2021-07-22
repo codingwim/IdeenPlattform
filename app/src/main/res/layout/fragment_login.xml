@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-
         <variable
             name="vm"
             type="com.codingschool.ideabase.ui.login.LoginViewModel" />
@@ -35,8 +34,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="textEmailAddress"
-                android:text="@={vm.username}"
-                android:onTextChanged="@{() -> vm.onUsernameTextChanged}"/>
+                android:onTextChanged="@{vm::onUsernameTextChanged}"
+                android:text="@={vm.username}" />
 
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -58,6 +57,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="textPassword"
+                android:onTextChanged="@{vm::onPasswordTextChanged}"
                 android:text="@={vm.password}"
                 />
 
