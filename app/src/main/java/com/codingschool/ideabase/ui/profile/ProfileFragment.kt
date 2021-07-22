@@ -12,6 +12,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.codingschool.ideabase.R
 import com.codingschool.ideabase.databinding.FragmentProfileBinding
 import com.codingschool.ideabase.ui.list.ListViewModel
+import com.codingschool.ideabase.utils.toast
 
 class ProfileFragment : Fragment(), ProfileView {
 
@@ -42,8 +43,8 @@ class ProfileFragment : Fragment(), ProfileView {
         viewModel.attachView(this)
     }
 
-    override fun showToast(text: String) {
-        TODO("Not yet implemented")
+    override fun showToast(any: Any) {
+        requireActivity().toast(any)
     }
 
     override fun showPopupReleaseAlert() {

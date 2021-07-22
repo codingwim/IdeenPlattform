@@ -49,40 +49,40 @@ class RegisterFragment : Fragment(), RegisterView {
         requireActivity().toast(any)
     }
 
-    override fun setInputFirstnameError(text: String) {
-        binding.tilFirstname.error = text
+    override fun setInputFirstnameError(any: Any) {
+        binding.tilFirstname.error = requireActivity().getResString(any)
     }
 
     override fun resetFirstnameError() {
         binding.tilFirstname.error = null
     }
 
-    override fun setInputLastnameError(text: String) {
-        binding.tilLastname.error = text
+    override fun setInputLastnameError(any: Any) {
+        binding.tilLastname.error = requireActivity().getResString(any)
     }
 
     override fun resetLastnameError() {
         binding.tilLastname.error = null
     }
 
-    override fun setInputEmailError(text: String) {
-        binding.tilEmail.error = text
+    override fun setInputEmailError(any: Any) {
+        binding.tilEmail.error = requireActivity().getResString(any)
     }
 
     override fun resetEmailError() {
         binding.tilEmail.error = null
     }
 
-    override fun setInputPasswordError(text: String) {
-        binding.tilPassword.error = text
+    override fun setInputPasswordError(any: Any) {
+        binding.tilPassword.error = requireActivity().getResString(any)
     }
 
     override fun resetPasswordError() {
         binding.tilPassword.error = null
     }
 
-    override fun setInputPasswordRepeatError(text: String) {
-        binding.tilPasswordagain.error = text
+    override fun setInputPasswordRepeatError(any: Any) {
+        binding.tilPasswordagain.error = requireActivity().getResString(any)
     }
 
     override fun resetPasswordRepeatError() {

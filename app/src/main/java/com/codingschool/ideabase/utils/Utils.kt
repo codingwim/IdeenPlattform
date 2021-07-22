@@ -30,7 +30,11 @@ fun Context.toast(any: Any) {
     }
 }
 
-fun Context.getResString(res: Int): String {
-    return this.getString(res)
+fun Context.getResString(any: Any): String {
+    return when (any) {
+        is Int -> this.getString(any)
+        is String -> any
+        else -> ""
+    }
 }
 

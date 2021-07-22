@@ -18,6 +18,7 @@
             android:id="@+id/rvIdeas"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            app:adapter="@{vm.adapter}"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constrainedHeight="true"
             app:layout_constraintBottom_toBottomOf="parent"

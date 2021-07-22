@@ -16,7 +16,7 @@ import okhttp3.Credentials
 
 class LoginViewModel(
     private val uNameFromArgs: String?,
-    private val IdeaApi: IdeaApi,
+    private val ideaApi: IdeaApi,
     private val prefs: Preferences
 ) :
     BaseObservable() {
@@ -62,7 +62,7 @@ class LoginViewModel(
     }
 
     private fun checkCredentialsWithAPI() {
-        IdeaApi.getOwnUser().observeOn(AndroidSchedulers.mainThread())
+        ideaApi.getOwnUser().observeOn(AndroidSchedulers.mainThread())
             //.subscribeOn(Schedulers.io())
             .subscribe({ user ->
                 view?.showToast("Hi ${user.firstname}, welcome back!")
@@ -93,11 +93,9 @@ class LoginViewModel(
 
     // TODO could be done as completable to link these actions ?
     private fun buildBasicAuthAndStoreInPrefs() {
-        val text = (username + ":" + password).toByteArray()
-        val test : String = Credentials.basic(username, password)
-        val authString = "Basic " + Base64.encodeToString(text, Base64.NO_WRAP)
+         val authString : String = Credentials.basic(username, password)
         //Log.d("observer_ex", "encoded: $authString")
-        prefs.setAuthString(test)
+        prefs.setAuthString(authString)
     }
 
     fun onRegisterClick() {

@@ -13,7 +13,7 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.addTo
 import kotlinx.coroutines.withContext
 
-class RegisterViewModel(private val IdeaApi: IdeaApi) : BaseObservable() {
+class RegisterViewModel(private val ideaApi: IdeaApi) : BaseObservable() {
     private var view: RegisterView? = null
 
     private val compositeDisposable = CompositeDisposable()
@@ -80,7 +80,7 @@ class RegisterViewModel(private val IdeaApi: IdeaApi) : BaseObservable() {
                 lastname,
                 password
             )
-            IdeaApi.registerUser(newUser)
+            ideaApi.registerUser(newUser)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
                     Log.d("observer_ex", "new user added over API")
@@ -93,9 +93,9 @@ class RegisterViewModel(private val IdeaApi: IdeaApi) : BaseObservable() {
                                 "HTTP 409",
                                 ignoreCase = true
                             )
-                        ) view?.setInputEmailError("This e-mail already belongs to a registered user")
+                        ) view?.setInputEmailError(R.string.email_already_inuse_input_error)
                         else if (responseMessage.contains(
-                                "HTTP 409",
+                                "HTTP 400",
                                 ignoreCase = true
                             )
                         ) view?.setInputEmailError("Some parameter is missing")

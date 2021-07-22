@@ -12,7 +12,7 @@ data class Idea(
     @PrimaryKey
     val id: String,
 
-    val user: User,
+    val author: User,
 
     val title: String,
 
@@ -32,3 +32,7 @@ data class Idea(
     val ratings: List<IdeaRating>
 
     )
+{
+
+    fun Author() = author.firstname + " " + author.lastname
+}

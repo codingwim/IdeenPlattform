@@ -6,6 +6,8 @@ import androidx.room.Room
 import com.ashokvarma.gander.GanderInterceptor
 import com.codingschool.ideabase.model.data.room.AppDataBase
 import com.codingschool.ideabase.model.remote.IdeaApi
+import com.codingschool.ideabase.ui.list.IdeaListAdapter
+import com.codingschool.ideabase.ui.list.ListViewModel
 import com.codingschool.ideabase.ui.login.LoginViewModel
 import com.codingschool.ideabase.ui.register.RegisterViewModel
 import com.codingschool.ideabase.utils.Preferences
@@ -71,13 +73,23 @@ val appModule = module {
 
     factory { provideUserApi(get()) }
 
+    factory<IdeaListAdapter> {
+        IdeaListAdapter()
+    }
+
     factory<LoginViewModel> { parameters ->
-        LoginViewModel(uNameFromArgs = parameters.get(), get(), get())
+        LoginViewModel(uNameFromArgs = parameters.get(), ideaApi = get(), prefs = get())
     }
 
     factory<RegisterViewModel> {
-        RegisterViewModel(get())
+        RegisterViewModel(ideaApi = get())
     }
+
+    factory<ListViewModel> {
+        ListViewModel(adapter = get(),ideaApi = get(), prefs = get()      )
+    }
+
+
 
 
 

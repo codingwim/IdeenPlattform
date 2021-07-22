@@ -40,7 +40,11 @@ interface IdeaApi {
 
     // todo WithCatgories List<CatogryId> as String "catx, catx, catc"
     @GET("idea")
-    fun getAllIdeas(@Body withCategories: String): Single<List<Idea>>
+    fun getAllIdeas(@Query ("categoryId") categoryId: String): Single<List<Idea>>
+
+    // without categories = no filter
+    @GET("idea")
+    fun getAllIdeasNoFilter(): Single<List<Idea>>
 
     // catch reponse error or Idea
     @POST("idea")
