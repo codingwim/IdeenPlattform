@@ -12,6 +12,7 @@ import com.codingschool.ideabase.utils.Preferences
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.addTo
+import kotlinx.coroutines.*
 import java.util.*
 
 class ListViewModel(
@@ -81,10 +82,10 @@ class ListViewModel(
         //Log.d("observer_ex", "selectedItems: $searchCategoryString ")
 
         if (searchCategoryString.isNotEmpty())
-        if (searchCategoryString.isNotEmpty() or searchText.isNotEmpty()) getAllIdeasToAdapter(
-            searchCategoryString,
-            searchText
-        )
+            if (searchCategoryString.isNotEmpty() or searchText.isNotEmpty()) getAllIdeasToAdapter(
+                searchCategoryString,
+                searchText
+            )
     }
 
     private fun getAllIdeasToAdapter(searchCategoryString: String, searchQuery: String) {
@@ -94,74 +95,87 @@ class ListViewModel(
         // ->   keep the intersection
 
         var listFilteredByCategories: List<Idea> = emptyList()
-
-        if (searchCategoryString.isNotEmpty() or searchQuery.isEmpty()) {
-            ideaApi.getAllIdeas(searchCategoryString)
-                //ideaApi.getIdeaById("6d01fe46-a1c3-4c81-baa4-4d353e905db9")
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({ list ->
-                    listFilteredByCategories = list
-                    adapter.setData(listFilteredByCategories)
-                    //Log.d("observer_ex", "adapter set with ${listFilteredByCategories[0].title} and more")
-                }, { t ->
-                    val responseMessage = t.message
-                    if (responseMessage != null) {
-                        if (responseMessage.contains(
-                                "HTTP 404",
-                                ignoreCase = true
-                            )
-                        ) {
-                            Log.d("observer_ex", "404 Idea not found")
-                            view?.showToast("The Idea was not found")
-                        } else if (responseMessage.contains(
-                                "HTTP 401",
-                                ignoreCase = true
-                            )
-                        ) {
-                            Log.d("observer_ex", "401 Authorization not valid")
-                            view?.showToast("You are not autorized to search")
-                        } else view?.showToast(R.string.network_issue_check_network)
-                    }
-                    Log.e("observer_ex", "exception getting ideas: $t")
-
-                }).addTo(compositeDisposable)
-        }
-
         var listFromSearch: List<Idea> = emptyList()
 
-        if (searchQuery.isNotEmpty()) {
+        val coroutineScope: CoroutineScope = CoroutineScope(Dispatchers.IO)
 
-            ideaApi.searchIdeas(searchQuery)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({ list ->
-                    listFromSearch = list
+        coroutineScope.launch {
 
-                }, { t ->
-                    val responseMessage = t.message
-                    if (responseMessage != null) {
-                        if (responseMessage.contains(
-                                "HTTP 401",
-                                ignoreCase = true
-                            )
-                        ) {
-                            Log.d("observer_ex", "401 Authorization not valid")
-                            view?.showToast("You are not autorized to search")
-                        } else view?.showToast(R.string.network_issue_check_network)
-                    }
-                    Log.e("observer_ex", "exception getting ideas: $t")
 
-                }).addTo(compositeDisposable)
-        }
-        // listFilteredByCategories will return complete list if searchstring is empty, so populates on init!!
-        if (searchQuery.isEmpty()) {
+            if (searchCategoryString.isNotEmpty() or searchQuery.isEmpty()) {
+                ideaApi.getAllIdeas(searchCategoryString)
+                    //ideaApi.getIdeaById("6d01fe46-a1c3-4c81-baa4-4d353e905db9")
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe({ list ->
+                        listFilteredByCategories = list
+                        //adapter.setData(listFilteredByCategories)
+                        Log.d(
+                            "observer_ex",
+                            "adapter set with ${listFilteredByCategories[0].title} and more"
+                        )
+                    }, { t ->
+                        val responseMessage = t.message
+                        if (responseMessage != null) {
+                            if (responseMessage.contains(
+                                    "HTTP 404",
+                                    ignoreCase = true
+                                )
+                            ) {
+                                Log.d("observer_ex", "404 Idea not found")
+                                view?.showToast("The Idea was not found")
+                            } else if (responseMessage.contains(
+                                    "HTTP 401",
+                                    ignoreCase = true
+                                )
+                            ) {
+                                Log.d("observer_ex", "401 Authorization not valid")
+                                view?.showToast("You are not autorized to search")
+                            } else view?.showToast(R.string.network_issue_check_network)
+                        }
+                        Log.e("observer_ex", "exception getting ideas: $t")
 
-            adapter.setData(listFilteredByCategories)
-        }
-        else if (searchCategoryString.isEmpty()) adapter.setData(listFromSearch)
-        else {
-            // we got two lists and need to get the intersection
-            val searchedAndFilteredList: List<Idea> = (listFilteredByCategories intersect listFromSearch).toList()
-            adapter.setData(searchedAndFilteredList)
+                    }).addTo(compositeDisposable)
+            }
+
+            if (searchQuery.isNotEmpty()) {
+
+                ideaApi.searchIdeas(searchQuery)
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe({ list ->
+                        listFromSearch = list
+
+                    }, { t ->
+                        val responseMessage = t.message
+                        if (responseMessage != null) {
+                            if (responseMessage.contains(
+                                    "HTTP 401",
+                                    ignoreCase = true
+                                )
+                            ) {
+                                Log.d("observer_ex", "401 Authorization not valid")
+                                view?.showToast("You are not autorized to search")
+                            } else view?.showToast(R.string.network_issue_check_network)
+                        }
+                        Log.e("observer_ex", "exception getting ideas: $t")
+
+                    }).addTo(compositeDisposable)
+            }
+
+
+            Log.d("observer_ex", "after both calls")
+
+
+            // listFilteredByCategories will return complete list if searchstring is empty, so populates on init!!
+            if (searchQuery.isEmpty()) {
+
+                adapter.setData(listFilteredByCategories)
+            } else if (searchCategoryString.isEmpty()) adapter.setData(listFromSearch)
+            else {
+                // we got two lists and need to get the intersection
+                val searchedAndFilteredList: List<Idea> =
+                    (listFilteredByCategories intersect listFromSearch).toList()
+                adapter.setData(searchedAndFilteredList)
+            }
         }
     }
 
