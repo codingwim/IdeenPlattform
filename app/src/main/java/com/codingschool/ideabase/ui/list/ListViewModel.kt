@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModel
 import com.codingschool.ideabase.R
 import com.codingschool.ideabase.model.data.Idea
 import com.codingschool.ideabase.model.remote.IdeaApi
+import com.codingschool.ideabase.utils.NO_CATEGORY_FILTER
 import com.codingschool.ideabase.utils.Preferences
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -27,11 +28,12 @@ class ListViewModel(
 
     fun init() {
         // set initial adapter list here
-        ideaApi.getIdeaById("6d01fe46-a1c3-4c81-baa4-4d353e905db9")
+
+        ideaApi.getAllIdeas(NO_CATEGORY_FILTER)
+        //ideaApi.getIdeaById("6d01fe46-a1c3-4c81-baa4-4d353e905db9")
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({ idea ->
-                ideaList.add(idea)
-                adapter.setData(ideaList)
+            .subscribe({ list ->
+                adapter.setData(list)
             }, { t ->
                 val responseMessage = t.message
                 if (responseMessage != null) {

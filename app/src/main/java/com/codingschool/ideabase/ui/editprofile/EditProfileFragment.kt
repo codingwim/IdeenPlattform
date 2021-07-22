@@ -8,6 +8,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import com.codingschool.ideabase.R
 import com.codingschool.ideabase.databinding.FragmentEditProfileBinding
+import com.codingschool.ideabase.utils.toast
 
 class EditProfileFragment: Fragment(), EditProfileView {
 
@@ -37,8 +38,8 @@ class EditProfileFragment: Fragment(), EditProfileView {
         viewModel.attachView(this)
     }
 
-    override fun showToast(text: String) {
-        TODO("Not yet implemented")
+    override fun showToast(any: Any) {
+        requireActivity().toast(any)
     }
 
     override fun navigateToLoginRegistered(username: String) {

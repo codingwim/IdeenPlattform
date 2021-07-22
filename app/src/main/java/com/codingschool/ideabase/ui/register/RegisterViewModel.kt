@@ -93,9 +93,9 @@ class RegisterViewModel(private val ideaApi: IdeaApi) : BaseObservable() {
                                 "HTTP 409",
                                 ignoreCase = true
                             )
-                        ) view?.setInputEmailError("This e-mail already belongs to a registered user")
+                        ) view?.setInputEmailError(R.string.email_already_inuse_input_error)
                         else if (responseMessage.contains(
-                                "HTTP 409",
+                                "HTTP 400",
                                 ignoreCase = true
                             )
                         ) view?.setInputEmailError("Some parameter is missing")

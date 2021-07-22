@@ -2,9 +2,9 @@ package com.codingschool.ideabase.ui.login
 
 interface LoginView {
     fun showToast(any: Any)
-    fun setInputUsernameError(text: String)
+    fun setInputUsernameError(any: Any)
     fun resetUsernameError()
-    fun setInputPasswordError(text: String)
+    fun setInputPasswordError(any: Any)
     fun resetPasswordError()
     fun navigateToRegisterFragment()
     fun navigateToTopRankedFragment()

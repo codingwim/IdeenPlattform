@@ -10,6 +10,7 @@ import androidx.navigation.NavDirections
 import androidx.navigation.Navigation
 import com.codingschool.ideabase.R
 import com.codingschool.ideabase.databinding.FragmentLoginBinding
+import com.codingschool.ideabase.utils.getResString
 import com.codingschool.ideabase.utils.toast
 import org.koin.android.ext.android.inject
 import org.koin.core.parameter.parametersOf
@@ -50,8 +51,8 @@ class LoginFragment : Fragment(), LoginView {
         requireActivity().toast(any)
     }
 
-    override fun setInputUsernameError(text: String) {
-        binding.tilUsername.error = text
+    override fun setInputUsernameError(any: Any) {
+        binding.tilUsername.error = requireActivity().getResString(any)
     }
 
     override fun navigateToRegisterFragment() {
@@ -70,8 +71,8 @@ class LoginFragment : Fragment(), LoginView {
         binding.tilUsername.error = null
     }
 
-    override fun setInputPasswordError(text: String) {
-        binding.tilPassword.error = text
+    override fun setInputPasswordError(any: Any) {
+        binding.tilPassword.error = requireActivity().getResString(any)
     }
 
     override fun resetPasswordError() {
