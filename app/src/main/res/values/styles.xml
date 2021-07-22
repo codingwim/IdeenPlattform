@@ -7,6 +7,5 @@
     </style>
     <style name="materialDialog" parent="Theme.AppCompat.DayNight.Dialog.Alert">
         <item name="colorSurface">@color/yellow</item>
-        <item name="colorOnPrimary">@color/black</item>
     </style>
 </resources>

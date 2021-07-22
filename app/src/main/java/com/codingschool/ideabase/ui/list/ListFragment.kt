@@ -1,8 +1,15 @@
 package com.codingschool.ideabase.ui.list
 
 import android.os.Bundle
+import android.text.InputType
+import android.text.Layout
 import android.util.Log
 import android.view.*
+import android.widget.AbsListView
+import android.widget.EditText
+import androidx.core.view.MarginLayoutParamsCompat
+import androidx.core.view.marginEnd
+import androidx.core.view.marginStart
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import com.codingschool.ideabase.R
@@ -44,6 +51,7 @@ class ListFragment : Fragment(), ListView {
         viewModel.init()
 
     }
+
     override fun showToast(any: Any) {
         requireActivity().toast(any)
     }
@@ -60,31 +68,60 @@ class ListFragment : Fragment(), ListView {
         TODO("Not yet implemented")
     }
 
-    override fun showFilterDialog(categoryArray: Array<String>, checkedItems: BooleanArray) {
-        // dummy items and checkeditems, these should be passed from ideApi in viewmodel
-        //val items = arrayOf("category 1", "category 2", "category 3", "category 4", "category 5")
+    override fun showSearchDialog(categoryArray: Array<String>, checkedItems: BooleanArray, searchText: String) {
+        val inputEditTextField = EditText(requireActivity())
+        if (searchText.isNotEmpty()) inputEditTextField.setText(searchText) else inputEditTextField.setHint("search for...")
+        inputEditTextField.inputType = InputType.TYPE_CLASS_TEXT
 
-        var selectedItems = 0
+        MaterialAlertDialogBuilder(
+            requireActivity(),
+            R.style.materialDialog
+        )
+            .setTitle("Enter search text below:")
+            .setMessage("You can add categories to filter the result. Just click FILTER below")
+                // todo better with layout so we can also show the selected categries in a textfield
+            //.setView(R.layout.dialog_edit_text)
+            .setView(inputEditTextField)
+            .setNeutralButton("CANCEL") { dialog, _ ->
+                dialog.dismiss()
+            }
+            .setNegativeButton("FILTER") { dialog, _ ->
+                val newSearchText =  if (inputEditTextField.text.isNotEmpty()) inputEditTextField.text.toString() else ""
+                showFilterDialog(categoryArray,checkedItems,newSearchText)
+                dialog.dismiss()
+            }
+            .setPositiveButton("SEARCH") { dialog, _ ->
+                viewModel.filterWithSelectedItemsAndSearchText(checkedItems, searchText)
+                dialog.dismiss()
+            }
+            .show()
+    }
+
+
+    override fun showFilterDialog(categoryArray: Array<String>, checkedItems: BooleanArray, searchText: String) {
+
         MaterialAlertDialogBuilder(
             requireActivity(),
             R.style.materialDialog
         )
             .setTitle("Search ideas by name and/or categories")
             //.setMessage("If no categories are selected, the result includes all possible categories.")
-            .setMultiChoiceItems(categoryArray, checkedItems ) { dialog, whichSelected, hasSelection ->
+            .setMultiChoiceItems(
+                categoryArray,
+                checkedItems
+            ) { dialog, whichSelected, hasSelection ->
                 checkedItems[whichSelected] = hasSelection
                 Log.d("observer_ex", "wichSelected $whichSelected , hasSelectio: $hasSelection")
             }
-
-            .setNegativeButton("CANCEL") { dialog, _ ->
+            .setNegativeButton("BACK") { dialog, _ ->
+                showSearchDialog(categoryArray,checkedItems, searchText)
                 dialog.dismiss()
             }
             .setPositiveButton("SEARCH") { dialog, _ ->
-                viewModel.filterWithSelected(checkedItems)
+                viewModel.filterWithSelectedItemsAndSearchText(checkedItems, searchText)
                 dialog.dismiss()
             }
             .show()
-
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -95,7 +132,7 @@ class ListFragment : Fragment(), ListView {
         when (item.itemId) {
             R.id.filter -> {
                 // open search dialog
-                viewModel.setFilterDialog()
+                viewModel.setSearchDialog()
             }
         }
 

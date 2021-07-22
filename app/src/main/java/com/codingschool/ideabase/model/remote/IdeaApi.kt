@@ -60,7 +60,7 @@ interface IdeaApi {
     fun deleteIdeaById(@Path ("id") id: String): Completable
 
     @GET("idea/search")
-    fun searchIdeas(@Body searchQuery: String): Single<List<Idea>>
+    fun searchIdeas(@Query ("searchQuery") searchQuery: String): Single<List<Idea>>
 
     @POST("idea/{id}/released")
     fun releaseIdea(@Path ("id") id: String, @Body updateReleased:  UpdateReleased): Completable

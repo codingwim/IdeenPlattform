@@ -8,3 +8,4 @@ const val testpwd = "wim12345678"
 const val testAuthWim = "Basic d2ltQG1haWwuY29tOndpbTEyMzQ1Njc4"
 
 const val NO_CATEGORY_FILTER = ""
+const val NO_SEARCH_QUERY =""
