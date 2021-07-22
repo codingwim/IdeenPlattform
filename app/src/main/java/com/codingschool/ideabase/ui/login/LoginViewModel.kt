@@ -93,11 +93,9 @@ class LoginViewModel(
 
     // TODO could be done as completable to link these actions ?
     private fun buildBasicAuthAndStoreInPrefs() {
-        val text = (username + ":" + password).toByteArray()
-        val test : String = Credentials.basic(username, password)
-        val authString = "Basic " + Base64.encodeToString(text, Base64.NO_WRAP)
+         val authString : String = Credentials.basic(username, password)
         //Log.d("observer_ex", "encoded: $authString")
-        prefs.setAuthString(test)
+        prefs.setAuthString(authString)
     }
 
     fun onRegisterClick() {

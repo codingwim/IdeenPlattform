@@ -40,7 +40,7 @@ class ListFragment : Fragment(), ListView {
         binding.rvIdeas.adapter = viewModel.adapter
         viewModel.attachView(this)
         viewModel.init()
-        
+
     }
     override fun showToast(any: Any) {
         requireActivity().toast(any)

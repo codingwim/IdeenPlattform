@@ -20,6 +20,11 @@ class IdeaListAdapter: RecyclerView.Adapter<IdeaListAdapter.IdeaViewHolder>() {
 
     }
 
+    fun setData(list: List<Idea>) {
+        this.list = list
+        notifyDataSetChanged()
+    }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): IdeaViewHolder {
         val binding = IdeaItemBinding.inflate(
             LayoutInflater.from(parent.context),
