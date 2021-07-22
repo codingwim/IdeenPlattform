@@ -8,16 +8,19 @@ import androidx.lifecycle.ViewModel
 import com.codingschool.ideabase.R
 import com.codingschool.ideabase.model.data.Idea
 import com.codingschool.ideabase.model.remote.IdeaApi
+import com.codingschool.ideabase.model.remote.ImageHandler
 import com.codingschool.ideabase.utils.NO_CATEGORY_FILTER
 import com.codingschool.ideabase.utils.Preferences
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.addTo
+import org.koin.java.KoinJavaComponent.inject
 
 class ListViewModel(
     val adapter: IdeaListAdapter,
     private val ideaApi: IdeaApi,
-    private val prefs: Preferences
+    private val prefs: Preferences,
+    private val imageHandler: ImageHandler
 ) :
     BaseObservable() {
 

@@ -10,7 +10,7 @@ import com.codingschool.ideabase.R
 import com.codingschool.ideabase.databinding.FragmentListBinding
 import com.codingschool.ideabase.utils.toast
 import org.koin.android.ext.android.inject
-import org.koin.java.KoinJavaComponent.inject
+
 
 class ListFragment : Fragment(), ListView {
 
