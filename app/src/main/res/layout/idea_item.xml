@@ -2,11 +2,10 @@
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:layout_margin="@dimen/margin_standard">
 
-    <com.google.android.material.card.MaterialCardView
-        xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    <com.google.android.material.card.MaterialCardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
         android:id="@+id/cvIdea"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -16,8 +15,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <com.google.android.material.card.MaterialCardView
-                xmlns:card_view="http://schemas.android.com/apk/res-auto"
+            <com.google.android.material.card.MaterialCardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
                 android:id="@+id/cvTop"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -46,9 +44,9 @@
 
                         card_view:layout_constraintTop_toTopOf="parent"
                         card_view:shapeAppearanceOverlay="@style/circleImageView"
-                        card_view:srcCompat="@drawable/profile_pic"
+                        card_view:srcCompat="@drawable/ic_baseline_person_24"
                         card_view:strokeColor="@color/yellow"
-                        card_view:strokeWidth="1dp"
+                        card_view:strokeWidth="0dp"
 
                         />
 
@@ -67,7 +65,7 @@
                         android:id="@+id/tvAuthor"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-
+                        android:textSize="@dimen/text_medium18"
                         card_view:layout_constraintBottom_toBottomOf="@id/ivProfilePicture"
                         card_view:layout_constraintStart_toStartOf="@+id/tvIdeaTitle"
                         tools:text="Jane Doe " />
