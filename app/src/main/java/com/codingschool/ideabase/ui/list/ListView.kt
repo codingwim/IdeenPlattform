@@ -5,4 +5,5 @@ interface ListView {
     fun showPopupRatingMenu()
     fun navigateToDetailFragment(id: String)
     fun navigateToCommentFragment(id: String)
+    fun showFilterDialog(categoryArray: Array<String>, checkedItems: BooleanArray)
 }

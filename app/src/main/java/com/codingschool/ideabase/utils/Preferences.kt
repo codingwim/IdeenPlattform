@@ -16,6 +16,9 @@ class Preferences(
     fun setAuthString(authString: String) {
         preferences.edit().putString(Keys.BASE_AUTH_STRING,authString).apply()
     }
+
+
+
 }
 
 object Keys {
