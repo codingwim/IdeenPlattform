@@ -16,9 +16,9 @@ class IdeaListAdapter(private val imageHandler: ImageHandler): RecyclerView.Adap
             binding.tvIdeaTitle.text = idea.title
             binding.tvAuthor.text = idea.Author()
             binding.tvIdeaDescription.text = idea.description
-            imageHandler.getImage("https://ideenmanagement.tailored-apps.com/image/idea/049d12ca-a156-4b3e-9d1f-3cfd4b60af46.png", binding.ivProfilePicture )
+            idea.author.profilePicture?.let { imageHandler.getProfilePic(it, binding.ivProfilePicture ) }
+            if (idea.imageUrl.isNotEmpty()) imageHandler.getIdeaImage(idea.imageUrl, binding.ivIdea)
         }
-
     }
 
     fun setData(list: List<Idea>) {

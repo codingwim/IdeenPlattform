@@ -19,13 +19,11 @@ import org.koin.java.KoinJavaComponent.inject
 class ListViewModel(
     val adapter: IdeaListAdapter,
     private val ideaApi: IdeaApi,
-    private val prefs: Preferences,
-    private val imageHandler: ImageHandler
+    private val prefs: Preferences
 ) :
     BaseObservable() {
 
     private var view: ListView? = null
-    private var ideaList: MutableList<Idea> = mutableListOf()
 
     private val compositeDisposable = CompositeDisposable()
 

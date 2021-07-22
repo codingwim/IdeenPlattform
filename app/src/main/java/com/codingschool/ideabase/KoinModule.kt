@@ -90,7 +90,7 @@ val appModule = module {
     }
 
     factory<ListViewModel> {
-        ListViewModel(adapter = get(),ideaApi = get(), prefs = get(), imageHandler = get() )
+        ListViewModel(adapter = get(),ideaApi = get(), prefs = get())
     }
 
 }
