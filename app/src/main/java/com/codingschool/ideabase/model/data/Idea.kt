@@ -32,3 +32,6 @@ data class Idea(
     val ratings: List<IdeaRating>
 
     )
+{
+    fun Author() = user.firstname + " " + user.lastname
+}

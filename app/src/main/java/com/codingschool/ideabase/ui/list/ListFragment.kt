@@ -8,10 +8,13 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import com.codingschool.ideabase.R
 import com.codingschool.ideabase.databinding.FragmentListBinding
+import com.codingschool.ideabase.utils.toast
+import org.koin.android.ext.android.inject
+import org.koin.java.KoinJavaComponent.inject
 
 class ListFragment : Fragment(), ListView {
 
-    private lateinit var viewModel: ListViewModel
+    private val viewModel: ListViewModel by inject()
     private lateinit var binding: FragmentListBinding
 
     override fun onCreateView(
@@ -33,12 +36,14 @@ class ListFragment : Fragment(), ListView {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel = ListViewModel()
         binding.vm = viewModel
+        binding.rvIdeas.adapter = viewModel.adapter
         viewModel.attachView(this)
+        viewModel.init()
+        
     }
-    override fun showToast(text: String) {
-        TODO("Not yet implemented")
+    override fun showToast(any: Any) {
+        requireActivity().toast(any)
     }
 
     override fun showPopupRatingMenu() {

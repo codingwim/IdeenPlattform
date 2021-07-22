@@ -16,7 +16,7 @@ import okhttp3.Credentials
 
 class LoginViewModel(
     private val uNameFromArgs: String?,
-    private val IdeaApi: IdeaApi,
+    private val ideaApi: IdeaApi,
     private val prefs: Preferences
 ) :
     BaseObservable() {
@@ -62,7 +62,7 @@ class LoginViewModel(
     }
 
     private fun checkCredentialsWithAPI() {
-        IdeaApi.getOwnUser().observeOn(AndroidSchedulers.mainThread())
+        ideaApi.getOwnUser().observeOn(AndroidSchedulers.mainThread())
             //.subscribeOn(Schedulers.io())
             .subscribe({ user ->
                 view?.showToast("Hi ${user.firstname}, welcome back!")
