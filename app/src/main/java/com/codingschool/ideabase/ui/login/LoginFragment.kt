@@ -4,22 +4,17 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isEmpty
+import androidx.core.view.isNotEmpty
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import androidx.navigation.NavDirections
-import androidx.navigation.Navigation
 import com.codingschool.ideabase.R
 import com.codingschool.ideabase.databinding.FragmentLoginBinding
-import com.codingschool.ideabase.utils.toast
-import org.koin.android.ext.android.inject
-import org.koin.core.parameter.parametersOf
-
+import com.jakewharton.rxbinding4.widget.textChanges
 
 class LoginFragment : Fragment(), LoginView {
 
-    private val viewModel: LoginViewModel by inject<LoginViewModel> {
-        parametersOf(arguments?.let { LoginFragmentArgs.fromBundle(it).userName })
-        }
+    private lateinit var viewModel: LoginViewModel
     private lateinit var binding: FragmentLoginBinding
 
     override fun onCreateView(
@@ -41,40 +36,17 @@ class LoginFragment : Fragment(), LoginView {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        viewModel = LoginViewModel()
         binding.vm = viewModel
         viewModel.attachView(this)
-        viewModel.init()
     }
 
-    override fun showToast(any: Any) {
-        requireActivity().toast(any)
-    }
-
-    override fun setInputUsernameError(text: String) {
+    override fun setInputEmptyError(text: String) {
         binding.tilUsername.error = text
     }
 
-    override fun navigateToRegisterFragment() {
-        val action: NavDirections =
-            LoginFragmentDirections.toRegister()
-        Navigation.findNavController(requireView()).navigate(action)
-    }
-
-    override fun navigateToTopRankedFragment() {
-        val action: NavDirections =
-            LoginFragmentDirections.toTopRanked()
-        Navigation.findNavController(requireView()).navigate(action)
-    }
-
-    override fun resetUsernameError() {
+    override fun resetError() {
+        binding.etUsername.textChanges()
         binding.tilUsername.error = null
-    }
-
-    override fun setInputPasswordError(text: String) {
-        binding.tilPassword.error = text
-    }
-
-    override fun resetPasswordError() {
-        binding.tilPassword.error = null
     }
 }

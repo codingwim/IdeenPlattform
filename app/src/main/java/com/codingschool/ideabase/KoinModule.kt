@@ -1,93 +1,41 @@
 package com.codingschool.ideabase
 
-import android.content.Context
-import android.content.SharedPreferences
 import androidx.room.Room
-import com.ashokvarma.gander.GanderInterceptor
-import com.codingschool.ideabase.model.data.room.AppDataBase
-import com.codingschool.ideabase.model.remote.IdeaApi
-import com.codingschool.ideabase.ui.login.LoginViewModel
-import com.codingschool.ideabase.ui.register.RegisterViewModel
-import com.codingschool.ideabase.utils.Preferences
-import com.codingschool.ideabase.utils.baseUrl
-import io.reactivex.schedulers.Schedulers
-import okhttp3.Credentials
-import okhttp3.OkHttpClient
-import org.koin.android.ext.koin.androidApplication
 import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
-import org.koin.java.KoinJavaComponent.inject
 import retrofit2.Retrofit
-import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
-import retrofit2.converter.gson.GsonConverterFactory
 
 val appModule = module {
 
-    single<Preferences> {
-        Preferences(androidContext())
-    }
-
-    single<AppDataBase> {
-        (
-                Room
-                    .databaseBuilder(
-                        androidContext(),
-                        AppDataBase::class.java,
-                        "app-db"
-                    )
-                    // REMOVE ON PRODUCTION VERSION
-                    .fallbackToDestructiveMigration()
-                    .allowMainThreadQueries()
-                    .build()
-                )
-    }
-    single {
-        OkHttpClient.Builder()
-            .addNetworkInterceptor { chain ->
-                chain.proceed(
-                    chain.request().newBuilder()
-                        .header(
-                            "Authorization",
-                            getAuthFromPrefs(get())
-                        )
-                        .build()
-                )
-            }
-            .addInterceptor(
-                GanderInterceptor(androidApplication())
-                    .showNotification(true)
+  /*  single<AppDatabase> { (
+        Room
+            .databaseBuilder(
+                androidContext(),
+                AppDatabase::class.java,
+                "app-db"
             )
+            // REMOVE ON PRODUCTION VERSION
+            .fallbackToDestructiveMigration()
+            .allowMainThreadQueries()
             .build()
-    }
+            )
+    }*/
 
-    single {
+   /* single {
         Retrofit.Builder()
-            .client(get())
-            .baseUrl(baseUrl)
+            .baseUrl( baseUrl)
             .addCallAdapterFactory(RxJava2CallAdapterFactory.createWithScheduler(Schedulers.io()))
             .addConverterFactory(GsonConverterFactory.create())
             .build()
-    }
 
-    factory { provideUserApi(get()) }
 
-    factory<LoginViewModel> { parameters ->
-        LoginViewModel(uNameFromArgs = parameters.get(), get(), get())
-    }
-
-    factory<RegisterViewModel> {
-        RegisterViewModel(get())
-    }
+    }*/
+/*
+    factory { provideUserApi(get()) }*/
 
 
 
 }
 
-fun getAuthFromPrefs(prefs: Preferences) = prefs.getAuthString()
-
-fun provideUserApi(retrofit: Retrofit): IdeaApi = retrofit.create(IdeaApi::class.java)
-
-
-
-
+/*fun provideUserApi(retrofit: Retrofit): UserApi = retrofit.create(UserApi::class.java)*/
 

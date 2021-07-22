@@ -11,15 +11,4 @@
     <string name="password_login">password</string>
     <string name="login_bnt_login">LOGIN</string>
     <string name="register_btn_login">REGISTER</string>
-    <string name="lastname">last name</string>
-    <string name="firstname">first name</string>
-    <string name="email">e-mail</string>
-    <string name="repeat_password">repeat password</string>
-    <string name="register">REGISTER</string>
-    <string name="cancel">CANCEL</string>
-    <string name="registration_cancelled">Registration cancelled</string>
-    <string name="network_issue_check_network">There seems to be a connectivity issue, please check your network connection</string>
-    <string name="long_lorem_ipsum">Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.</string>
-    <string name="comment_text_button_under_idea">COMMENT</string>
-    <string name="rate_this_idea_content_description">Rate this Idea</string>
 </resources>
