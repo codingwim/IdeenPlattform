@@ -14,10 +14,14 @@ import androidx.core.view.marginEnd
 import androidx.core.view.marginStart
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.navigation.NavDirections
+import androidx.navigation.Navigation
 import com.codingschool.ideabase.R
 import com.codingschool.ideabase.databinding.FragmentListBinding
+import com.codingschool.ideabase.ui.register.RegisterFragmentDirections
 import com.codingschool.ideabase.utils.toast
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import org.koin.android.ext.android.inject
 
 
@@ -25,6 +29,7 @@ class ListFragment : Fragment(), ListView {
 
     private val viewModel: ListViewModel by inject()
     private lateinit var binding: FragmentListBinding
+    private lateinit var fab: FloatingActionButton
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -45,6 +50,10 @@ class ListFragment : Fragment(), ListView {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        fab = binding.fab
+        fab.setOnClickListener {
+            viewModel.addIdeaClicked()
+        }
         setHasOptionsMenu(true)
 
         binding.vm = viewModel
@@ -80,11 +89,19 @@ class ListFragment : Fragment(), ListView {
     }
 
     override fun navigateToDetailFragment(id: String) {
-        TODO("Not yet implemented")
+        val action: NavDirections =
+            ListFragmentDirections.toDetail(id)
+        Navigation.findNavController(requireView()).navigate(action)
     }
 
     override fun navigateToCommentFragment(id: String) {
         TODO("Not yet implemented")
+    }
+
+    override fun navigateToNewIdeaFragment(newIdea: Boolean) {
+        val action: NavDirections =
+            ListFragmentDirections.toEditNewIdea(newIdea)
+        Navigation.findNavController(requireView()).navigate(action)
     }
 
     override fun showSearchDialog(

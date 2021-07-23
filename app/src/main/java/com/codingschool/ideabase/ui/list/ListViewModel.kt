@@ -6,6 +6,7 @@ import com.codingschool.ideabase.R
 import com.codingschool.ideabase.model.data.Category
 import com.codingschool.ideabase.model.data.PostIdeaRating
 import com.codingschool.ideabase.model.remote.IdeaApi
+import com.codingschool.ideabase.utils.NEW_IDEA
 import com.codingschool.ideabase.utils.NO_SEARCH_QUERY
 import com.codingschool.ideabase.utils.Preferences
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -238,5 +239,9 @@ class ListViewModel(
                 }).addTo(compositeDisposable)
         }
 
+    }
+
+    fun addIdeaClicked() {
+        view?.navigateToNewIdeaFragment(NEW_IDEA)
     }
 }

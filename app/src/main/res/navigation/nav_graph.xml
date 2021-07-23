@@ -13,6 +13,9 @@
         <action
             android:id="@+id/toDetail"
             app:destination="@id/detailFragment" />
+        <action
+            android:id="@+id/toEditNewIdea"
+            app:destination="@id/newEditIdeaFragment" />
     </fragment>
 
     <fragment
@@ -23,6 +26,9 @@
         <action
             android:id="@+id/toDetail"
             app:destination="@id/detailFragment" />
+        <action
+            android:id="@+id/toEditNewIdea"
+            app:destination="@id/newEditIdeaFragment" />
     </fragment>
 
     <fragment
@@ -62,5 +68,13 @@
         <argument
             android:name="id"
             app:argType="string" />
+    </fragment>
+    <fragment
+        android:id="@+id/newEditIdeaFragment"
+        android:name="com.codingschool.ideabase.ui.neweditidea.NewEditIdeaFragment"
+        android:label="NewEditIdeaFragment" >
+        <argument
+            android:name="newIdea"
+            app:argType="boolean" />
     </fragment>
 </navigation>
