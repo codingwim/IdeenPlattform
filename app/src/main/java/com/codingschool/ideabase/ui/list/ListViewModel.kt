@@ -36,13 +36,42 @@ class ListViewModel(
         this.view = view
     }
 
-    fun setSearchDialog() {
+    fun setFilterDialog(
+        categoryArray: Array<String>,
+        checkedItems: BooleanArray,
+        searchText: String,
+        messageSelectedCategories: String
+    ) {
+        view?.showFilterDialog(
+            categoryArray,
+            checkedItems,
+            searchText,
+            messageSelectedCategories
+        )
+    }
+
+    fun setSearchDialog(
+        categoryArray: Array<String>,
+        checkedItems: BooleanArray,
+        searchText: String
+    ) {
+        // Build the category message text
+
+        val listOfSearchCategories = emptyList<String>().toMutableList()
+        for (i in 0..checkedItems.size - 1) if (checkedItems[i]) listOfSearchCategories += categoryList[i].id
+        val selectedCategories = listOfSearchCategories.joinToString(", ")
+        val newMessageSelectedCategories =
+            if (selectedCategories.isEmpty()) "You can add categories to filter the result. Just click FILTER below"
+            else "Filter by: " + selectedCategories
+        view?.showSearchDialog(categoryArray, checkedItems, searchText, newMessageSelectedCategories)
+    }
+
+    fun setInitialSearchDialog() {
 
         //val locale = ConfigurationCompat.getLocales(Resources.getSystem().getConfiguration())
         // RESET category list and checked items
 
         var categoryArray: Array<String> = emptyArray()
-
         var checkedItems: BooleanArray = booleanArrayOf()
 
         ideaApi.getAllCategories()
@@ -54,7 +83,12 @@ class ListViewModel(
                     categoryArray += i.name_en
                     checkedItems += false
                 }
-                view?.showSearchDialog(categoryArray, checkedItems, "")
+                view?.showSearchDialog(
+                    categoryArray,
+                    checkedItems,
+                    "",
+                    "You can add categories to filter the result. Just click FILTER below"
+                )
 
             }, { t ->
                 val responseMessage = t.message
@@ -73,14 +107,10 @@ class ListViewModel(
     }
 
     fun filterWithSelectedItemsAndSearchText(checkedItems: BooleanArray, searchText: String) {
-        // Build the category search string
+        // Build the category search List for the filtering
         val listOfSearchCategories = emptyList<String>().toMutableList()
         for (i in 0..checkedItems.size - 1) if (checkedItems[i]) listOfSearchCategories += categoryList[i].id
-        //val searchCategoryString = listOfSearchCategories.joinToString(",")
-
         //Log.d("observer_ex", "selectedItems: $searchCategoryString ")
-
-        //if (listOfSearchCategories.isNotEmpty() or searchText.isNotEmpty())
         getAllIdeasToAdapter(
             listOfSearchCategories,
             searchText
@@ -92,14 +122,11 @@ class ListViewModel(
         searchQuery: String
     ) {
         // if searchQuery = empty,
-        //      we use searchquery"id" to return complete list !! ELSE return list with search keyword
-        //      and THAN filter with the categoryArray
-        //      TODO and sort with the sorting pref
+        //      we use searchquery "id" to return complete list !! ELSE return list with search keyword
+        //      and THAN filter with the categoryList (if not empty)
+        //      TODO add sort with the sorting pref
         //      TODO IF RESULT = EMPTY -> put overlay "no ideas found matching your search and/or filter criteria
         //
-
-        //var listFilteredByCategories: List<Idea> = emptyList()
-        //var listFromSearch: List<Idea> = emptyList()
 
         val newSearchQuery = if (searchQuery.isEmpty()) "id" else searchQuery
 
@@ -130,63 +157,5 @@ class ListViewModel(
 
             }).addTo(compositeDisposable)
 
-
-        /*if (searchCategoryString.isNotEmpty() or searchQuery.isEmpty()) {
-            ideaApi.getAllIdeas(searchCategoryString)
-                //ideaApi.getIdeaById("6d01fe46-a1c3-4c81-baa4-4d353e905db9")
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({ list ->
-                    listFilteredByCategories = list
-                    //adapter.setData(listFilteredByCategories)
-                    Log.d(
-                        "observer_ex",
-                        "adapter set with ${listFilteredByCategories[0].title} and more"
-                    )
-                }, { t ->
-                    val responseMessage = t.message
-                    if (responseMessage != null) {
-                        if (responseMessage.contains(
-                                "HTTP 404",
-                                ignoreCase = true
-                            )
-                        ) {
-                            Log.d("observer_ex", "404 Idea not found")
-                            view?.showToast("The Idea was not found")
-                        } else if (responseMessage.contains(
-                                "HTTP 401",
-                                ignoreCase = true
-                            )
-                        ) {
-                            Log.d("observer_ex", "401 Authorization not valid")
-                            view?.showToast("You are not autorized to search")
-                        } else view?.showToast(R.string.network_issue_check_network)
-                    }
-                    Log.e("observer_ex", "exception getting ideas: $t")
-
-                }).addTo(compositeDisposable)
-        }*/
-
-
-
-
-
-
-
-        Log.d("observer_ex", "after jobs.join")
-
-
-        // listFilteredByCategories will return complete list if searchstring is empty, so populates on init!!
-        /*if (searchQuery.isEmpty()) {
-
-            adapter.setData(listFilteredByCategories)
-        } else if (searchCategoryString.isEmpty()) adapter.setData(listFromSearch)
-        else {
-            // we got two lists and need to get the intersection
-            val searchedAndFilteredList: List<Idea> =
-                (listFilteredByCategories intersect listFromSearch).toList()
-            adapter.setData(searchedAndFilteredList)
-        }*/
-
     }
-
 }

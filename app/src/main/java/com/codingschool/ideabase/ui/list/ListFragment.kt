@@ -1,5 +1,6 @@
 package com.codingschool.ideabase.ui.list
 
+import android.app.ActionBar
 import android.os.Bundle
 import android.text.InputType
 import android.text.Layout
@@ -7,6 +8,7 @@ import android.util.Log
 import android.view.*
 import android.widget.AbsListView
 import android.widget.EditText
+import android.widget.LinearLayout
 import androidx.core.view.MarginLayoutParamsCompat
 import androidx.core.view.marginEnd
 import androidx.core.view.marginStart
@@ -68,30 +70,43 @@ class ListFragment : Fragment(), ListView {
         TODO("Not yet implemented")
     }
 
-    override fun showSearchDialog(categoryArray: Array<String>, checkedItems: BooleanArray, searchText: String) {
+    override fun showSearchDialog(
+        categoryArray: Array<String>,
+        checkedItems: BooleanArray,
+        searchText: String,
+        messageSelecteCategories: String
+    ) {
         val inputEditTextField = EditText(requireActivity())
-        if (searchText.isNotEmpty()) inputEditTextField.setText(searchText) else inputEditTextField.setHint("search for...")
+        if (searchText.isNotEmpty()) inputEditTextField.setText(searchText) else inputEditTextField.setHint(
+            "search for..."
+        )
         inputEditTextField.inputType = InputType.TYPE_CLASS_TEXT
+        /*val linearLayoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.WRAP_CONTENT )
+        linearLayoutParams.setMargins(150,0,150,0)
+        inputEditTextField.layoutParams = linearLayoutParams*/
 
         MaterialAlertDialogBuilder(
             requireActivity(),
             R.style.materialDialog
         )
             .setTitle("Enter search text below:")
-            .setMessage("You can add categories to filter the result. Just click FILTER below")
-                // todo better with layout so we can also show the selected categries in a textfield
+            .setMessage(messageSelecteCategories)
+            // TODO remove dialog_edit_text.xml if not used
             //.setView(R.layout.dialog_edit_text)
+            //.setView(inputEditTextField, 30,0,30,0)
             .setView(inputEditTextField)
             .setNeutralButton("CANCEL") { dialog, _ ->
                 dialog.dismiss()
             }
             .setNegativeButton("FILTER") { dialog, _ ->
-                val newSearchText =  if (inputEditTextField.text.isNotEmpty()) inputEditTextField.text.toString() else ""
-                showFilterDialog(categoryArray,checkedItems,newSearchText)
+                val newSearchText =
+                    if (inputEditTextField.text.isNotEmpty()) inputEditTextField.text.toString() else ""
+                viewModel.setFilterDialog(categoryArray, checkedItems, newSearchText, messageSelecteCategories)
                 dialog.dismiss()
             }
             .setPositiveButton("SEARCH") { dialog, _ ->
-                val newSearchText =  if (inputEditTextField.text.isNotEmpty()) inputEditTextField.text.toString() else ""
+                val newSearchText =
+                    if (inputEditTextField.text.isNotEmpty()) inputEditTextField.text.toString() else ""
                 viewModel.filterWithSelectedItemsAndSearchText(checkedItems, newSearchText)
                 dialog.dismiss()
             }
@@ -99,7 +114,12 @@ class ListFragment : Fragment(), ListView {
     }
 
 
-    override fun showFilterDialog(categoryArray: Array<String>, checkedItems: BooleanArray, searchText: String) {
+    override fun showFilterDialog(
+        categoryArray: Array<String>,
+        checkedItems: BooleanArray,
+        searchText: String,
+        messageSelecteCategories: String
+    ) {
 
         MaterialAlertDialogBuilder(
             requireActivity(),
@@ -115,7 +135,7 @@ class ListFragment : Fragment(), ListView {
                 Log.d("observer_ex", "wichSelected $whichSelected , hasSelectio: $hasSelection")
             }
             .setNegativeButton("BACK") { dialog, _ ->
-                showSearchDialog(categoryArray,checkedItems, searchText)
+                viewModel.setSearchDialog(categoryArray, checkedItems, searchText )
                 dialog.dismiss()
             }
             .setPositiveButton("SEARCH") { dialog, _ ->
@@ -133,7 +153,7 @@ class ListFragment : Fragment(), ListView {
         when (item.itemId) {
             R.id.filter -> {
                 // open search dialog
-                viewModel.setSearchDialog()
+                viewModel.setInitialSearchDialog()
             }
         }
 

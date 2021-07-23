@@ -3,16 +3,23 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:padding="@dimen/padding_small">
 
     <EditText
         android:id="@+id/etDialogSearch"
         android:hint="Search for ..."
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/margin_standard"
-        android:layout_marginEnd="@dimen/margin_standard"
+        android:layout_marginStart="@dimen/margin_large"
+        android:layout_marginEnd="@dimen/margin_large"
         android:inputType="text"
         tools:ignore="Autofill" />
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/tvDialogCheckedCategories"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Filter: No categories selected"
+        />
 
 </LinearLayout>
