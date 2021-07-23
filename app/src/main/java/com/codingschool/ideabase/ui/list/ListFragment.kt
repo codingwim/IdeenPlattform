@@ -18,16 +18,22 @@ import androidx.navigation.NavDirections
 import androidx.navigation.Navigation
 import com.codingschool.ideabase.R
 import com.codingschool.ideabase.databinding.FragmentListBinding
+import com.codingschool.ideabase.ui.neweditidea.NewEditIdeaFragmentArgs
+import com.codingschool.ideabase.ui.neweditidea.NewEditIdeaViewModel
 import com.codingschool.ideabase.ui.register.RegisterFragmentDirections
 import com.codingschool.ideabase.utils.toast
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import org.koin.android.ext.android.inject
+import org.koin.core.parameter.parametersOf
 
 
 class ListFragment : Fragment(), ListView {
 
-    private val viewModel: ListViewModel by inject()
+    private val viewModel: ListViewModel by inject<ListViewModel> {
+        parametersOf(arguments?.let { ListFragmentArgs.fromBundle(it).topOrAll })
+    }
+
     private lateinit var binding: FragmentListBinding
     private lateinit var fab: FloatingActionButton
 

@@ -92,8 +92,8 @@ val appModule = module {
         RegisterViewModel(ideaApi = get())
     }
 
-    factory<ListViewModel> {
-        ListViewModel(adapter = get(),ideaApi = get(), prefs = get())
+    factory<ListViewModel> { parameters ->
+        ListViewModel(topOrAll = parameters.get(), adapter = get(),ideaApi = get(), prefs = get())
     }
 
     factory<DetailViewModel> { parameters ->

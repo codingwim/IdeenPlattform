@@ -15,6 +15,7 @@ import io.reactivex.rxkotlin.addTo
 import retrofit2.HttpException
 
 class ListViewModel(
+    private val topOrAll: Boolean,
     val adapter: IdeaListAdapter,
     private val ideaApi: IdeaApi,
     private val prefs: Preferences
@@ -31,6 +32,8 @@ class ListViewModel(
         arrayOf("I don't like it at all", "Not so cool", "Its fine", "Cool", "Mega Cool ")
 
     fun init() {
+
+        Log.d("observer_ex", "toporall $topOrAll")
         // set initial adapter list here
         getdeasToAdapter(emptyList(), NO_SEARCH_QUERY)
         adapter.addIdeaClickListener {

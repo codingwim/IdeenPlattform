@@ -16,6 +16,11 @@
         <action
             android:id="@+id/toEditNewIdea"
             app:destination="@id/newEditIdeaFragment" />
+        <argument
+            android:name="topOrAll"
+            app:argType="boolean"
+            android:defaultValue="true"
+            />
     </fragment>
 
     <fragment
@@ -29,6 +34,11 @@
         <action
             android:id="@+id/toEditNewIdea"
             app:destination="@id/newEditIdeaFragment" />
+        <argument
+            android:name="topOrAll"
+            app:argType="boolean"
+            android:defaultValue="false"
+            />
     </fragment>
 
     <fragment
