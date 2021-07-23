@@ -6,6 +6,7 @@ import com.ashokvarma.gander.GanderInterceptor
 import com.codingschool.ideabase.model.data.room.AppDataBase
 import com.codingschool.ideabase.model.remote.IdeaApi
 import com.codingschool.ideabase.model.remote.ImageHandler
+import com.codingschool.ideabase.ui.detail.DetailViewModel
 import com.codingschool.ideabase.ui.list.IdeaListAdapter
 import com.codingschool.ideabase.ui.list.ListViewModel
 import com.codingschool.ideabase.ui.login.LoginViewModel
@@ -93,6 +94,9 @@ val appModule = module {
         ListViewModel(adapter = get(),ideaApi = get(), prefs = get())
     }
 
+    factory<DetailViewModel> { parameters ->
+        DetailViewModel(id = parameters.get(), ideaApi = get(), prefs = get())
+    }
 }
 
 

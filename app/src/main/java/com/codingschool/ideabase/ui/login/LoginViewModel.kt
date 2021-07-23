@@ -15,7 +15,7 @@ import io.reactivex.rxkotlin.addTo
 import okhttp3.Credentials
 
 class LoginViewModel(
-    private val uNameFromArgs: String?,
+    uNameFromArgs: String?,
     private val ideaApi: IdeaApi,
     private val prefs: Preferences
 ) :
@@ -65,8 +65,9 @@ class LoginViewModel(
         ideaApi.getOwnUser().observeOn(AndroidSchedulers.mainThread())
             //.subscribeOn(Schedulers.io())
             .subscribe({ user ->
-                view?.showToast("Hi ${user.firstname}, welcome back!")
+                view?.showToast("Hi ${user.firstname}")
                 // TODO we could put the users firstname, etc in sharedprefs if we need to
+                prefs.setMyId(user.id)
                 view?.navigateToTopRankedFragment()
                 //Log.d("observer_ex", "Current logged in user: ${user.firstname}")
             }, { t ->

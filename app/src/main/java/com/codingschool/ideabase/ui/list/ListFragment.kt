@@ -58,8 +58,25 @@ class ListFragment : Fragment(), ListView {
         requireActivity().toast(any)
     }
 
-    override fun showPopupRatingMenu() {
-        TODO("Not yet implemented")
+    override fun showPopupRatingDialog(id: String, ratingArray: Array<String>, checkedItem: Int) {
+        var newCheckedItem = 0
+        MaterialAlertDialogBuilder(
+            requireActivity(),
+            R.style.materialDialog
+        )
+            .setTitle("How do you rate this idea?")
+            .setSingleChoiceItems(ratingArray,checkedItem) { dialog, which ->
+                newCheckedItem = which
+
+            }
+            .setNegativeButton(getString(R.string.btn_cancel_dialog)) { dialog, _ ->
+                dialog.dismiss()
+            }
+            .setPositiveButton("RATE") { dialog, _ ->
+                viewModel.setRating(id, checkedItem, newCheckedItem)
+                dialog.dismiss()
+            }
+            .show()
     }
 
     override fun navigateToDetailFragment(id: String) {
@@ -101,7 +118,12 @@ class ListFragment : Fragment(), ListView {
             .setNegativeButton(getString(R.string.btn_filter_dialog)) { dialog, _ ->
                 val newSearchText =
                     if (inputEditTextField.text.isNotEmpty()) inputEditTextField.text.toString() else ""
-                viewModel.setFilterDialog(categoryArray, checkedItems, newSearchText, messageSelecteCategories)
+                viewModel.setFilterDialog(
+                    categoryArray,
+                    checkedItems,
+                    newSearchText,
+                    messageSelecteCategories
+                )
                 dialog.dismiss()
             }
             .setPositiveButton(getString(R.string.btn_search_dialog)) { dialog, _ ->
@@ -134,7 +156,7 @@ class ListFragment : Fragment(), ListView {
                 //Log.d("observer_ex", "wichSelected $whichSelected , hasSelectio: $hasSelection")
             }
             .setNegativeButton(getString(R.string.btn_back_dialog)) { dialog, _ ->
-                viewModel.setSearchDialog(categoryArray, checkedItems, searchText )
+                viewModel.setSearchDialog(categoryArray, checkedItems, searchText)
                 dialog.dismiss()
             }
             .setPositiveButton(getString(R.string.btn_search_dialog)) { dialog, _ ->
