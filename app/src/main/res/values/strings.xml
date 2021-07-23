@@ -24,4 +24,11 @@
     <string name="rate_this_idea_content_description">Rate this Idea</string>
     <string name="email_already_inuse_input_error">This e-mail already belongs to a registered user</string>
     <string name="search_menu_title">Search</string>
+    <string name="title_search_dialog">Enter search text below:</string>
+    <string name="btn_cancel_dialog">CANCEL</string>
+    <string name="btn_filter_dialog">FILTER</string>
+    <string name="btn_search_dialog">SEARCH</string>
+    <string name="btn_back_dialog">BACK</string>
+    <string name="title_filter_dialog">Filter search with categories</string>
+    <string name="search_for_hint_dialog">search for...</string>
 </resources>

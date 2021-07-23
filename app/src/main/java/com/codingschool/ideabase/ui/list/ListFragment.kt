@@ -78,7 +78,7 @@ class ListFragment : Fragment(), ListView {
     ) {
         val inputEditTextField = EditText(requireActivity())
         if (searchText.isNotEmpty()) inputEditTextField.setText(searchText) else inputEditTextField.setHint(
-            "search for..."
+            getString(R.string.search_for_hint_dialog)
         )
         inputEditTextField.inputType = InputType.TYPE_CLASS_TEXT
         /*val linearLayoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.WRAP_CONTENT )
@@ -89,22 +89,22 @@ class ListFragment : Fragment(), ListView {
             requireActivity(),
             R.style.materialDialog
         )
-            .setTitle("Enter search text below:")
+            .setTitle(getString(R.string.title_search_dialog))
             .setMessage(messageSelecteCategories)
             // TODO remove dialog_edit_text.xml if not used
             //.setView(R.layout.dialog_edit_text)
             //.setView(inputEditTextField, 30,0,30,0)
             .setView(inputEditTextField)
-            .setNeutralButton("CANCEL") { dialog, _ ->
+            .setNeutralButton(getString(R.string.btn_cancel_dialog)) { dialog, _ ->
                 dialog.dismiss()
             }
-            .setNegativeButton("FILTER") { dialog, _ ->
+            .setNegativeButton(getString(R.string.btn_filter_dialog)) { dialog, _ ->
                 val newSearchText =
                     if (inputEditTextField.text.isNotEmpty()) inputEditTextField.text.toString() else ""
                 viewModel.setFilterDialog(categoryArray, checkedItems, newSearchText, messageSelecteCategories)
                 dialog.dismiss()
             }
-            .setPositiveButton("SEARCH") { dialog, _ ->
+            .setPositiveButton(getString(R.string.btn_search_dialog)) { dialog, _ ->
                 val newSearchText =
                     if (inputEditTextField.text.isNotEmpty()) inputEditTextField.text.toString() else ""
                 viewModel.filterWithSelectedItemsAndSearchText(checkedItems, newSearchText)
@@ -112,7 +112,6 @@ class ListFragment : Fragment(), ListView {
             }
             .show()
     }
-
 
     override fun showFilterDialog(
         categoryArray: Array<String>,
@@ -125,20 +124,20 @@ class ListFragment : Fragment(), ListView {
             requireActivity(),
             R.style.materialDialog
         )
-            .setTitle("Search ideas by name and/or categories")
+            .setTitle(getString(R.string.title_filter_dialog))
             //.setMessage("If no categories are selected, the result includes all possible categories.")
             .setMultiChoiceItems(
                 categoryArray,
                 checkedItems
             ) { dialog, whichSelected, hasSelection ->
                 checkedItems[whichSelected] = hasSelection
-                Log.d("observer_ex", "wichSelected $whichSelected , hasSelectio: $hasSelection")
+                //Log.d("observer_ex", "wichSelected $whichSelected , hasSelectio: $hasSelection")
             }
-            .setNegativeButton("BACK") { dialog, _ ->
+            .setNegativeButton(getString(R.string.btn_back_dialog)) { dialog, _ ->
                 viewModel.setSearchDialog(categoryArray, checkedItems, searchText )
                 dialog.dismiss()
             }
-            .setPositiveButton("SEARCH") { dialog, _ ->
+            .setPositiveButton(getString(R.string.btn_search_dialog)) { dialog, _ ->
                 viewModel.filterWithSelectedItemsAndSearchText(checkedItems, searchText)
                 dialog.dismiss()
             }
