@@ -91,7 +91,8 @@ class ListFragment : Fragment(), ListView {
                 dialog.dismiss()
             }
             .setPositiveButton("SEARCH") { dialog, _ ->
-                viewModel.filterWithSelectedItemsAndSearchText(checkedItems, searchText)
+                val newSearchText =  if (inputEditTextField.text.isNotEmpty()) inputEditTextField.text.toString() else ""
+                viewModel.filterWithSelectedItemsAndSearchText(checkedItems, newSearchText)
                 dialog.dismiss()
             }
             .show()
