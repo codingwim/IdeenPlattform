@@ -151,7 +151,6 @@ class ListFragment : Fragment(), ListView {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.filter -> {
-                // open search dialog
                 viewModel.setInitialSearchDialog()
             }
         }
