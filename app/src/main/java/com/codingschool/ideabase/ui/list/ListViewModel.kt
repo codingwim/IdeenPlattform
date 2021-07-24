@@ -6,9 +6,7 @@ import com.codingschool.ideabase.R
 import com.codingschool.ideabase.model.data.Category
 import com.codingschool.ideabase.model.data.PostIdeaRating
 import com.codingschool.ideabase.model.remote.IdeaApi
-import com.codingschool.ideabase.utils.NEW_IDEA
-import com.codingschool.ideabase.utils.NO_SEARCH_QUERY
-import com.codingschool.ideabase.utils.Preferences
+import com.codingschool.ideabase.utils.*
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.addTo
@@ -33,7 +31,7 @@ class ListViewModel(
 
     fun init() {
 
-        Log.d("observer_ex", "toporall $topOrAll")
+        //Log.d("observer_ex", "toporall $topOrAll")
         // set initial adapter list here
         getdeasToAdapter(emptyList(), NO_SEARCH_QUERY)
         adapter.addIdeaClickListener {
@@ -195,7 +193,17 @@ class ListViewModel(
                             it.category.id in listOfSearchCategories
                         } else list
                 // search list now filtered with selected categories
-                adapter.updateList(listFromSearch)
+                val sortedList = when(topOrAll) {
+                    // TODO add average cal or map  sum and count...
+                    true -> {
+                        listFromSearch.sortedWith(compareBy { it.author.id })
+                    }
+                    false -> {
+                        listFromSearch.sortedWith(compareBy { it.id })
+                    }
+
+                }
+                adapter.updateList(sortedList)
 
             }, { t ->
                 val responseMessage = t.message

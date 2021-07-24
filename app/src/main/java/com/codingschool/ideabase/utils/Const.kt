@@ -13,3 +13,6 @@ const val NO_SEARCH_QUERY ="id"
 
 const val NEW_IDEA = true
 const val EDIT_IDEA = false
+
+const val TOP_RANKED = true
+const val ALL_IDEAS = false

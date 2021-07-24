@@ -56,7 +56,12 @@ class ListFragment : Fragment(), ListView {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        fab = binding.fab
+        // get main activity view to access fab / toolbar
+        val activityView = requireActivity().findViewById<View>(android.R.id.content)
+
+        // set fab button
+        fab = activityView.findViewById(R.id.fab)
+        fab.show()
         fab.setOnClickListener {
             viewModel.addIdeaClicked()
         }
