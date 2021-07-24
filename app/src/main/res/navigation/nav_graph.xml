@@ -9,13 +9,37 @@
         android:id="@+id/navigation_top_ranked"
         android:name="com.codingschool.ideabase.ui.list.ListFragment"
         android:label="@string/top_ranked"
-        tools:layout="@layout/fragment_list" />
+        tools:layout="@layout/fragment_list" >
+        <action
+            android:id="@+id/toDetail"
+            app:destination="@id/detailFragment" />
+        <action
+            android:id="@+id/toEditNewIdea"
+            app:destination="@id/newEditIdeaFragment" />
+        <argument
+            android:name="topOrAll"
+            app:argType="boolean"
+            android:defaultValue="true"
+            />
+    </fragment>
 
     <fragment
         android:id="@+id/navigation_ideas"
         android:name="com.codingschool.ideabase.ui.list.ListFragment"
         android:label="@string/ideas_bottom_nav"
-        tools:layout="@layout/fragment_list" />
+        tools:layout="@layout/fragment_list" >
+        <action
+            android:id="@+id/toDetail"
+            app:destination="@id/detailFragment" />
+        <action
+            android:id="@+id/toEditNewIdea"
+            app:destination="@id/newEditIdeaFragment" />
+        <argument
+            android:name="topOrAll"
+            app:argType="boolean"
+            android:defaultValue="false"
+            />
+    </fragment>
 
     <fragment
         android:id="@+id/navigation_profile"
@@ -46,5 +70,21 @@
         <action
             android:id="@+id/toLogin"
             app:destination="@id/loginFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/detailFragment"
+        android:name="com.codingschool.ideabase.ui.detail.DetailFragment"
+        android:label="DetailFragment" >
+        <argument
+            android:name="id"
+            app:argType="string" />
+    </fragment>
+    <fragment
+        android:id="@+id/newEditIdeaFragment"
+        android:name="com.codingschool.ideabase.ui.neweditidea.NewEditIdeaFragment"
+        android:label="NewEditIdeaFragment" >
+        <argument
+            android:name="newIdea"
+            app:argType="boolean" />
     </fragment>
 </navigation>

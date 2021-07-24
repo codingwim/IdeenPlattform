@@ -1,24 +1,27 @@
 package com.codingschool.ideabase
 
-import android.content.Context
-import android.content.SharedPreferences
+import android.media.Image
 import androidx.room.Room
 import com.ashokvarma.gander.GanderInterceptor
 import com.codingschool.ideabase.model.data.room.AppDataBase
 import com.codingschool.ideabase.model.remote.IdeaApi
+import com.codingschool.ideabase.model.remote.ImageHandler
+import com.codingschool.ideabase.ui.detail.DetailViewModel
 import com.codingschool.ideabase.ui.list.IdeaListAdapter
 import com.codingschool.ideabase.ui.list.ListViewModel
 import com.codingschool.ideabase.ui.login.LoginViewModel
+import com.codingschool.ideabase.ui.neweditidea.NewEditIdeaFragment
+import com.codingschool.ideabase.ui.neweditidea.NewEditIdeaViewModel
 import com.codingschool.ideabase.ui.register.RegisterViewModel
 import com.codingschool.ideabase.utils.Preferences
 import com.codingschool.ideabase.utils.baseUrl
+import com.squareup.picasso.OkHttp3Downloader
+import com.squareup.picasso.Picasso
 import io.reactivex.schedulers.Schedulers
-import okhttp3.Credentials
 import okhttp3.OkHttpClient
 import org.koin.android.ext.koin.androidApplication
 import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
-import org.koin.java.KoinJavaComponent.inject
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
@@ -71,10 +74,14 @@ val appModule = module {
             .build()
     }
 
+    single<ImageHandler> {
+        ImageHandler(androidContext(), get())
+    }
+
     factory { provideUserApi(get()) }
 
     factory<IdeaListAdapter> {
-        IdeaListAdapter()
+        IdeaListAdapter(imageHandler = get())
     }
 
     factory<LoginViewModel> { parameters ->
@@ -85,15 +92,19 @@ val appModule = module {
         RegisterViewModel(ideaApi = get())
     }
 
-    factory<ListViewModel> {
-        ListViewModel(adapter = get(),ideaApi = get(), prefs = get()      )
+    factory<ListViewModel> { parameters ->
+        ListViewModel(topOrAll = parameters.get(), adapter = get(),ideaApi = get(), prefs = get())
     }
 
+    factory<DetailViewModel> { parameters ->
+        DetailViewModel(id = parameters.get(), ideaApi = get(), prefs = get())
+    }
 
-
-
-
+    factory<NewEditIdeaViewModel> { parameters ->
+        NewEditIdeaViewModel(newIdea = parameters.get(), ideaApi = get(), prefs = get())
+    }
 }
+
 
 fun getAuthFromPrefs(prefs: Preferences) = prefs.getAuthString()
 

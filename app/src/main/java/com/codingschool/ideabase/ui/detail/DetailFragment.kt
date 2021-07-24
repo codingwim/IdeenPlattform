@@ -10,9 +10,17 @@ import com.codingschool.ideabase.R
 import com.codingschool.ideabase.databinding.FragmentDetailBinding
 import com.codingschool.ideabase.databinding.FragmentListBinding
 import com.codingschool.ideabase.ui.list.ListViewModel
+import com.codingschool.ideabase.ui.login.LoginFragmentArgs
+import com.codingschool.ideabase.ui.login.LoginViewModel
+import org.koin.android.ext.android.inject
+import org.koin.core.parameter.parametersOf
 
 class DetailFragment: Fragment(), DetailView {
-    private lateinit var viewModel: DetailViewModel
+
+    private val viewModel: DetailViewModel by inject<DetailViewModel> {
+        parametersOf(arguments?.let { DetailFragmentArgs.fromBundle(it).id })
+    }
+
     private lateinit var binding: FragmentDetailBinding
 
     override fun onCreateView(
@@ -34,8 +42,8 @@ class DetailFragment: Fragment(), DetailView {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel = DetailViewModel()
         binding.vm = viewModel
         viewModel.attachView(this)
+        viewModel.init()
     }
 }
