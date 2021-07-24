@@ -1,5 +1,6 @@
 package com.codingschool.ideabase.ui.comment
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -14,6 +15,13 @@ import com.codingschool.ideabase.utils.toast
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import org.koin.android.ext.android.inject
 import org.koin.core.parameter.parametersOf
+import android.content.Context.INPUT_METHOD_SERVICE
+import android.view.inputmethod.InputMethodManager
+import androidx.core.content.ContextCompat
+
+import androidx.core.content.ContextCompat.getSystemService
+import com.codingschool.ideabase.utils.showKeyboard
+
 
 class CommentFragment : Fragment(), CommentView {
 
@@ -51,6 +59,10 @@ class CommentFragment : Fragment(), CommentView {
         // hide fab button
         fab = activityView.findViewById(R.id.fab)
         fab.hide()
+
+        //show keyboard and focus edittext
+        binding.etComment.requestFocus()
+        requireActivity().showKeyboard(binding.etComment)
 
         binding.vm = viewModel
         viewModel.attachView(this)

@@ -5,7 +5,6 @@
     >
 
     <data>
-
         <variable
             name="vm"
             type="com.codingschool.ideabase.ui.comment.CommentViewModel" />
@@ -14,6 +13,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+
         >
 
         <ImageView
@@ -70,6 +70,7 @@
             android:layout_height="0dp"
             android:inputType="textMultiLine"
             android:hint="@string/write_comment_hint"
+            android:focusable="true"
             android:gravity="top"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

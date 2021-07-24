@@ -1,6 +1,8 @@
 package com.codingschool.ideabase.utils
 
 import android.content.Context
+import android.view.inputmethod.InputMethodManager
+import android.widget.EditText
 import android.widget.Toast
 import com.codingschool.ideabase.MyApplication
 
@@ -36,5 +38,16 @@ fun Context.getResString(any: Any): String {
         is String -> any
         else -> ""
     }
+}
+
+fun Context.showKeyboard(editText: EditText) {
+    val inputMethodManager: InputMethodManager =
+        getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+    inputMethodManager.toggleSoftInputFromWindow(
+        editText.applicationWindowToken,
+        InputMethodManager.SHOW_IMPLICIT, 0
+    )
+    editText.requestFocus()
+    editText.setSelection(editText.text.length)
 }
 
