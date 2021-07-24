@@ -1,26 +1,15 @@
 package com.codingschool.ideabase.ui.list
 
-import android.app.ActionBar
 import android.os.Bundle
 import android.text.InputType
-import android.text.Layout
-import android.util.Log
 import android.view.*
-import android.widget.AbsListView
 import android.widget.EditText
-import android.widget.LinearLayout
-import androidx.core.view.MarginLayoutParamsCompat
-import androidx.core.view.marginEnd
-import androidx.core.view.marginStart
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavDirections
 import androidx.navigation.Navigation
 import com.codingschool.ideabase.R
 import com.codingschool.ideabase.databinding.FragmentListBinding
-import com.codingschool.ideabase.ui.neweditidea.NewEditIdeaFragmentArgs
-import com.codingschool.ideabase.ui.neweditidea.NewEditIdeaViewModel
-import com.codingschool.ideabase.ui.register.RegisterFragmentDirections
 import com.codingschool.ideabase.utils.toast
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -105,8 +94,10 @@ class ListFragment : Fragment(), ListView {
         Navigation.findNavController(requireView()).navigate(action)
     }
 
-    override fun navigateToCommentFragment(id: String) {
-        TODO("Not yet implemented")
+    override fun navigateToCommentFragment(id: String, title: String) {
+        val action: NavDirections =
+            ListFragmentDirections.toComment(id)
+        Navigation.findNavController(requireView()).navigate(action)
     }
 
     override fun navigateToNewIdeaFragment(newIdea: Boolean) {

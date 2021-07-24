@@ -11,6 +11,7 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.codingschool.ideabase.databinding.ActivityMainBinding
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 class MainActivity : AppCompatActivity() {
 
@@ -27,8 +28,11 @@ class MainActivity : AppCompatActivity() {
 
         navController = findNavController(R.id.nav_host_fragment)
 
-        val appBarConfiguration = AppBarConfiguration(setOf(
-                R.id.navigation_top_ranked, R.id.navigation_ideas, R.id.navigation_profile))
+        val appBarConfiguration = AppBarConfiguration(
+            setOf(
+                R.id.navigation_top_ranked, R.id.navigation_ideas, R.id.navigation_profile
+            )
+        )
 
         setupActionBarWithNavController(navController, appBarConfiguration)
 
@@ -36,7 +40,10 @@ class MainActivity : AppCompatActivity() {
 
         navController.addOnDestinationChangedListener { controller, destination, arguments ->
             when (destination.id) {
-                R.id.loginFragment, R.id.registerFragment -> hideAppBarAndBottomNaviagtionBar(navView, actionBar)
+                R.id.loginFragment, R.id.registerFragment, R.id.commentFragment -> hideAppBarAndBottomNaviagtionBar(
+                    navView,
+                    actionBar
+                )
                 else -> showAppBarAndBottomNaviagtionBar(navView, actionBar)
             }
         }
@@ -44,7 +51,10 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    private fun showAppBarAndBottomNaviagtionBar(navView: BottomNavigationView, actionBar: ActionBar?) {
+    private fun showAppBarAndBottomNaviagtionBar(
+        navView: BottomNavigationView,
+        actionBar: ActionBar?
+    ) {
         actionBar?.show()
         navView.visibility = View.VISIBLE
     }
@@ -53,8 +63,8 @@ class MainActivity : AppCompatActivity() {
         navView: BottomNavigationView,
         actionBar: ActionBar?
     ) {
-            actionBar?.hide()
-            navView.visibility = View.INVISIBLE
+        actionBar?.hide()
+        navView.visibility = View.GONE
     }
 
 }

@@ -32,4 +32,11 @@
     <string name="title_filter_dialog">Filter search with categories</string>
     <string name="search_for_hint_dialog">search for...</string>
     <string name="contennt_description_fab_add_idea">Add Idea</string>
+    <string name="cancel_comment_contenct_description">Cancel comment</string>
+    <string name="submit_btn_comment">SUBMIT</string>
+    <string name="write_comment_hint">Write comment...</string>
+    <string name="add_comment_cancelled">Adding comment cancelled</string>
+    <string name="prof_info_will_be_visible_commenting">When you add a comment your profile information will be visible to all other registered users.</string>
+    <string name="comment_empty_error_message">Please add some text.</string>
+    <string name="thank_you_comment">Thank you for commenting!</string>
 </resources>

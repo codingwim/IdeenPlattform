@@ -34,16 +34,15 @@ class ListViewModel(
         //Log.d("observer_ex", "toporall $topOrAll")
         // set initial adapter list here
         getdeasToAdapter(emptyList(), NO_SEARCH_QUERY)
-        adapter.addIdeaClickListener {
+        adapter.addIdeaClickListener { id ->
             Log.d("observer_ex", "Idea clicked")
-            view?.navigateToDetailFragment(it)
+            view?.navigateToDetailFragment(id)
         }
-        adapter.addCommentClickListener {
-            Log.d("observer_ex", "Comment clicked")
-            view?.navigateToCommentFragment(it)
+        adapter.addCommentClickListener { id, title ->
+            Log.d("observer_ex", "comment clicked id: $id & title: $title")
+            view?.navigateToCommentFragment(id, title)
         }
         adapter.addRateClickListener { id ->
-            Log.d("observer_ex", "Rate clicked")
             getMyRatingForThisIdeaAndStartDialog(id)
 
         }

@@ -6,6 +6,7 @@ import com.ashokvarma.gander.GanderInterceptor
 import com.codingschool.ideabase.model.data.room.AppDataBase
 import com.codingschool.ideabase.model.remote.IdeaApi
 import com.codingschool.ideabase.model.remote.ImageHandler
+import com.codingschool.ideabase.ui.comment.CommentViewModel
 import com.codingschool.ideabase.ui.detail.DetailViewModel
 import com.codingschool.ideabase.ui.list.IdeaListAdapter
 import com.codingschool.ideabase.ui.list.ListViewModel
@@ -102,6 +103,11 @@ val appModule = module {
 
     factory<NewEditIdeaViewModel> { parameters ->
         NewEditIdeaViewModel(newIdea = parameters.get(), ideaApi = get(), prefs = get())
+    }
+
+    factory<CommentViewModel> { parameters ->
+        CommentViewModel(id = parameters.get(), ideaApi = get())
+        //CommentViewModel(id = parameters.get(), title = parameters.get(), ideaApi = get())
     }
 }
 

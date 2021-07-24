@@ -21,7 +21,7 @@ data class IdeaList (
     val created:String,
     val lastUpdated:String,
 
-    val commentList: CommentList,
+    val commentList: List<Comment>,
 
     val imageUrl:String,
 
