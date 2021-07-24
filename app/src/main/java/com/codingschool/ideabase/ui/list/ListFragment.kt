@@ -94,8 +94,10 @@ class ListFragment : Fragment(), ListView {
         Navigation.findNavController(requireView()).navigate(action)
     }
 
-    override fun navigateToCommentFragment(id: String) {
-        TODO("Not yet implemented")
+    override fun navigateToCommentFragment(id: String, title: String) {
+        val action: NavDirections =
+            ListFragmentDirections.toComment(id, title)
+        Navigation.findNavController(requireView()).navigate(action)
     }
 
     override fun navigateToNewIdeaFragment(newIdea: Boolean) {

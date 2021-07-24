@@ -6,10 +6,11 @@ import androidx.databinding.Bindable
 import com.codingschool.ideabase.model.remote.IdeaApi
 import com.codingschool.ideabase.utils.Preferences
 import io.reactivex.disposables.CompositeDisposable
+import kotlinx.coroutines.channels.ticker
 
 class CommentViewModel (
-    id: String,
-    title: String,
+    private val id: String,
+    private val title: String,
     private val ideaApi: IdeaApi
 ) :
     BaseObservable() {
@@ -19,6 +20,7 @@ class CommentViewModel (
     private val compositeDisposable = CompositeDisposable()
 
     fun init() {
+        view?.setTitle(title)
     }
 
     fun attachView(view: CommentView) {
@@ -29,7 +31,7 @@ class CommentViewModel (
     var comment: String = ""
 
     fun onCommentTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-        if (count > 0) view?.resetCommentEmptyError()
+        if (count > 0 && count < 3) view?.setTitle(title)
     }
 
     fun onSubmitClick() {

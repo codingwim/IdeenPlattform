@@ -21,6 +21,9 @@
             app:argType="boolean"
             android:defaultValue="true"
             />
+        <action
+            android:id="@+id/toComment"
+            app:destination="@id/commentFragment" />
     </fragment>
 
     <fragment
@@ -39,6 +42,9 @@
             app:argType="boolean"
             android:defaultValue="false"
             />
+        <action
+            android:id="@+id/toComment"
+            app:destination="@id/commentFragment" />
     </fragment>
 
     <fragment
@@ -78,6 +84,9 @@
         <argument
             android:name="id"
             app:argType="string" />
+        <action
+            android:id="@+id/toComment"
+            app:destination="@id/commentFragment" />
     </fragment>
     <fragment
         android:id="@+id/newEditIdeaFragment"
@@ -86,5 +95,16 @@
         <argument
             android:name="newIdea"
             app:argType="boolean" />
+    </fragment>
+    <fragment
+        android:id="@+id/commentFragment"
+        android:name="com.codingschool.ideabase.ui.comment.CommentFragment"
+        android:label="CommentFragment" >
+        <argument
+            android:name="id"
+            app:argType="string" />
+        <argument
+            android:name="title"
+            app:argType="string" />
     </fragment>
 </navigation>

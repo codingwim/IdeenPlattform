@@ -12,14 +12,14 @@ class IdeaListAdapter(private val imageHandler: ImageHandler): RecyclerView.Adap
 
     private var list: List<Idea> = emptyList()
     lateinit var ideaClickListener: (String) -> Unit
-    lateinit var commentClickListener: (String) -> Unit
+    lateinit var commentClickListener: (String, String) -> Unit
     lateinit var rateClickListener: (String) -> Unit
 
     class IdeaViewHolder(private val binding: IdeaItemBinding, private val imageHandler: ImageHandler ): RecyclerView.ViewHolder(binding.root) {
         fun setBinding(
             idea: Idea,
             ideaClickListener: (String) -> Unit,
-            commentClickListener: (String) -> Unit,
+            commentClickListener: (String, String) -> Unit,
             rateClickListener: (String) -> Unit
         ) {
             binding.tvIdeaTitle.text = idea.title //+ " R:" + idea.avgRating.toString()
@@ -31,7 +31,7 @@ class IdeaListAdapter(private val imageHandler: ImageHandler): RecyclerView.Adap
                 ideaClickListener(idea.id)
             }
             binding.btComment.setOnClickListener {
-                commentClickListener(idea.id)
+                commentClickListener(idea.id, idea.title)
             }
             binding.btRate.setOnClickListener {
                 rateClickListener(idea.id)
@@ -91,7 +91,7 @@ class IdeaListAdapter(private val imageHandler: ImageHandler): RecyclerView.Adap
         this.ideaClickListener = listener
     }
 
-    fun addCommentClickListener(listener: (String) -> Unit) {
+    fun addCommentClickListener(listener: (String, String) -> Unit) {
         this.commentClickListener = listener
     }
 

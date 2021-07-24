@@ -11,6 +11,7 @@ import com.codingschool.ideabase.databinding.FragmentCommentBinding
 import com.codingschool.ideabase.ui.login.LoginFragmentArgs
 import com.codingschool.ideabase.utils.getResString
 import com.codingschool.ideabase.utils.toast
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import org.koin.android.ext.android.inject
 import org.koin.core.parameter.parametersOf
 
@@ -19,10 +20,12 @@ class CommentFragment : Fragment(), CommentView {
     private val viewModel: CommentViewModel by inject<CommentViewModel> {
         parametersOf(
             arguments?.let { CommentFragmentArgs.fromBundle(it).id })
-        parametersOf(arguments?.let { CommentFragmentArgs.fromBundle(it).title })
+        parametersOf(
+            arguments?.let { CommentFragmentArgs.fromBundle(it).title })
     }
 
     private lateinit var binding: FragmentCommentBinding
+    private lateinit var fab: FloatingActionButton
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -43,6 +46,12 @@ class CommentFragment : Fragment(), CommentView {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        val activityView = requireActivity().findViewById<View>(android.R.id.content)
+
+        // hide fab button
+        fab = activityView.findViewById(R.id.fab)
+        fab.hide()
+
         binding.vm = viewModel
         viewModel.attachView(this)
         viewModel.init()
@@ -52,12 +61,12 @@ class CommentFragment : Fragment(), CommentView {
         requireActivity().toast(any)
     }
 
-    override fun resetCommentEmptyError() {
-        binding.tilComment.error = null
+    override fun setCommentEmptyError(any: Any) {
+        binding.tvCommentTitle.text = requireActivity().getResString(any)
     }
 
-    override fun setCommentEmptyError(any: Any) {
-        binding.tilComment.error = requireActivity().getResString(any)
+    override fun setTitle(title: String) {
+        binding.tvCommentTitle.text = "Idea: " + title
     }
 
 }
