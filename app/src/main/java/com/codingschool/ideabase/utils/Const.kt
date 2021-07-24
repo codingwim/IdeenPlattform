@@ -16,3 +16,6 @@ const val EDIT_IDEA = false
 
 const val TOP_RANKED = true
 const val ALL_IDEAS = false
+
+// here we can set the minimum amoutn of ratings an idea needs, to be included on the top ranked screen
+const val MIN_NUM_RATINGS_SHOW_IDEA_ON_TOP_RANKED = 1

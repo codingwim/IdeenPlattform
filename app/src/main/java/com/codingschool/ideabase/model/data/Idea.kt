@@ -31,8 +31,15 @@ data class Idea(
 
     val ratings: List<IdeaRating>
 
-    )
-{
+) {
 
-    fun Author() = author.firstname + " " + author.lastname
+    val authorName: String
+        get() = author.firstname + " " + author.lastname
+
+    val numberOfRatings: Int
+        get() = ratings.size
+
+    val avgRating: Double
+        get() = if (numberOfRatings > 0) ratings.map { it.rating }.average()
+        else 0.0
 }

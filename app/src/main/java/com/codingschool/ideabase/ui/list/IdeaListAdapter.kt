@@ -22,8 +22,8 @@ class IdeaListAdapter(private val imageHandler: ImageHandler): RecyclerView.Adap
             commentClickListener: (String) -> Unit,
             rateClickListener: (String) -> Unit
         ) {
-            binding.tvIdeaTitle.text = idea.title
-            binding.tvAuthor.text = idea.Author()
+            binding.tvIdeaTitle.text = idea.title //+ " R:" + idea.avgRating.toString()
+            binding.tvAuthor.text = idea.authorName
             binding.tvIdeaDescription.text = idea.description
             imageHandler.getProfilePic(idea.author.profilePicture, binding.ivProfilePicture)
             imageHandler.getIdeaImage(idea.imageUrl, binding.ivIdea)

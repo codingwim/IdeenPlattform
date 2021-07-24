@@ -62,7 +62,7 @@ class ListViewModel(
                 Log.d("observer_ex", "ratingGiven : $ratingGiven")
                 val ratingItem = ratingGiven ?: -1
                 Log.d("observer_ex", "ratingItem : $ratingItem")
-                view?.showPopupRatingDialog(id, ratingArray, ratingItem)
+                view?.showPopupRatingDialog(id, ratingArray, ratingItem-1)
             }, { t ->
                 val responseMessage = t.message
                 if (responseMessage != null) {
@@ -193,13 +193,15 @@ class ListViewModel(
                             it.category.id in listOfSearchCategories
                         } else list
                 // search list now filtered with selected categories
+                Log.d("observer_ex", "sorting by $topOrAll ")
                 val sortedList = when(topOrAll) {
                     // TODO add average cal or map  sum and count...
                     true -> {
-                        listFromSearch.sortedWith(compareBy { it.author.id })
+                        listFromSearch.filter {it.numberOfRatings >= MIN_NUM_RATINGS_SHOW_IDEA_ON_TOP_RANKED }.sortedWith(
+                            compareByDescending { it.avgRating })
                     }
                     false -> {
-                        listFromSearch.sortedWith(compareBy { it.id })
+                        listFromSearch.sortedWith(compareByDescending { it.created })
                     }
 
                 }

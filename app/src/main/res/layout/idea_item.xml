@@ -52,18 +52,21 @@
 
                     <TextView
                         android:id="@+id/tvIdeaTitle"
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/margin_large"
-                        android:maxLines="2"
+                        android:layout_marginEnd="16dp"
+                        android:lines="2"
+                        android:ellipsize="end"
                         android:textSize="@dimen/text_medium22"
                         card_view:layout_constraintStart_toEndOf="@+id/ivProfilePicture"
                         card_view:layout_constraintTop_toTopOf="@+id/ivProfilePicture"
-                        tools:text="Idea #1 lorem ipsum " />
+                        card_view:layout_constraintEnd_toEndOf="parent"
+                        tools:text="Idea #1 lorem ipsum nostr rorum " />
 
                     <TextView
                         android:id="@+id/tvAuthor"
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:textSize="@dimen/text_medium18"
                         card_view:layout_constraintBottom_toBottomOf="@id/ivProfilePicture"
