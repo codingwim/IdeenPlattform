@@ -39,6 +39,7 @@ class ListViewModel(
             view?.navigateToDetailFragment(id)
         }
         adapter.addCommentClickListener { id, title ->
+            Log.d("observer_ex", "comment clicked id: $id & title: $title")
             view?.navigateToCommentFragment(id, title)
         }
         adapter.addRateClickListener { id ->

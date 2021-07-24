@@ -106,7 +106,8 @@ val appModule = module {
     }
 
     factory<CommentViewModel> { parameters ->
-        CommentViewModel(id = parameters.get(), title = parameters.get(), ideaApi = get())
+        CommentViewModel(id = parameters.get(), ideaApi = get())
+        //CommentViewModel(id = parameters.get(), title = parameters.get(), ideaApi = get())
     }
 }
 

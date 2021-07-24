@@ -6,4 +6,5 @@ interface CommentView {
      fun showToast(any: Any)
      fun setCommentEmptyError(any: Any)
      fun setTitle(title: String)
+     fun navigateBack()
 }

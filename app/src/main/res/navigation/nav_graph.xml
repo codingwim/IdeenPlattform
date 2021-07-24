@@ -103,8 +103,5 @@
         <argument
             android:name="id"
             app:argType="string" />
-        <argument
-            android:name="title"
-            app:argType="string" />
     </fragment>
 </navigation>

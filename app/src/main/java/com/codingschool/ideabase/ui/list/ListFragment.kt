@@ -96,7 +96,7 @@ class ListFragment : Fragment(), ListView {
 
     override fun navigateToCommentFragment(id: String, title: String) {
         val action: NavDirections =
-            ListFragmentDirections.toComment(id, title)
+            ListFragmentDirections.toComment(id)
         Navigation.findNavController(requireView()).navigate(action)
     }
 
