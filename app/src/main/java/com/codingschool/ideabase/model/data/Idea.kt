@@ -1,11 +1,6 @@
 package com.codingschool.ideabase.model.data
 
-import androidx.room.ColumnInfo
-import androidx.room.Embedded
-import androidx.room.Entity
 import androidx.room.PrimaryKey
-import org.w3c.dom.Comment
-
 //@Entity(tableName = "idea")
 data class Idea(
 
