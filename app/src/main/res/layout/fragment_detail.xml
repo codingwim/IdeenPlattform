@@ -13,7 +13,68 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        app:layout_constraintHorizontal_chainStyle="packed"
         tools:context=".ui.detail.DetailFragment">
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/ivIdea"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:scaleType="centerCrop"
+            app:layout_constraintBottom_toTopOf="@id/tvIdeaTitle"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/idea_image" />
 
+        <TextView
+            android:id="@+id/tvIdeaTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/margin_large"
+            android:maxLines="4"
+            android:ellipsize="end"
+            android:textStyle="bold"
+            android:textSize="@dimen/text_large24"
+            app:layout_constraintBottom_toTopOf="@id/tvAuthor"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/ivIdea"
+            tools:text="Idea lorem ipsum nostr rorum " />
+
+        <TextView
+            android:id="@+id/tvAuthor"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/margin_large"
+            android:textSize="@dimen/text_medium18"
+            app:layout_constraintBottom_toTopOf="@id/tvCategory"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tvIdeaTitle"
+            tools:text="Jane Doe " />
+
+        <TextView
+            android:id="@+id/tvCategory"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/margin_large"
+            android:textSize="@dimen/text_medium22"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@id/tvIdeaDescription"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tvAuthor"
+            tools:text="Category: childcare " />
+
+        <TextView
+            android:id="@+id/tvIdeaDescription"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/margin_large"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tvCategory"
+            tools:text="@string/long_lorem_ipsum" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
