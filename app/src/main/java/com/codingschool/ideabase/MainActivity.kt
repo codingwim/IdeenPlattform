@@ -47,8 +47,6 @@ class MainActivity : AppCompatActivity() {
                 else -> showAppBarAndBottomNaviagtionBar(navView, actionBar)
             }
         }
-
-
     }
 
     private fun showAppBarAndBottomNaviagtionBar(
