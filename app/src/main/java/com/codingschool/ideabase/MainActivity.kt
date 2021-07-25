@@ -67,4 +67,8 @@ class MainActivity : AppCompatActivity() {
         navView.visibility = View.GONE
     }
 
+    override fun onSupportNavigateUp(): Boolean {
+        return navController.navigateUp()
+    }
+
 }

@@ -28,4 +28,6 @@
     <dimen name="text_large24">24sp</dimen>
     <dimen name="text_xlarge28">28sp</dimen>
 
+    <dimen name="title_toolbar">16sp</dimen>
+
 </resources>
