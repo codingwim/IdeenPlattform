@@ -43,9 +43,9 @@ class DetailViewModel(
             .subscribe({ idea ->
                 // set idea name in title
                 view?.setTtitle(idea.title)
-                // first set the menu options: no menu when release // no "release" when not manager
-                if (idea.released) view?.hideMenu()
-                else if (prefs.isManager()) view?.addReleaseMenuItem()
+                // first set the menu options: add release if manager // no menu when released OR not owner // not "release" and owner sees Edit/delete
+                if (prefs.isManager()) view?.addReleaseMenuItem()
+                else if (idea.released or (prefs.getMyId() != idea.author.id)) view?.hideMenu()
                 // now set all the bindable details, including image
                 view?.setIdeaImage(idea.imageUrl)
                 ideaTitle = idea.title
