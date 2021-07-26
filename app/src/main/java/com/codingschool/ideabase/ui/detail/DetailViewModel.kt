@@ -5,6 +5,7 @@ import androidx.databinding.BaseObservable
 import androidx.databinding.Bindable
 import androidx.databinding.library.baseAdapters.BR
 import com.codingschool.ideabase.R
+import com.codingschool.ideabase.model.data.UpdateReleased
 import com.codingschool.ideabase.model.remote.IdeaApi
 import com.codingschool.ideabase.utils.Preferences
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -80,25 +81,51 @@ class DetailViewModel(
                             "HTTP 404",
                             ignoreCase = true
                         )
-                    ) view?.showToast("Some parameter was missing. Adding comment failed.")
+                    ) view?.showToast("Some parameter was missing. Deleting idea failed.")
                     else if (responseMessage.contains(
                             "HTTP 400",
                             ignoreCase = true
                         )
-                    ) view?.showToast("Idea was not found. Adding comment failed.")
+                    ) view?.showToast("Idea was not found. Deleting idea failed.")
                     else view?.showToast(R.string.network_issue_check_network)
                 }
-                Log.e("observer_ex", "exception adding comment: $t")
+                Log.e("observer_ex", "exception deleting idea: $t")
             }).addTo(compositeDisposable)
 
     }
 
     fun editIdea() {
-        TODO("Not yet implemented")
+        view?.navigateToEditFragment(id)
     }
 
     fun releaseIdea() {
-        TODO("Not yet implemented")
+        val updateReleased = UpdateReleased(true)
+        ideaApi.releaseIdea(id, updateReleased)
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({
+                // todo add snacker with UNDO option ORRRRR warning message before releasing
+                view?.showToast("Idea has been released")
+                // TODO remove complete menu on release ?
+                view?.removeReleaseMenuItem()
+                view?.removeEditMenuItem()
+            }, { t ->
+                val responseMessage = t.message
+                // TODO check response options
+                if (responseMessage != null) {
+                    if (responseMessage.contains(
+                            "HTTP 404",
+                            ignoreCase = true
+                        )
+                    ) view?.showToast("Some parameter was missing. Release idea failed.")
+                    else if (responseMessage.contains(
+                            "HTTP 400",
+                            ignoreCase = true
+                        )
+                    ) view?.showToast("Idea was not found. Release idea failed failed.")
+                    else view?.showToast(R.string.network_issue_check_network)
+                }
+                Log.e("observer_ex", "exception releasing idea: $t")
+            }).addTo(compositeDisposable)
     }
 
     @get:Bindable

@@ -17,7 +17,7 @@ import org.koin.core.parameter.parametersOf
 class NewEditIdeaFragment: Fragment(), NewEditIdeaView {
 
     private val viewModel: NewEditIdeaViewModel by inject<NewEditIdeaViewModel> {
-        parametersOf(arguments?.let { NewEditIdeaFragmentArgs.fromBundle(it).newIdea })
+        parametersOf(arguments?.let { NewEditIdeaFragmentArgs.fromBundle(it).editIdea })
     }
 
 

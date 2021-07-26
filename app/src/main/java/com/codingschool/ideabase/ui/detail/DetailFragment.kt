@@ -4,11 +4,13 @@ import android.os.Bundle
 import android.view.*
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.navigation.NavDirections
 import androidx.navigation.Navigation
 import com.codingschool.ideabase.R
 import com.codingschool.ideabase.databinding.FragmentDetailBinding
 import com.codingschool.ideabase.databinding.FragmentListBinding
 import com.codingschool.ideabase.model.remote.ImageHandler
+import com.codingschool.ideabase.ui.list.ListFragmentDirections
 import com.codingschool.ideabase.ui.list.ListViewModel
 import com.codingschool.ideabase.ui.login.LoginFragmentArgs
 import com.codingschool.ideabase.ui.login.LoginViewModel
@@ -72,6 +74,22 @@ class DetailFragment: Fragment(), DetailView {
         Navigation.findNavController(requireView()).navigateUp()
     }
 
+    override fun navigateToEditFragment(id: String) {
+            val action: NavDirections =
+                DetailFragmentDirections.toEditNewIdea(id)
+            Navigation.findNavController(requireView()).navigate(action)
+    }
+
+    override fun removeReleaseMenuItem() {
+        // idea released, hide delete menu item
+        TODO("Not yet implemented")
+    }
+
+    override fun removeEditMenuItem() {
+        // TODO or hode menu after release ?? as user cannot edit, delete anymore ?
+        TODO("Not yet implemented")
+    }
+
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.menu_idea_detail, menu)
     }
@@ -79,7 +97,7 @@ class DetailFragment: Fragment(), DetailView {
     override fun onPrepareOptionsMenu(menu: Menu) {
         super.onPrepareOptionsMenu(menu)
 
-        // if NOT loggedin user admin, hide release menu item
+        // if NOT (admin ), hide release menu item
 
         // if idea released, hide delete menu item
     }

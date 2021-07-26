@@ -254,6 +254,6 @@ class ListViewModel(
     }
 
     fun addIdeaClicked() {
-        view?.navigateToNewIdeaFragment(NEW_IDEA)
+        view?.navigateToNewIdeaFragment()
     }
 }
