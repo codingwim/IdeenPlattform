@@ -12,23 +12,140 @@
     </data>
 
 
-<androidx.constraintlayout.widget.ConstraintLayout
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".ui.profile.ProfileFragment">
-
-    <TextView
-        android:id="@+id/text_notifications"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:textAlignment="center"
-        android:textSize="20sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-</androidx.constraintlayout.widget.ConstraintLayout>
+        android:layout_height="match_parent"
+        tools:context=".ui.profile.ProfileFragment">
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/ivProfilePicture"
+            android:layout_width="140dp"
+            android:layout_height="140dp"
+            android:layout_margin="@dimen/margin_large"
+            android:scaleType="centerCrop"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/guideline"
+            app:layout_constraintTop_toTopOf="parent"
+            app:shapeAppearanceOverlay="@style/circleImageView"
+            app:srcCompat="@drawable/profile_pic"
+            app:strokeColor="@color/yellow"
+            app:strokeWidth="1dp"
+
+            />
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_percent="0.35"/>
+        <TextView
+            android:id="@+id/tvUserNameFL"
+            android:text="Wim Niko"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/guideline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/margin_large">
+
+        </TextView>
+
+        <TextView
+            android:id="@+id/tvUserMail"
+            android:text="Wim@Niko.com"
+
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tvUserNameFL"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_small">
+
+        </TextView>
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline2"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_percent="0.55"/>
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guidelineVert"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.05"/>
+        <TextView
+            android:id="@+id/tvFName"
+            android:text="FirstName:"
+            android:layout_marginEnd="@dimen/margin_large"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="@id/guidelineVert"
+            app:layout_constraintTop_toBottomOf="@+id/guideline2"
+            >
+
+        </TextView>
+        <TextView
+            android:id="@+id/tvFName2"
+            android:text="Wim"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toEndOf="@+id/tvFName"
+            android:layout_marginStart="@dimen/margin_large"
+            app:layout_constraintTop_toBottomOf="@+id/guideline2"
+            >
+
+        </TextView>
+
+        <TextView
+            android:id="@+id/tvLName"
+            android:text="LastName:"
+            android:layout_marginEnd="@dimen/margin_large"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="@+id/guidelineVert"
+            app:layout_constraintTop_toBottomOf="@+id/tvFName"
+            >
+
+        </TextView>
+        <TextView
+            android:id="@+id/tvLName2"
+            android:text="Niko"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toEndOf="@+id/tvFName"
+            android:layout_marginStart="@dimen/margin_large"
+            app:layout_constraintTop_toBottomOf="@+id/tvFName"
+            >
+
+        </TextView>
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline3"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_percent="0.7"/>
+
+        <TextView
+            android:id="@+id/tvRolle"
+            android:text="Role:"
+            android:layout_marginEnd="@dimen/margin_large"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="@+id/guidelineVert"
+            app:layout_constraintTop_toBottomOf="@+id/guideline3"/>
+        <TextView
+            android:id="@+id/tvRole2"
+            android:text="Ideenmanager"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toEndOf="@+id/tvFName"
+            android:layout_marginStart="@dimen/margin_large"
+            app:layout_constraintTop_toBottomOf="@+id/guideline3"
+            >
+
+        </TextView>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
