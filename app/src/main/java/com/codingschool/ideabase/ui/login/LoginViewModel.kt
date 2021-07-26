@@ -68,6 +68,7 @@ class LoginViewModel(
                 view?.showToast("Hi ${user.firstname}")
                 // TODO we could put the users firstname, etc in sharedprefs if we need to
                 prefs.setMyId(user.id)
+                prefs.setManager(user.isManager)
                 view?.navigateToTopRankedFragment()
                 //Log.d("observer_ex", "Current logged in user: ${user.firstname}")
             }, { t ->

@@ -45,7 +45,7 @@ class DetailViewModel(
                 view?.setTtitle(idea.title)
                 // first set the menu options: no menu when release // no "release" when not manager
                 if (idea.released) view?.hideMenu()
-                else if (idea.author.isManager) view?.addReleaseMenuItem()
+                else if (prefs.isManager()) view?.addReleaseMenuItem()
                 // now set all the bindable details, including image
                 view?.setIdeaImage(idea.imageUrl)
                 ideaTitle = idea.title

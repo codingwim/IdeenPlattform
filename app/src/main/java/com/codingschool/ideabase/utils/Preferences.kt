@@ -5,6 +5,7 @@ import android.content.SharedPreferences
 import com.codingschool.ideabase.utils.Keys.BASE_AUTH_STRING
 import com.codingschool.ideabase.utils.Keys.MY_ID
 import com.codingschool.ideabase.utils.Keys.PREF_NAME
+import com.codingschool.ideabase.utils.Keys.USER_IS_MANAGER
 
 class Preferences(
     context: Context
@@ -24,6 +25,12 @@ class Preferences(
         preferences.edit().putString(MY_ID,id).apply()
     }
 
+    fun isManager() = preferences.getBoolean(USER_IS_MANAGER, false)
+
+    fun setManager(isManager: Boolean) {
+        preferences.edit().putBoolean(USER_IS_MANAGER,isManager).apply()
+    }
+
 
 
 }
@@ -32,4 +39,5 @@ object Keys {
     const val PREF_NAME = "sharedpreferences"
     const val BASE_AUTH_STRING = "basic_auth_string"
     const val MY_ID = "logged_in_user_id"
+    const val USER_IS_MANAGER = "is_user_manager"
 }
