@@ -13,6 +13,7 @@ import io.reactivex.rxkotlin.addTo
 
 class DetailViewModel(
     private val id: String,
+    val adapter: CommentListAdapter,
     private val ideaApi: IdeaApi,
     private val prefs: Preferences
 ) : BaseObservable() {
@@ -40,7 +41,7 @@ class DetailViewModel(
                 notifyPropertyChanged(BR.ideaAuthor)
                 notifyPropertyChanged(BR.ideaCategory)
                 notifyPropertyChanged(BR.ideaDescritpion)
-
+                adapter.updateList(idea.comments)
             }, { t ->
                 val responseMessage = t.message
                 if (responseMessage != null) {

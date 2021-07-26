@@ -54,6 +54,7 @@ class DetailFragment: Fragment(), DetailView {
         fab.hide()
 
         binding.vm = viewModel
+        binding.rvComments.adapter = viewModel.adapter
         viewModel.attachView(this)
         viewModel.init()
     }
