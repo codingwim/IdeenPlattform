@@ -31,11 +31,11 @@ class DetailViewModel(
         //get idea with api, and set the bindables, set menu items, set comment ist
         view?.setTtitle("Idea:")
         getIdeaAndShow()
-        adapter.addCommentClickListener {  id ->
+        adapter.addCommentClickListener { id ->
             Log.d("observer_ex", "Comment with id $id clicked")
 
         }
-        }
+    }
 
     private fun getIdeaAndShow() {
         ideaApi.getIdeaById(id)
@@ -48,7 +48,7 @@ class DetailViewModel(
                 else if (idea.author.isManager) view?.addReleaseMenuItem()
                 // now set all the bindable details, including image
                 view?.setIdeaImage(idea.imageUrl)
-                ideaTitle=idea.title
+                ideaTitle = idea.title
                 ideaAuthor = idea.authorName
                 // TODO locale check to get correct language category
                 ideaCategory = idea.category.name_en
@@ -149,12 +149,12 @@ class DetailViewModel(
     var ideaTitle: String = ""
 
     @get:Bindable
-    var ideaAuthor: String =""
+    var ideaAuthor: String = ""
 
     @get:Bindable
     var ideaCategory: String = ""
 
     @get:Bindable
-    var ideaDescritpion: String =""
+    var ideaDescritpion: String = ""
 
 }

@@ -2,7 +2,6 @@ package com.codingschool.ideabase.ui.detail
 
 import android.os.Bundle
 import android.view.*
-import androidx.appcompat.app.ActionBar
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavDirections
@@ -10,12 +9,7 @@ import androidx.navigation.Navigation
 import com.codingschool.ideabase.MainActivity
 import com.codingschool.ideabase.R
 import com.codingschool.ideabase.databinding.FragmentDetailBinding
-import com.codingschool.ideabase.databinding.FragmentListBinding
 import com.codingschool.ideabase.model.remote.ImageHandler
-import com.codingschool.ideabase.ui.list.ListFragmentDirections
-import com.codingschool.ideabase.ui.list.ListViewModel
-import com.codingschool.ideabase.ui.login.LoginFragmentArgs
-import com.codingschool.ideabase.ui.login.LoginViewModel
 import com.codingschool.ideabase.utils.toast
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import org.koin.android.ext.android.inject
@@ -109,7 +103,6 @@ class DetailFragment: Fragment(), DetailView {
         super.onPrepareOptionsMenu(menu)
         // if  admin, add release menu item
         menu.findItem(R.id.release)?.setEnabled(menuWithRelease)
-
         // if idea released, hide  menu item done with hide and hideMenu()
     }
 

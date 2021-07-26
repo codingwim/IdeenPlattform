@@ -12,7 +12,6 @@ class CommentListAdapter: RecyclerView.Adapter<CommentListAdapter.CommentViewHol
     private var list: List<Comment> = emptyList()
     lateinit var commentClickListener: (String) -> Unit
 
-
     class CommentViewHolder(private val binding: CommentItemBinding): RecyclerView.ViewHolder(binding.root) {
         fun setBinding(
             comment: Comment,
@@ -20,6 +19,9 @@ class CommentListAdapter: RecyclerView.Adapter<CommentListAdapter.CommentViewHol
         ) {
             binding.tvCommentAuthor.text = comment.authorName
             binding.tvComment.text = comment.message
+            binding.root.setOnClickListener{
+                commentClickListener(comment.id)
+            }
         }
     }
 
@@ -51,7 +53,6 @@ class CommentListAdapter: RecyclerView.Adapter<CommentListAdapter.CommentViewHol
                 }
             }
         )
-
         list = newList
         diffResult.dispatchUpdatesTo(this)
     }
