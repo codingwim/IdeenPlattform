@@ -84,15 +84,19 @@ class DetailFragment: Fragment(), DetailView {
         setHasOptionsMenu(false)
     }
 
+    override fun hideCommentTitle() {
+        binding.tvCommentTitle.visibility = View.GONE
+    }
+
     override fun removeReleaseMenuItem() {
         // idea released, hide delete menu item
         // todo addmenu item might be easier ?
-        TODO("Not yet implemented")
+
     }
 
     override fun removeEditMenuItem() {
-        // TODO or hode menu after release ?? as user cannot edit, delete anymore ?
-        TODO("Not yet implemented")
+
+
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {

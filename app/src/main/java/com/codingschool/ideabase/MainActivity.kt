@@ -44,6 +44,7 @@ class MainActivity : AppCompatActivity() {
                     navView,
                     actionBar
                 )
+                /*R.id.detailFragment -> actionBar?.hide()*/
                 else -> showAppBarAndBottomNaviagtionBar(navView, actionBar)
             }
         }

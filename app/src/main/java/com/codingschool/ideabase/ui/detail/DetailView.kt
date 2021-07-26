@@ -6,6 +6,7 @@ interface DetailView {
     fun navigateBack()
     fun navigateToEditFragment(id: String)
     fun hideMenu()
+    fun hideCommentTitle()
     fun removeReleaseMenuItem()
     fun removeEditMenuItem()
 }

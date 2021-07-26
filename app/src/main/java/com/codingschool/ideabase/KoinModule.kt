@@ -107,7 +107,7 @@ val appModule = module {
     }
 
     factory<NewEditIdeaViewModel> { parameters ->
-        NewEditIdeaViewModel(newIdea = parameters.get(), ideaApi = get(), prefs = get())
+        NewEditIdeaViewModel(editIdea = parameters.get(), ideaApi = get(), prefs = get())
     }
 
     factory<CommentViewModel> { parameters ->

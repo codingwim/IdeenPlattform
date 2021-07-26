@@ -42,4 +42,5 @@
     <string name="menu_detail_delete_idea">Delete idea</string>
     <string name="menu_detail_edit_idea">Edit idea</string>
     <string name="menu_detail_release_idea">Release idea</string>
+    <string name="comments_title_detail_idea">Comments</string>
 </resources>

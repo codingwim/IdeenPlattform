@@ -29,10 +29,18 @@ class DetailViewModel(
 
     fun init() {
         //get idea with api, and set the bindables, set menu items, set comment ist
+        getIdeaAndShow()
+        adapter.addCommentClickListener {  id ->
+            Log.d("observer_ex", "Comment with id $id clicked")
+
+        }
+        }
+
+    private fun getIdeaAndShow() {
         ideaApi.getIdeaById(id)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({ idea ->
-                // first set the menu options: no menu wehn release // no "release" when not manager
+                // first set the menu options: no menu when release // no "release" when not manager
                 if (idea.released) view?.hideMenu()
                 else if (!idea.author.isManager) view?.removeReleaseMenuItem()
                 // now set all the bindable details, including image
@@ -42,6 +50,7 @@ class DetailViewModel(
                 // TODO locale check to get correct language category
                 ideaCategory = idea.category.name_en
                 ideaDescritpion = idea.description
+                if (idea.comments.isEmpty()) view?.hideCommentTitle()
                 notifyPropertyChanged(BR.ideaTitle)
                 notifyPropertyChanged(BR.ideaAuthor)
                 notifyPropertyChanged(BR.ideaCategory)
@@ -69,6 +78,7 @@ class DetailViewModel(
                 }
                 Log.e("observer_ex", "exception getting idea: $t")
             }).addTo(compositeDisposable)
+
     }
 
     fun deleteIdea() {

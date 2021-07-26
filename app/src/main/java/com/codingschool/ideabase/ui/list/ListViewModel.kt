@@ -33,7 +33,7 @@ class ListViewModel(
 
         //Log.d("observer_ex", "toporall $topOrAll")
         // set initial adapter list here
-        getdeasToAdapter(emptyList(), NO_SEARCH_QUERY)
+        getIdeasToAdapter(emptyList(), NO_SEARCH_QUERY)
         adapter.addIdeaClickListener { id ->
             Log.d("observer_ex", "Idea clicked")
             view?.navigateToDetailFragment(id)
@@ -164,13 +164,13 @@ class ListViewModel(
         // Build the category search List for the filtering
         val listOfSearchCategories = getlistOfSearchCategories(checkedItems)
         //Log.d("observer_ex", "selectedItems: $searchCategoryString ")
-        getdeasToAdapter(
+        getIdeasToAdapter(
             listOfSearchCategories,
             searchText
         )
     }
 
-    private fun getdeasToAdapter(
+    private fun getIdeasToAdapter(
         listOfSearchCategories: List<String>,
         searchQuery: String
     ) {
