@@ -2,6 +2,7 @@ package com.codingschool.ideabase.ui.profile
 
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
@@ -41,6 +42,22 @@ class ProfileFragment : Fragment(), ProfileView {
         viewModel = ProfileViewModel()
         binding.vm = viewModel
         viewModel.attachView(this)
+    }
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.editProfil -> {
+
+//go to something
+            }
+            R.id.addIdea -> {
+//go to something
+            }
+            R.id.loggout -> {
+//go to something
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
+        return true
     }
 
     override fun showToast(any: Any) {
