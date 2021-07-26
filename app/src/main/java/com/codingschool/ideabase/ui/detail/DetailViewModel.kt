@@ -29,6 +29,7 @@ class DetailViewModel(
 
     fun init() {
         //get idea with api, and set the bindables, set menu items, set comment ist
+        view?.setTtitle("Idea:")
         getIdeaAndShow()
         adapter.addCommentClickListener {  id ->
             Log.d("observer_ex", "Comment with id $id clicked")
@@ -40,9 +41,11 @@ class DetailViewModel(
         ideaApi.getIdeaById(id)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({ idea ->
+                // set idea name in title
+                view?.setTtitle(idea.title)
                 // first set the menu options: no menu when release // no "release" when not manager
                 if (idea.released) view?.hideMenu()
-                else if (!idea.author.isManager) view?.removeReleaseMenuItem()
+                else if (idea.author.isManager) view?.addReleaseMenuItem()
                 // now set all the bindable details, including image
                 view?.setIdeaImage(idea.imageUrl)
                 ideaTitle=idea.title
@@ -120,9 +123,8 @@ class DetailViewModel(
             .subscribe({
                 // todo add snacker with UNDO option ORRRRR warning message before releasing
                 view?.showToast("Idea has been released")
-                // TODO remove complete menu on release ?
-                view?.removeReleaseMenuItem()
-                view?.removeEditMenuItem()
+                // remove complete menu on release ?
+                view?.hideMenu()
             }, { t ->
                 val responseMessage = t.message
                 // TODO check response options

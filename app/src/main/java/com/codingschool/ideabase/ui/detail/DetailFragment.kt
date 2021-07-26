@@ -2,10 +2,12 @@ package com.codingschool.ideabase.ui.detail
 
 import android.os.Bundle
 import android.view.*
+import androidx.appcompat.app.ActionBar
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavDirections
 import androidx.navigation.Navigation
+import com.codingschool.ideabase.MainActivity
 import com.codingschool.ideabase.R
 import com.codingschool.ideabase.databinding.FragmentDetailBinding
 import com.codingschool.ideabase.databinding.FragmentListBinding
@@ -28,7 +30,7 @@ class DetailFragment: Fragment(), DetailView {
     private lateinit var binding: FragmentDetailBinding
     private lateinit var fab: FloatingActionButton
     private val imageHandler: ImageHandler by inject()
-
+    private var menuWithRelease = false
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -88,15 +90,15 @@ class DetailFragment: Fragment(), DetailView {
         binding.tvCommentTitle.visibility = View.GONE
     }
 
-    override fun removeReleaseMenuItem() {
-        // idea released, hide delete menu item
-        // todo addmenu item might be easier ?
-
+    override fun addReleaseMenuItem() {
+        // user MANGAGER, add release menu item
+        menuWithRelease = true
+        requireActivity().invalidateOptionsMenu()
     }
 
-    override fun removeEditMenuItem() {
 
-
+    override fun setTtitle(title: String) {
+        (activity as MainActivity).getSupportActionBar()?.title = title
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -105,10 +107,10 @@ class DetailFragment: Fragment(), DetailView {
 
     override fun onPrepareOptionsMenu(menu: Menu) {
         super.onPrepareOptionsMenu(menu)
+        // if  admin, add release menu item
+        menu.findItem(R.id.release)?.setEnabled(menuWithRelease)
 
-        // if NOT (admin ), hide release menu item
-
-        // if idea released, hide delete menu item
+        // if idea released, hide  menu item done with hide and hideMenu()
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
