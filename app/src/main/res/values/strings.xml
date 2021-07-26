@@ -39,4 +39,8 @@
     <string name="prof_info_will_be_visible_commenting">When you add a comment your profile information will be visible to all other registered users.</string>
     <string name="comment_empty_error_message">Please add some text.</string>
     <string name="thank_you_comment">Thank you for commenting!</string>
+    <string name="menu_detail_delete_idea">Delete idea</string>
+    <string name="menu_detail_edit_idea">Edit idea</string>
+    <string name="menu_detail_release_idea">Release idea</string>
+    <string name="comments_title_detail_idea">Comments</string>
 </resources>

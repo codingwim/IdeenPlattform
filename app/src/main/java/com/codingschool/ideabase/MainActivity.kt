@@ -44,11 +44,10 @@ class MainActivity : AppCompatActivity() {
                     navView,
                     actionBar
                 )
+                /*R.id.detailFragment -> actionBar?.hide()*/
                 else -> showAppBarAndBottomNaviagtionBar(navView, actionBar)
             }
         }
-
-
     }
 
     private fun showAppBarAndBottomNaviagtionBar(
@@ -65,6 +64,14 @@ class MainActivity : AppCompatActivity() {
     ) {
         actionBar?.hide()
         navView.visibility = View.GONE
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        return navController.navigateUp()
+    }
+
+    fun setActionBarTitle(title: String) {
+        actionBar?.title = title
     }
 
 }

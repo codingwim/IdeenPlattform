@@ -4,8 +4,13 @@ data class Comment (
 
     val id: String,
 
-    val Author: User,
+    val author: User,
 
     val message: String,
     val created: String,
         )
+{
+    val authorName: String
+        get() = author.firstname + " " + author.lastname
+
+}
