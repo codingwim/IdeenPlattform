@@ -65,6 +65,42 @@ class DetailViewModel(
             }).addTo(compositeDisposable)
     }
 
+    fun deleteIdea() {
+        ideaApi.deleteIdeaById(id)
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({
+                // todo add snacker with UNDO option ORRRRR warning message before deleting
+                view?.showToast("Idea has been deleted")
+                view?.navigateBack()
+            }, { t ->
+                val responseMessage = t.message
+                // TODO check response options
+                if (responseMessage != null) {
+                    if (responseMessage.contains(
+                            "HTTP 404",
+                            ignoreCase = true
+                        )
+                    ) view?.showToast("Some parameter was missing. Adding comment failed.")
+                    else if (responseMessage.contains(
+                            "HTTP 400",
+                            ignoreCase = true
+                        )
+                    ) view?.showToast("Idea was not found. Adding comment failed.")
+                    else view?.showToast(R.string.network_issue_check_network)
+                }
+                Log.e("observer_ex", "exception adding comment: $t")
+            }).addTo(compositeDisposable)
+
+    }
+
+    fun editIdea() {
+        TODO("Not yet implemented")
+    }
+
+    fun releaseIdea() {
+        TODO("Not yet implemented")
+    }
+
     @get:Bindable
     var ideaTitle: String = ""
 

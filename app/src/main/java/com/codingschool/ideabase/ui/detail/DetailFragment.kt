@@ -1,11 +1,10 @@
 package com.codingschool.ideabase.ui.detail
 
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.navigation.Navigation
 import com.codingschool.ideabase.R
 import com.codingschool.ideabase.databinding.FragmentDetailBinding
 import com.codingschool.ideabase.databinding.FragmentListBinding
@@ -49,6 +48,8 @@ class DetailFragment: Fragment(), DetailView {
         super.onViewCreated(view, savedInstanceState)
         val activityView = requireActivity().findViewById<View>(android.R.id.content)
 
+        setHasOptionsMenu(true)
+
         // hide fab button
         fab = activityView.findViewById(R.id.fab)
         fab.hide()
@@ -65,5 +66,37 @@ class DetailFragment: Fragment(), DetailView {
 
     override fun setIdeaImage(uri: String) {
         imageHandler.getIdeaImage(uri, binding.ivIdea)
+    }
+
+    override fun navigateBack() {
+        Navigation.findNavController(requireView()).navigateUp()
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.menu_idea_detail, menu)
+    }
+
+    override fun onPrepareOptionsMenu(menu: Menu) {
+        super.onPrepareOptionsMenu(menu)
+
+        // if NOT loggedin user admin, hide release menu item
+
+        // if idea released, hide delete menu item
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.delete -> {
+                viewModel.deleteIdea()
+            }
+            R.id.edit -> {
+                viewModel.editIdea()
+            }
+            R.id.release -> {
+                viewModel.releaseIdea()
+            }
+        }
+
+        return super.onOptionsItemSelected(item)
     }
 }
