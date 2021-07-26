@@ -80,8 +80,13 @@ class DetailFragment: Fragment(), DetailView {
             Navigation.findNavController(requireView()).navigate(action)
     }
 
+    override fun hideMenu() {
+        setHasOptionsMenu(false)
+    }
+
     override fun removeReleaseMenuItem() {
         // idea released, hide delete menu item
+        // todo addmenu item might be easier ?
         TODO("Not yet implemented")
     }
 

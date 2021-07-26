@@ -28,10 +28,14 @@ class DetailViewModel(
     }
 
     fun init() {
-        //get idea with api, and set the bindables
+        //get idea with api, and set the bindables, set menu items, set comment ist
         ideaApi.getIdeaById(id)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({ idea ->
+                // first set the menu options: no menu wehn release // no "release" when not manager
+                if (idea.released) view?.hideMenu()
+                else if (!idea.author.isManager) view?.removeReleaseMenuItem()
+                // now set all the bindable details, including image
                 view?.setIdeaImage(idea.imageUrl)
                 ideaTitle=idea.title
                 ideaAuthor = idea.authorName
@@ -42,6 +46,7 @@ class DetailViewModel(
                 notifyPropertyChanged(BR.ideaAuthor)
                 notifyPropertyChanged(BR.ideaCategory)
                 notifyPropertyChanged(BR.ideaDescritpion)
+                // add comment list
                 adapter.updateList(idea.comments)
             }, { t ->
                 val responseMessage = t.message

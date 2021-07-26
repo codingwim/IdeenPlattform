@@ -5,6 +5,7 @@ interface DetailView {
     fun setIdeaImage(uri: String)
     fun navigateBack()
     fun navigateToEditFragment(id: String)
+    fun hideMenu()
     fun removeReleaseMenuItem()
     fun removeEditMenuItem()
 }
