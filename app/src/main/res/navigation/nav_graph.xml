@@ -64,7 +64,7 @@
         <argument
             android:name="id"
             app:argType="string"
-            android:defaultValue='""' />
+            android:defaultValue="" />
     </fragment>
 
     <fragment

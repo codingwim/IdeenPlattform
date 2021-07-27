@@ -29,11 +29,10 @@ class ProfileViewModel(
     }
 
     fun init() {
-        // check
-            getUserProfileAndShow(id)
+        getUserProfileAndShow()
     }
 
-    private fun getUserProfileAndShow(id: String) {
+    private fun getUserProfileAndShow() {
         val getId = if (id.isEmpty()) prefs.getMyId() else id
         ideaApi.getUserById(getId)
             .observeOn(AndroidSchedulers.mainThread())
@@ -56,11 +55,11 @@ class ProfileViewModel(
                     } else if (responseMessage.contains(
                             "HTTP 404",
                             ignoreCase = true
-                        ) ){
-                            Log.d("observer_ex", "404 User not found")
-                            view?.showToast("User not found")
-                        }
-                        else view?.showToast(R.string.network_issue_check_network)
+                        )
+                    ) {
+                        Log.d("observer_ex", "404 User not found")
+                        view?.showToast("User not found")
+                    } else view?.showToast(R.string.network_issue_check_network)
                 }
                 Log.e("observer_ex", "exception getting user profile $t")
 
