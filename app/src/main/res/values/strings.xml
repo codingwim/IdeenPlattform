@@ -44,4 +44,14 @@
     <string name="menu_detail_release_idea">Release idea</string>
     <string name="comments_title_detail_idea">Comments</string>
     <string name="save">SAVE</string>
+    <string name="save_idea_new">UPLOAD</string>
+    <string name="save_idea_edit">SAVE</string>
+    <string name="upload_image_idea_new">UPLOAD IMAGE</string>
+    <string name="change_image_idea_edit">CHANGE IMAGE</string>
+    <string name="idea_name_hint">Name</string>
+    <string name="idea_name_helper">Name</string>
+    <string name="description_hint_new_idea">Description</string>
+    <string name="helper_categroy">Category</string>
+    <string name="hint_choose_category_new">Choose category</string>
+
 </resources>

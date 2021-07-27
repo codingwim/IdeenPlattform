@@ -6,11 +6,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import com.codingschool.ideabase.MainActivity
 import com.codingschool.ideabase.R
-import com.codingschool.ideabase.databinding.FragmentLoginBinding
 import com.codingschool.ideabase.databinding.FragmentNewEditIdeaBinding
-import com.codingschool.ideabase.ui.login.LoginFragmentArgs
-import com.codingschool.ideabase.ui.login.LoginViewModel
 import org.koin.android.ext.android.inject
 import org.koin.core.parameter.parametersOf
 
@@ -19,7 +17,6 @@ class NewEditIdeaFragment: Fragment(), NewEditIdeaView {
     private val viewModel: NewEditIdeaViewModel by inject<NewEditIdeaViewModel> {
         parametersOf(arguments?.let { NewEditIdeaFragmentArgs.fromBundle(it).editIdea })
     }
-
 
     private lateinit var binding: FragmentNewEditIdeaBinding
 
@@ -45,5 +42,18 @@ class NewEditIdeaFragment: Fragment(), NewEditIdeaView {
         binding.vm = viewModel
         viewModel.attachView(this)
         viewModel.init()
+
+    }
+
+/*    override fun getStringResource(res: Int) {
+        requireActivity().getString(res)
+    }*/
+
+    override fun setActionBarTitle(title: String) {
+        (activity as MainActivity).getSupportActionBar()?.title = title
+    }
+
+    override fun resetEmptyIdeaName() {
+        TODO("Not yet implemented")
     }
 }
