@@ -147,7 +147,7 @@
             app:layout_constraintTop_toBottomOf="@+id/guideline3"/>
         <TextView
             android:id="@+id/tvRole2"
-            tools:text="Ideenmanager"
+            android:text="Ideenmanager"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintStart_toEndOf="@+id/tvFName"

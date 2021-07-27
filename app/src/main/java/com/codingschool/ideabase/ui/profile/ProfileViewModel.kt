@@ -42,6 +42,7 @@ class ProfileViewModel(
     @get:Bindable
     var lastname: String = ""
 
+
     private fun getUserProfileAndShow() {
         val getId = if (id.isEmpty()) prefs.getMyId() else id
         ideaApi.getUserById(getId)
@@ -51,14 +52,20 @@ class ProfileViewModel(
                 firstname = user.firstname
                 lastname = user.lastname
 
-
-                notifyPropertyChanged(BR.email)
                 notifyPropertyChanged(BR.firstname)
                 notifyPropertyChanged(BR.lastname)
 
+
+
                 // add user fileds to vm fields
-                //if (id.isEmpty()) visibilty email ok ELSE visibility GONE
-                Log.d("observer_ex", "received profile")
+                if (id.isEmpty()) {
+                    notifyPropertyChanged(BR.email)
+
+                }else{
+
+                            Log.d("observer_ex", "not your profile, so no mail for you")
+                }
+
 
             }, { t ->
                 val responseMessage = t.message
