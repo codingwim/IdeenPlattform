@@ -29,5 +29,6 @@
     <dimen name="text_xlarge28">28sp</dimen>
 
     <dimen name="title_toolbar">16sp</dimen>
+    <dimen name="margin_special">30dp</dimen>
 
 </resources>

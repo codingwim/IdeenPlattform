@@ -41,20 +41,30 @@
             app:layout_constraintGuide_percent="0.35"/>
         <TextView
             android:id="@+id/tvUserNameFL"
-            tools:text="Wim Niko"
+            android:text="@={vm.firstname}"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+
             app:layout_constraintTop_toBottomOf="@+id/guideline"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/margin_large">
+            android:layout_marginEnd="@dimen/margin_special">
 
         </TextView>
+        <TextView
+            android:id="@+id/tvUserNameFL2"
+            android:text="@={vm.lastname}"
+            app:layout_constraintStart_toEndOf="@id/tvUserNameFL"
+            app:layout_constraintTop_toBottomOf="@+id/guideline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/margin_large">
 
+        </TextView>
         <TextView
             android:id="@+id/tvUserMail"
-            tools:text="Wim@Niko.com"
 
+            android:text="@={vm.email}"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tvUserNameFL"
@@ -88,7 +98,7 @@
         </TextView>
         <TextView
             android:id="@+id/tvFName2"
-            tools:text="Wim"
+            android:text="@={vm.firstname}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintStart_toEndOf="@+id/tvFName"
@@ -111,7 +121,7 @@
         </TextView>
         <TextView
             android:id="@+id/tvLName2"
-            tools:text="Niko"
+            android:text="@={vm.lastname}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintStart_toEndOf="@+id/tvFName"

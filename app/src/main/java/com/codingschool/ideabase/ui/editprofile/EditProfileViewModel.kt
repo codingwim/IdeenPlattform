@@ -117,9 +117,11 @@ class EditProfileViewModel(
                 view?.showToast("Hi ${user.firstname}, if you change your password, you will be redirected to login again!")
                 email = user.email
                 firstname = user.firstname
+                lastname = user.lastname
 
                 notifyPropertyChanged(BR.firstname)
-                // TODO fill edittext fields with user data
+                notifyPropertyChanged(BR.lastname)
+
 
             }, { t ->
                 val responseMessage = t.message
