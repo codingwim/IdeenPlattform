@@ -61,6 +61,10 @@
         <action
             android:id="@+id/toEditNewIdea"
             app:destination="@id/newEditIdeaFragment" />
+        <argument
+            android:name="id"
+            app:argType="string"
+            android:defaultValue="" />
     </fragment>
 
     <fragment

@@ -8,12 +8,17 @@ import androidx.navigation.NavDirections
 import androidx.navigation.Navigation
 import com.codingschool.ideabase.R
 import com.codingschool.ideabase.databinding.FragmentProfileBinding
+import com.codingschool.ideabase.ui.detail.DetailFragmentArgs
 import com.codingschool.ideabase.ui.register.RegisterFragmentDirections
 import com.codingschool.ideabase.utils.toast
+import org.koin.android.ext.android.inject
+import org.koin.core.parameter.parametersOf
 
 class ProfileFragment : Fragment(), ProfileView {
 
-    private lateinit var viewModel: ProfileViewModel
+    private val viewModel: ProfileViewModel by inject<ProfileViewModel> {
+        parametersOf(arguments?.let { ProfileFragmentArgs.fromBundle(it).id })
+    }
     private lateinit var binding: FragmentProfileBinding
 
     override fun onCreateView(
@@ -37,9 +42,9 @@ class ProfileFragment : Fragment(), ProfileView {
 
         setHasOptionsMenu(true)
 
-        viewModel = ProfileViewModel()
         binding.vm = viewModel
         viewModel.attachView(this)
+        viewModel.init()
     }
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.menu_profile, menu)
