@@ -1,18 +1,14 @@
 package com.codingschool.ideabase.ui.profile
 
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.MenuItem
-import android.view.View
-import android.view.ViewGroup
-import android.widget.TextView
+import android.view.*
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.NavDirections
+import androidx.navigation.Navigation
 import com.codingschool.ideabase.R
 import com.codingschool.ideabase.databinding.FragmentProfileBinding
-import com.codingschool.ideabase.ui.list.ListViewModel
+import com.codingschool.ideabase.ui.register.RegisterFragmentDirections
 import com.codingschool.ideabase.utils.toast
 
 class ProfileFragment : Fragment(), ProfileView {
@@ -20,7 +16,7 @@ class ProfileFragment : Fragment(), ProfileView {
     private lateinit var viewModel: ProfileViewModel
     private lateinit var binding: FragmentProfileBinding
 
-            override fun onCreateView(
+    override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -39,21 +35,25 @@ class ProfileFragment : Fragment(), ProfileView {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        setHasOptionsMenu(true)
+
         viewModel = ProfileViewModel()
         binding.vm = viewModel
         viewModel.attachView(this)
     }
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.menu_profile, menu)
+    }
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            R.id.editProfil -> {
-
-//go to something
+            R.id.editProfile -> {
+                viewModel.editProfile()
             }
             R.id.addIdea -> {
-//go to something
+                viewModel.addIdea()
             }
-            R.id.loggout -> {
-//go to something
+            R.id.logout -> {
+                viewModel.logout()
             }
             else -> super.onOptionsItemSelected(item)
         }
@@ -64,19 +64,24 @@ class ProfileFragment : Fragment(), ProfileView {
         requireActivity().toast(any)
     }
 
-    override fun showPopupReleaseAlert() {
-        TODO("Not yet implemented")
+
+
+    override fun navigateToEditProfileFragment() {
+        val action: NavDirections =
+            ProfileFragmentDirections.toEditProfile()
+        Navigation.findNavController(requireView()).navigate(action)
     }
 
-    override fun showPopupDeleteAlert() {
-        TODO("Not yet implemented")
+
+    override fun navigateToLoginFragment(username: String) {
+        val action: NavDirections =
+            ProfileFragmentDirections.toLogin(username)
+        Navigation.findNavController(requireView()).navigate(action)
     }
 
-    override fun navigateToEditProfileFragment(id: String) {
-        TODO("Not yet implemented")
-    }
-
-    override fun navigateToLoginFragment() {
-        TODO("Not yet implemented")
+    override fun navigateToNewIdeaFragment(editIdea: String) {
+        val action: NavDirections =
+            ProfileFragmentDirections.toEditNewIdea("")
+        Navigation.findNavController(requireView()).navigate(action)
     }
 }

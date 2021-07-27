@@ -17,7 +17,7 @@ interface IdeaApi {
     fun getAllUsers(): Single<List<User>>
 
     @PUT("user")
-    fun updateUser(@Body updateUser: UpdateUser): Single<User>
+    fun updateUser(@Body updateUser: UpdateUser): Completable
 
     @GET("user/me")
     fun getOwnUser(): Single<User>

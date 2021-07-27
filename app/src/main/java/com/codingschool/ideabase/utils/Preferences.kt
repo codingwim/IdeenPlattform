@@ -18,10 +18,12 @@ class Preferences(
     private val preferences: SharedPreferences =
         appContext.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
 
-    fun getEmailString() = preferences.getString(USER_EMAIL, "") ?: ""
+
     fun getAuthString() = preferences.getString(BASE_AUTH_STRING, "") ?: ""
     fun getMyId() = preferences.getString(USER_ID, "")
     fun isManager() = preferences.getBoolean(IS_MANAGER, false)
+
+    //fun getEmailString() = preferences.getString(USER_EMAIL, "")
 
     fun setAuthString(authString: String) {
         preferences.edit().putString(Keys.BASE_AUTH_STRING, authString).apply()
@@ -31,21 +33,23 @@ class Preferences(
         preferences.edit().putBoolean(Keys.IS_MANAGER, isManager).apply()
     }
 
-    fun setCredentialMail(mail: String) {
-        preferences.edit().putString(Keys.BASE_AUTH_STRING, mail).apply()
-    }
-
-    fun setCredentialFName(fname: String) {
-        preferences.edit().putString(Keys.PREF_NAME, fname).apply()
-    }
-
-    fun setCredentialLName(fname: String) {
-        preferences.edit().putString(Keys.BASE_AUTH_STRING, fname).apply()
-    }
-
     fun setCredentialID(id: String) {
         preferences.edit().putString(Keys.USER_ID, id).apply()
     }
+
+    /*fun setCredentialMail(mail: String) {
+        preferences.edit().putString(Keys.USER_EMAIL, mail).apply()
+    }
+
+    fun setCredentialFName(fname: String) {
+        preferences.edit().putString(Keys.USER_FNAME, fname).apply()
+    }
+
+    fun setCredentialLName(fname: String) {
+        preferences.edit().putString(Keys.USER_LNAME, fname).apply()
+    }*/
+
+
 }
 
 object Keys {

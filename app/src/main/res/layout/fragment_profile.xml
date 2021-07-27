@@ -41,7 +41,7 @@
             app:layout_constraintGuide_percent="0.35"/>
         <TextView
             android:id="@+id/tvUserNameFL"
-            android:text="Wim Niko"
+            tools:text="Wim Niko"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/guideline"
@@ -53,7 +53,7 @@
 
         <TextView
             android:id="@+id/tvUserMail"
-            android:text="Wim@Niko.com"
+            tools:text="Wim@Niko.com"
 
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -88,7 +88,7 @@
         </TextView>
         <TextView
             android:id="@+id/tvFName2"
-            android:text="Wim"
+            tools:text="Wim"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintStart_toEndOf="@+id/tvFName"
@@ -111,7 +111,7 @@
         </TextView>
         <TextView
             android:id="@+id/tvLName2"
-            android:text="Niko"
+            tools:text="Niko"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintStart_toEndOf="@+id/tvFName"
@@ -137,7 +137,7 @@
             app:layout_constraintTop_toBottomOf="@+id/guideline3"/>
         <TextView
             android:id="@+id/tvRole2"
-            android:text="Ideenmanager"
+            tools:text="Ideenmanager"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintStart_toEndOf="@+id/tvFName"

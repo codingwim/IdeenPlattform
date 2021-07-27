@@ -54,7 +54,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:onTextChanged="@{vm::onFirstnameTextChanged}"
-                android:text="@{vm.firstname}" />
+                android:text="@={vm.firstname}" />
 
         </com.google.android.material.textfield.TextInputLayout>
 

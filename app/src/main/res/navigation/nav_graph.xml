@@ -55,6 +55,12 @@
         <action
             android:id="@+id/toEditProfile"
             app:destination="@id/editProfileFragment" />
+        <action
+            android:id="@+id/toLogin"
+            app:destination="@id/loginFragment" />
+        <action
+            android:id="@+id/toEditNewIdea"
+            app:destination="@id/newEditIdeaFragment" />
     </fragment>
 
     <fragment

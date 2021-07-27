@@ -39,6 +39,7 @@ class EditProfileFragment: Fragment(), EditProfileView {
         super.onViewCreated(view, savedInstanceState)
 
         viewModel.attachView(this)
+        binding.vm = viewModel
         viewModel.init()
 
     }
@@ -81,7 +82,6 @@ class EditProfileFragment: Fragment(), EditProfileView {
     override fun setFocusPasswordInput() {
         binding.tilPassword.requestFocus()
     }
-
 
     override fun navigateToLoginRegistered(username: String) {
         val action: NavDirections =

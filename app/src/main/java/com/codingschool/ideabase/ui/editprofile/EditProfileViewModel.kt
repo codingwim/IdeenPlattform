@@ -21,10 +21,8 @@ class EditProfileViewModel(
     private var view: EditProfileView? = null
     private val compositeDisposable = CompositeDisposable()
 
-
     fun init() {
         if (prefs.getAuthString().isNotEmpty()) {
-
             setMyCredentialsFromAPI()
             Log.d("observer_ex", "prefs not empty")
         } else Log.d("observer_ex", "prefs empty")
@@ -34,6 +32,7 @@ class EditProfileViewModel(
     }
 
     var email: String =""
+
     @get:Bindable
     var firstname: String = ""
 
@@ -81,14 +80,16 @@ class EditProfileViewModel(
         if (validCredentailsToRegister) {
             val updatedUser = UpdateUser(
                 email,
+                password,
                 firstname,
-                lastname,
-                password
+                lastname
             )
             ideaApi.updateUser(updatedUser)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
-
+                    Log.d("observer_ex", "user updated over API")
+                    view?.showToast("You're credentials have been updated. Please login again")
+                    view?.navigateToLoginRegistered(email)
                 }, { t ->
                     val responseMessage = t.message
                     if (responseMessage != null) {
@@ -115,6 +116,11 @@ class EditProfileViewModel(
             .subscribe({ user ->
                 view?.showToast("Hi ${user.firstname}, if you change your password, you will be redirected to login again!")
                 email = user.email
+                firstname = user.firstname
+
+                notifyPropertyChanged(BR.firstname)
+                // TODO fill edittext fields with user data
+
             }, { t ->
                 val responseMessage = t.message
                 if (responseMessage != null) {
