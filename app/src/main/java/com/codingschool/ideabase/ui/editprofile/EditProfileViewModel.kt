@@ -6,11 +6,16 @@ import androidx.databinding.Bindable
 import androidx.databinding.library.baseAdapters.BR
 import com.codingschool.ideabase.R
 import com.codingschool.ideabase.model.data.UpdateUser
+import com.codingschool.ideabase.model.remote.IdeaApi
+import com.codingschool.ideabase.utils.Preferences
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.addTo
 
-class EditProfileViewModel : BaseObservable() {
+class EditProfileViewModel(
+    private val ideaApi: IdeaApi,
+    private val prefs: Preferences
+) : BaseObservable() {
 
 
     private var view: EditProfileView? = null
@@ -27,6 +32,8 @@ class EditProfileViewModel : BaseObservable() {
     fun attachView(view: EditProfileView) {
         this.view = view
     }
+
+    var email: String =""
     @get:Bindable
     var firstname: String = ""
 
@@ -73,6 +80,7 @@ class EditProfileViewModel : BaseObservable() {
         // if credentials valid, register User via API call
         if (validCredentailsToRegister) {
             val updatedUser = UpdateUser(
+                email,
                 firstname,
                 lastname,
                 password
@@ -85,18 +93,18 @@ class EditProfileViewModel : BaseObservable() {
                     val responseMessage = t.message
                     if (responseMessage != null) {
                         if (responseMessage.contains(
-                                "HTTP 409",
+                                "HTTP 401",
                                 ignoreCase = true
                             )
-                        ) view?.setInputEmailError(R.string.email_already_inuse_input_error)
+                        ) view?.showToast("You are not authorized to log in")
                         else if (responseMessage.contains(
                                 "HTTP 400",
                                 ignoreCase = true
                             )
-                        ) view?.setInputEmailError("Some parameter is missing")
+                        ) view?.showToast("Some parameter is missing")
                         else view?.showToast(R.string.network_issue_check_network)
                     }
-                    Log.e("observer_ex", "exception updating new user: $t")
+                    Log.e("observer_ex", "exception updating user: $t")
                 }).addTo(compositeDisposable)
         }
 
@@ -105,9 +113,8 @@ class EditProfileViewModel : BaseObservable() {
         ideaApi.getOwnUser().observeOn(AndroidSchedulers.mainThread())
             //.subscribeOn(Schedulers.io())
             .subscribe({ user ->
-                view?.showToast("Hi ${user.firstname}, welcome back!")
-
-
+                view?.showToast("Hi ${user.firstname}, if you change your password, you will be redirected to login again!")
+                email = user.email
             }, { t ->
                 val responseMessage = t.message
                 if (responseMessage != null) {
@@ -126,14 +133,13 @@ class EditProfileViewModel : BaseObservable() {
                     ) view?.showToast("You are not autorized to log in")
                     else view?.showToast(R.string.network_issue_check_network)
                 }
-                Log.e("observer_ex", "exception adding new user: $t")
+                Log.e("observer_ex", "exception getting user info: $t")
             }).addTo(compositeDisposable)
     }
 
     private fun validPassword(password: String): Boolean {
         return password.length > 4
     }
-
 
     fun onFirstnameTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
         view?.resetFirstnameError()
@@ -142,8 +148,6 @@ class EditProfileViewModel : BaseObservable() {
     fun onLastnameTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
         view?.resetLastnameError()
     }
-
-
 
     fun onPasswordTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
         if (count > 0) view?.resetPasswordError()

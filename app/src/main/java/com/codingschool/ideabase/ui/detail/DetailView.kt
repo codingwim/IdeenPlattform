@@ -8,5 +8,5 @@ interface DetailView {
     fun hideMenu()
     fun hideCommentTitle()
     fun addReleaseMenuItem()
-    fun setTtitle(title: String)
+    fun setActionBarTitle(title: String)
 }

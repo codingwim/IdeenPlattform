@@ -102,7 +102,7 @@ class ListFragment : Fragment(), ListView {
 
     override fun navigateToNewIdeaFragment() {
         val action: NavDirections =
-            ListFragmentDirections.toEditNewIdea(null)
+            ListFragmentDirections.toEditNewIdea("")
         Navigation.findNavController(requireView()).navigate(action)
     }
 

@@ -29,7 +29,7 @@ class DetailViewModel(
 
     fun init() {
         //get idea with api, and set the bindables, set menu items, set comment ist
-        view?.setTtitle("Idea:")
+        view?.setActionBarTitle("Idea:")
         getIdeaAndShow()
         adapter.addCommentClickListener { id ->
             Log.d("observer_ex", "Comment with id $id clicked")
@@ -42,7 +42,7 @@ class DetailViewModel(
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({ idea ->
                 // set idea name in title
-                view?.setTtitle(idea.title)
+                view?.setActionBarTitle(idea.title)
                 // first set the menu options: add release if manager // no menu when released OR not owner // not "release" and owner sees Edit/delete
                 if (prefs.isManager()) view?.addReleaseMenuItem()
                 else if (idea.released or (prefs.getMyId() != idea.author.id)) view?.hideMenu()

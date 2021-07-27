@@ -91,7 +91,7 @@ class DetailFragment: Fragment(), DetailView {
     }
 
 
-    override fun setTtitle(title: String) {
+    override fun setActionBarTitle(title: String) {
         (activity as MainActivity).getSupportActionBar()?.title = title
     }
 

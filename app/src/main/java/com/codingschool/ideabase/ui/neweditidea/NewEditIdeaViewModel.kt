@@ -5,7 +5,7 @@ import com.codingschool.ideabase.model.remote.IdeaApi
 import com.codingschool.ideabase.utils.Preferences
 
 class NewEditIdeaViewModel(
-    editIdea: String?,
+    editIdea: String,
     private val ideaApi: IdeaApi,
     private val prefs: Preferences
 ): BaseObservable() {
@@ -16,6 +16,6 @@ class NewEditIdeaViewModel(
         this.view = view
     }
     fun init() {
-        // set edittexts with hint or prefill depending on editIdea (id) or editIdea(null)
+        // set edittexts with hint or prefill depending on editIdea (id) or editIdea("")
     }
 }

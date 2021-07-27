@@ -9,6 +9,7 @@ import com.codingschool.ideabase.model.remote.ImageHandler
 import com.codingschool.ideabase.ui.comment.CommentViewModel
 import com.codingschool.ideabase.ui.detail.CommentListAdapter
 import com.codingschool.ideabase.ui.detail.DetailViewModel
+import com.codingschool.ideabase.ui.editprofile.EditProfileViewModel
 import com.codingschool.ideabase.ui.list.IdeaListAdapter
 import com.codingschool.ideabase.ui.list.ListViewModel
 import com.codingschool.ideabase.ui.login.LoginViewModel
@@ -114,6 +115,10 @@ val appModule = module {
         CommentViewModel(id = parameters.get(), ideaApi = get())
         //CommentViewModel(id = parameters.get(), title = parameters.get(), ideaApi = get())
     }
+    factory<EditProfileViewModel> { parameters ->
+        EditProfileViewModel(ideaApi = get(), prefs = get())
+    }
+
 
 }
 

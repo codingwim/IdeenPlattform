@@ -51,7 +51,11 @@
         android:id="@+id/navigation_profile"
         android:name="com.codingschool.ideabase.ui.profile.ProfileFragment"
         android:label="@string/profile_bot_nav"
-        tools:layout="@layout/fragment_profile" />
+        tools:layout="@layout/fragment_profile" >
+        <action
+            android:id="@+id/toEditProfile"
+            app:destination="@id/editProfileFragment" />
+    </fragment>
 
     <fragment
         android:id="@+id/loginFragment"
@@ -63,8 +67,7 @@
         <argument
             android:name="userName"
             app:argType="string"
-            app:nullable="true"
-            android:defaultValue="null" />
+            android:defaultValue= "" />
         <action
             android:id="@+id/toTopRanked"
             app:destination="@id/navigation_top_ranked" />
@@ -98,8 +101,7 @@
         <argument
             android:name="editIdea"
             app:argType="string"
-            app:nullable="true"
-            android:defaultValue="null" />
+            android:defaultValue="" />
     </fragment>
     <fragment
         android:id="@+id/commentFragment"
@@ -108,5 +110,13 @@
         <argument
             android:name="id"
             app:argType="string" />
+    </fragment>
+    <fragment
+        android:id="@+id/editProfileFragment"
+        android:name="com.codingschool.ideabase.ui.editprofile.EditProfileFragment"
+        android:label="Edit Profile" >
+        <action
+            android:id="@+id/toLogin"
+            app:destination="@id/loginFragment" />
     </fragment>
 </navigation>

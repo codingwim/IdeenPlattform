@@ -1,14 +1,11 @@
 package com.codingschool.ideabase.ui.login
 
-import android.content.SharedPreferences
-import android.util.Base64
 import android.util.Log
 import androidx.databinding.BaseObservable
 import androidx.databinding.Bindable
 import com.codingschool.ideabase.R
 import com.codingschool.ideabase.model.remote.IdeaApi
 import com.codingschool.ideabase.utils.Preferences
-import io.reactivex.Completable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.addTo
@@ -67,8 +64,8 @@ class LoginViewModel(
             .subscribe({ user ->
                 view?.showToast("Hi ${user.firstname}")
                 // TODO we could put the users firstname, etc in sharedprefs if we need to
-                prefs.setMyId(user.id)
-                prefs.setManager(user.isManager)
+                prefs.setCredentialID(user.id)
+                prefs.setIsManager(user.isManager)
                 view?.navigateToTopRankedFragment()
                 //Log.d("observer_ex", "Current logged in user: ${user.firstname}")
             }, { t ->
@@ -86,7 +83,7 @@ class LoginViewModel(
                             "HTTP 401",
                             ignoreCase = true
                         )
-                    ) view?.showToast("You are not autorized to log in")
+                    ) view?.showToast("You are not authorized to log in")
                     else view?.showToast(R.string.network_issue_check_network)
                 }
                 Log.e("observer_ex", "exception adding new user: $t")
