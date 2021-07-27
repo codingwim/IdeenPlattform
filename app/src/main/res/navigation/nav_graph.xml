@@ -107,11 +107,11 @@
     <fragment
         android:id="@+id/newEditIdeaFragment"
         android:name="com.codingschool.ideabase.ui.neweditidea.NewEditIdeaFragment"
-        android:label="NewEditIdeaFragment" >
+        android:label="Add Idea">
         <argument
             android:name="editIdea"
-            app:argType="string"
-            android:defaultValue="" />
+            android:defaultValue=""
+            app:argType="string" />
     </fragment>
     <fragment
         android:id="@+id/commentFragment"
