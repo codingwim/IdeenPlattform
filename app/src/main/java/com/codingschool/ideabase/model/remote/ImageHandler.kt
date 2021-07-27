@@ -1,9 +1,13 @@
 package com.codingschool.ideabase.model.remote
 
+import android.app.Activity
 import android.content.ContentResolver
 import android.content.Context
+import android.content.Intent
 import android.net.Uri
 import android.widget.ImageView
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.DrawableRes
 import com.codingschool.ideabase.R
 import com.squareup.picasso.OkHttp3Downloader
@@ -16,10 +20,10 @@ class ImageHandler(
     okHttpClient: OkHttpClient
 ) {
     private val appContext = context.applicationContext
+
     val picasso = Picasso.Builder(appContext)
         .downloader(OkHttp3Downloader(okHttpClient))
         .build()
-
     fun getProfilePic(uri: String?, view: ImageView) {
         val uriOrDrawable = if (uri != null) uri else "R.drawable.ic_baseline_emoji_objects_24"
 
@@ -43,6 +47,5 @@ class ImageHandler(
             .error(R.drawable.placeholder_idea_image_not_found)
             .into(view)
     }
-
 
 }

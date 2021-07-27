@@ -50,6 +50,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+
     private fun showAppBarAndBottomNaviagtionBar(
         navView: BottomNavigationView,
         actionBar: ActionBar?

@@ -1,10 +1,17 @@
 package com.codingschool.ideabase.utils
 
+import android.content.ContentResolver
 import android.content.Context
+import android.net.Uri
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.Toast
 import com.codingschool.ideabase.MyApplication
+import okhttp3.MediaType
+import okhttp3.RequestBody
+import okio.BufferedSink
+import okio.source
+import java.io.IOException
 
 
 fun Context.toast(text: String) {
@@ -39,6 +46,24 @@ fun Context.getResString(any: Any): String {
         else -> ""
     }
 }
+class InputStreamRequestBody(
+    private val contentType: MediaType,
+    private val contentResolver: ContentResolver,
+    private val uri: Uri
+) : RequestBody() {
+    override fun contentType() = contentType
+
+    override fun contentLength(): Long = -1
+
+    @Throws(IOException::class)
+    override fun writeTo(sink: BufferedSink) {
+        val input = contentResolver.openInputStream(uri)
+
+        input?.use { sink.writeAll(it.source()) }
+            ?: throw IOException("Could not open $uri")
+    }
+}
+
 
 fun Context.showKeyboard(editText: EditText) {
     val inputMethodManager: InputMethodManager =

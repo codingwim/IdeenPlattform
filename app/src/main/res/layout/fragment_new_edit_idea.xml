@@ -38,7 +38,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/margin_standard"
             android:backgroundTint="@color/yellow"
-            android:onClick="@{() -> vm.onUploadImageClick()}"
+            android:onClick="@{() -> vm.onGetImageClick()}"
             android:text= "@{vm.uploadImageButtonText}"
             tools:text="UPLOAD IMAGE"
             android:textColor="@color/black"
