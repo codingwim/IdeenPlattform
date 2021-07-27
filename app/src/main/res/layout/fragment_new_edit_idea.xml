@@ -13,7 +13,8 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layout_constraintVertical_chainStyle="spread_inside"
+        android:fitsSystemWindows="true"
+        app:layout_constraintVertical_chainStyle="packed"
         tools:context=".ui.neweditidea.NewEditIdeaFragment">
 
         <com.google.android.material.imageview.ShapeableImageView
@@ -64,6 +65,7 @@
                 android:id="@+id/etIdeaName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:inputType="textNoSuggestions"
                 android:onTextChanged="@{vm::onIdeaNameTextChanged}"
                 android:text="@={vm.ideaName}" />
 
@@ -88,6 +90,9 @@
                 android:id="@+id/etLastname"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:inputType="textMultiLine"
+                android:gravity="top"
+                android:lines="4"
                 android:onTextChanged="@{vm::onDescriptionTextChanged}"
                 android:text="@={vm.ideaDescritpion}"
                 />
@@ -113,6 +118,7 @@
                 android:id="@+id/tvCategory"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:text="@={vm.ideaCategory}"
                 android:inputType="none"
                 />
         </com.google.android.material.textfield.TextInputLayout>

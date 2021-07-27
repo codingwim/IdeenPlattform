@@ -38,7 +38,6 @@ class DetailFragment: Fragment(), DetailView {
             container,
             false
         )
-
         return binding.root
     }
 

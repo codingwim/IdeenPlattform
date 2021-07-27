@@ -15,8 +15,6 @@
         android:layout_height="match_parent"
         tools:context=".ui.detail.DetailFragment">
 
-
-
             <com.google.android.material.appbar.AppBarLayout
                 android:id="@+id/vwIdeaImage"
                 android:layout_width="match_parent"

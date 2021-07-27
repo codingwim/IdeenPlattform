@@ -22,14 +22,44 @@ class NewEditIdeaViewModel(
 
     private val compositeDisposable = CompositeDisposable()
 
+    private var categoryList = emptyList<String>()
+
     fun attachView(view: NewEditIdeaView) {
         this.view = view
     }
     fun init() {
-        // set edittexts with hint or prefill depending on editIdea (id) or editIdea("")
+        // todo add progress indicator loading categories / prefill and wait (completable?) disable update button till loaded
+        getAndSetCategoryItems()
+        ideaCategory = "event"
+        // set edittexts with hint or prefill depending on editIdea (id) or editIdea("") (default)
         if (editIdea.isNotEmpty()) {
             getIdeaAndPrefill()
         }
+    }
+
+    private fun getAndSetCategoryItems() {
+        ideaApi.getAllCategories()
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({ list ->
+                // TODO add locale check to take right value
+                categoryList = list.map { category ->
+                    category.name_en
+                }
+                view?.setCategoryListItems(categoryList)
+            }, { t ->
+                val responseMessage = t.message
+                if (responseMessage != null) {
+                    if (responseMessage.contains(
+                            "HTTP 401",
+                            ignoreCase = true
+                        )
+                    ) {
+                        Log.d("observer_ex", "401 Authorization not valid")
+                        view?.showToast("You are not autorized to log in")
+                    } else view?.showToast(R.string.network_issue_check_network)
+                }
+                Log.e("observer_ex", "exception getting categories: $t")
+            }).addTo(compositeDisposable)
     }
 
     private fun getIdeaAndPrefill() {
@@ -47,6 +77,7 @@ class NewEditIdeaViewModel(
                 ideaName = idea.title
                 // TODO locale check to get correct language category
                 ideaCategory = idea.category.name_en
+                /*view?.setSelectedCategory(ideaCategory)*/
                 ideaDescritpion = idea.description
                 notifyPropertyChanged(BR.ideaName)
                 notifyPropertyChanged(BR.ideaCategory)
@@ -76,6 +107,8 @@ class NewEditIdeaViewModel(
 
     }
 
+    var ideaImageUrl: String = "dummy"
+
     @get:Bindable
     var ideaName: String = ""
 
@@ -94,7 +127,19 @@ class NewEditIdeaViewModel(
 
 
     fun onSaveClick() {
+        // check empty fields
+        var fieldsNotEmpty = false
 
+        if (ideaName.isEmpty()) view?.setInputNameError("Please enter a name for your idea")
+        else if (ideaDescritpion.isEmpty()) view?.setInputDescriptionError("Please enter a description for your idea")
+        else if (ideaCategory.isEmpty()) view?.setInputCategoryError("Please choose a categroy for your idea")
+        else if (ideaImageUrl.isEmpty()) view?.showToast("Please select and upload an image for your idea")
+        else fieldsNotEmpty = true
+
+        if (fieldsNotEmpty) {
+            // build the multi form to send the api call
+            view?.showToast("selected category= $ideaCategory")
+        }
     }
 
     fun onUploadImageClick() {
@@ -102,11 +147,11 @@ class NewEditIdeaViewModel(
     }
 
     fun onIdeaNameTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-        view?.resetEmptyIdeaName()
+        if (count < 2) view?.resetEmptyIdeaName()
     }
 
 
     fun onDescriptionTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-        view?.resetEmptyDescription()
+        if (count < 2) view?.resetEmptyDescription()
     }
 }
