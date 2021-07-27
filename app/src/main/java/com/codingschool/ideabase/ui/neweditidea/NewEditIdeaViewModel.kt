@@ -9,6 +9,7 @@ import com.codingschool.ideabase.R
 import com.codingschool.ideabase.model.remote.IdeaApi
 import com.codingschool.ideabase.utils.Preferences
 import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.addTo
 
 class NewEditIdeaViewModel(
@@ -18,6 +19,8 @@ class NewEditIdeaViewModel(
 ): BaseObservable() {
 
     private var view: NewEditIdeaView? = null
+
+    private val compositeDisposable = CompositeDisposable()
 
     fun attachView(view: NewEditIdeaView) {
         this.view = view
@@ -39,23 +42,16 @@ class NewEditIdeaViewModel(
             .subscribe({ idea ->
                 // set idea name in title
                 view?.setActionBarTitle(idea.title)
-                // first set the menu options: add release if manager // no menu when released OR not owner // not "release" and owner sees Edit/delete
-                if (prefs.isManager()) view?.addReleaseMenuItem()
-                else if (idea.released or (prefs.getMyId() != idea.author.id)) view?.hideMenu()
                 // now set all the bindable details, including image
                 view?.setIdeaImage(idea.imageUrl)
-                ideaTitle = idea.title
-                ideaAuthor = idea.authorName
+                ideaName = idea.title
                 // TODO locale check to get correct language category
                 ideaCategory = idea.category.name_en
                 ideaDescritpion = idea.description
-                if (idea.comments.isEmpty()) view?.hideCommentTitle()
-                notifyPropertyChanged(BR.ideaTitle)
-                notifyPropertyChanged(BR.ideaAuthor)
+                notifyPropertyChanged(BR.ideaName)
                 notifyPropertyChanged(BR.ideaCategory)
                 notifyPropertyChanged(BR.ideaDescritpion)
-                // add comment list
-                adapter.updateList(idea.comments)
+
             }, { t ->
                 val responseMessage = t.message
                 if (responseMessage != null) {

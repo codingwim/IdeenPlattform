@@ -9,6 +9,8 @@ import androidx.fragment.app.Fragment
 import com.codingschool.ideabase.MainActivity
 import com.codingschool.ideabase.R
 import com.codingschool.ideabase.databinding.FragmentNewEditIdeaBinding
+import com.codingschool.ideabase.model.remote.ImageHandler
+import com.codingschool.ideabase.utils.toast
 import org.koin.android.ext.android.inject
 import org.koin.core.parameter.parametersOf
 
@@ -19,6 +21,7 @@ class NewEditIdeaFragment: Fragment(), NewEditIdeaView {
     }
 
     private lateinit var binding: FragmentNewEditIdeaBinding
+    private val imageHandler: ImageHandler by inject()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -55,5 +58,17 @@ class NewEditIdeaFragment: Fragment(), NewEditIdeaView {
 
     override fun resetEmptyIdeaName() {
         TODO("Not yet implemented")
+    }
+
+    override fun showToast(any: Any) {
+        requireActivity().toast(any)
+    }
+
+    override fun resetEmptyDescription() {
+        TODO("Not yet implemented")
+    }
+
+    override fun setIdeaImage(uri: String) {
+        imageHandler.getIdeaImage(uri, binding.ivIdeaImage)
     }
 }
