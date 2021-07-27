@@ -163,12 +163,17 @@ class NewEditIdeaViewModel(
                      "image",
                      "idea_image.jpeg",
                      context.assets.open("dummyImage.jpeg").readBytes()
-                         .toRequestBody("image/png".toMediaTypeOrNull())
+                         .toRequestBody("image/jpg".toMediaTypeOrNull())
                      )
                  .build()
-            ideaApi.addIdea(requestBody)
-                // add response with Response, not single, so try catch??
+            try {
+                ideaApi.addIdea(requestBody)
 
+            } catch (e: Exception){
+                Log.d("observer_ex", "uploading idea failed exception: ${e.message}")
+                view?.showToast("Idea upload failed")
+                // add response with Response, not single, so try catch??
+            }
 
         }
     }
