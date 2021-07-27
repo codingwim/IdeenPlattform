@@ -15,6 +15,7 @@ import com.codingschool.ideabase.ui.list.ListViewModel
 import com.codingschool.ideabase.ui.login.LoginViewModel
 import com.codingschool.ideabase.ui.neweditidea.NewEditIdeaFragment
 import com.codingschool.ideabase.ui.neweditidea.NewEditIdeaViewModel
+import com.codingschool.ideabase.ui.profile.ProfileViewModel
 import com.codingschool.ideabase.ui.register.RegisterViewModel
 import com.codingschool.ideabase.utils.Preferences
 import com.codingschool.ideabase.utils.baseUrl
@@ -114,6 +115,10 @@ val appModule = module {
     factory<CommentViewModel> { parameters ->
         CommentViewModel(id = parameters.get(), ideaApi = get())
         //CommentViewModel(id = parameters.get(), title = parameters.get(), ideaApi = get())
+    }
+
+    factory<ProfileViewModel> { parameters ->
+        ProfileViewModel(id = get(), ideaApi = get(),prefs = get())
     }
     factory<EditProfileViewModel> { parameters ->
         EditProfileViewModel(ideaApi = get(), prefs = get())

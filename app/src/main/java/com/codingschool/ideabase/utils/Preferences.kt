@@ -20,7 +20,7 @@ class Preferences(
 
 
     fun getAuthString() = preferences.getString(BASE_AUTH_STRING, "") ?: ""
-    fun getMyId() = preferences.getString(USER_ID, "")
+    fun getMyId() = preferences.getString(USER_ID, "") ?: ""
     fun isManager() = preferences.getBoolean(IS_MANAGER, false)
 
     //fun getEmailString() = preferences.getString(USER_EMAIL, "")
