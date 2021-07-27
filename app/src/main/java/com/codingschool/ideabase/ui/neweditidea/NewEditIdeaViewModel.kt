@@ -1,16 +1,22 @@
 package com.codingschool.ideabase.ui.neweditidea
 
+import android.app.Application
 import android.util.Log
 import androidx.databinding.BaseObservable
 import androidx.databinding.Bindable
 import androidx.databinding.ObservableInt
 import androidx.databinding.library.baseAdapters.BR
 import com.codingschool.ideabase.R
+import com.codingschool.ideabase.model.data.CreateIdea
 import com.codingschool.ideabase.model.remote.IdeaApi
 import com.codingschool.ideabase.utils.Preferences
+import com.google.gson.Gson
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.addTo
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
 
 class NewEditIdeaViewModel(
     private val editIdea: String,
@@ -137,8 +143,33 @@ class NewEditIdeaViewModel(
         else fieldsNotEmpty = true
 
         if (fieldsNotEmpty) {
+            val createIdea = CreateIdea(
+                ideaName,
+                ideaCategory,
+                ideaDescritpion
+            )
+            var gson = Gson()
+            val ideaString = gson.toJson(createIdea)
+
             // build the multi form to send the api call
-            view?.showToast("selected category= $ideaCategory")
+             val requestBody = MultipartBody.Builder()
+                 .setType(MultipartBody.FORM)
+                 .addFormDataPart(
+                     "body",
+                     null,
+                     RequestBody.create("application/json".toMediaTypeOrNull(), ideaString )
+                 )
+                 .addFormDataPart(
+                     "image",
+                     "idea_image.jpeg",
+                     context.assets.open("dummyImage.jpeg").readBytes()
+                         .toRequestBody("image/png".toMediaTypeOrNull())
+                     )
+                 .build()
+            ideaApi.addIdea(requestBody)
+                // add response with Response, not single, so try catch??
+
+
         }
     }
 
