@@ -53,5 +53,15 @@
     <string name="description_hint_new_idea">Description</string>
     <string name="helper_categroy">Category</string>
     <string name="hint_choose_category_new">Choose category</string>
+    <string name="idea_updated_successflly">Idea updated successfully</string>
+    <string name="not_authorized">You are not authorized</string>
+    <string name="idea_released_mot_editable_error">The idea has been released by an admin and can\'t be edited anymore.</string>
+    <string name="idea_not_found_message">Something went wrong, the idea was not found</string>
+    <string name="parameter_missing_message">Parameter missing</string>
+    <string name="idea_added">Idea successfully added</string>
+    <string name="error_empty_name">Please enter a name for your idea</string>
+    <string name="error_empty_description">Please enter a description for your idea</string>
+    <string name="error_empty_category">Please choose a category for your idea</string>
+    <string name="error_empty_image">Please select and upload an image for your idea</string>
 
 </resources>

@@ -18,7 +18,6 @@ import io.reactivex.Completable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.addTo
-import io.reactivex.schedulers.Schedulers
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
@@ -44,7 +43,7 @@ class NewEditIdeaViewModel(
     }
 
     fun init() {
-        // todo add progress indicator loading categories / prefill and wait (completable?) disable update button till loaded
+        // optionally: add progress indicator loading categories / prefill and wait (completable?) disable update button till loaded
         getAndSetCategoryItems()
         // set edittexts with hint or prefill depending on editIdea (id) or editIdea("") (default)
         if (editIdea.isNotEmpty()) {
@@ -73,7 +72,7 @@ class NewEditIdeaViewModel(
                         )
                     ) {
                         Log.d("observer_ex", "401 Authorization not valid")
-                        view?.showToast("You are not autorized to log in")
+                        view?.showToast(R.string.not_authorized)
                     } else view?.showToast(R.string.network_issue_check_network)
                 }
                 Log.e("observer_ex", "exception getting categories: $t")
@@ -113,14 +112,14 @@ class NewEditIdeaViewModel(
                         )
                     ) {
                         Log.d("observer_ex", "401 Authorization not valid")
-                        view?.showToast("You are not autorized to log in")
+                        view?.showToast(R.string.not_authorized)
                     } else if (responseMessage.contains(
                             "HTTP 404",
                             ignoreCase = true
                         )
                     ) {
                         Log.d("observer_ex", "404 Idea not found")
-                        view?.showToast("Idea not found")
+                        view?.showToast(R.string.idea_not_found_message)
                     } else view?.showToast(R.string.network_issue_check_network)
                 }
                 Log.e("observer_ex", "exception getting idea: $t")
@@ -152,10 +151,10 @@ class NewEditIdeaViewModel(
         // check empty fields
         var fieldsNotEmpty = false
 
-        if (ideaName.isEmpty()) view?.setInputNameError("Please enter a name for your idea")
-        else if (ideaDescritpion.isEmpty()) view?.setInputDescriptionError("Please enter a description for your idea")
-        else if (ideaCategory.isEmpty()) view?.setInputCategoryError("Please choose a category for your idea")
-        else if (ideaImageUrl.isEmpty()) view?.showToast("Please select and upload an image for your idea")
+        if (ideaName.isEmpty()) view?.setInputNameError(R.string.error_empty_name)
+        else if (ideaDescritpion.isEmpty()) view?.setInputDescriptionError(R.string.error_empty_description)
+        else if (ideaCategory.isEmpty()) view?.setInputCategoryError(R.string.error_empty_category)
+        else if (ideaImageUrl.isEmpty()) view?.showToast(R.string.error_empty_image)
         else fieldsNotEmpty = true
 
         if (fieldsNotEmpty) {
@@ -194,7 +193,7 @@ class NewEditIdeaViewModel(
                 ideaApi.addIdea(requestBodyForNewIdea)
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe({ idea ->
-                        view?.showToast("Idea successfully added")
+                        view?.showToast(R.string.idea_added)
                         view?.navigateToAllIdeas()
                     }, { t ->
                         val responseMessage = t.message
@@ -204,22 +203,13 @@ class NewEditIdeaViewModel(
                                     ignoreCase = true
                                 )
                             ) {
-                                view?.showToast("Parameter missing")
+                                view?.showToast(R.string.parameter_missing_message)
                                 Log.d("observer_ex", "Parameter missing: $t")
                             } else view?.showToast(R.string.network_issue_check_network)
                         }
                         Log.e("observer_ex", "exception adding idea: $t")
                     }).addTo(compositeDisposable)
             }
-            /*try {
-                val call = ideaApi.addIdea(requestBody)
-
-            } catch (e: Exception){
-                Log.d("observer_ex", "uploading idea failed exception: ${e.message}")
-                view?.showToast("Idea upload failed")
-                // add response with Response, not single, so try catch??
-            }*/
-
         }
     }
 
@@ -227,23 +217,16 @@ class NewEditIdeaViewModel(
 
         val updateImage = !ideaImageUrl.equals(initialImageUrl, false)
         ideaApi.updateIdea(editIdea, createIdea)
-            // TODO this is the wrong way. the updatemage part will run even if the ideaupdate failed. There is no feedback either
-            /*.subscribeOn(Schedulers.io())*/
             .onErrorComplete {
                 it is HttpException
             }
             .andThen (
                 updateImage(imagePart, updateImage)
-                    /*ideaApi.updateImageIdea(editIdea, getRequestBodyForUpdatedImage(imagePart))*/
             )
             .observeOn(AndroidSchedulers.mainThread())
-            /*.andThen {
-                view?.showToast("done")
-                Log.d("observer_ex", "Idea updated andthen")
-            }*/
             .subscribe({
-                view?.showToast("Idea updated successfully")
-                Log.d("observer_ex", "Idea updated successfully")
+                view?.showToast(R.string.idea_updated_successflly)
+                Log.d("observer_ex", "Idea updated")
                 view?.navigateBack()
             }, { t ->
                 val responseMessage = t.message
@@ -253,31 +236,30 @@ class NewEditIdeaViewModel(
                             ignoreCase = true
                         )
                     ) {
-                        view?.showToast("Parameter missing")
+                        view?.showToast(R.string.parameter_missing_message)
                         Log.d("observer_ex", "Parameter missing: $t")
                     } else if (responseMessage.contains(
                             "HTTP 401",
                             ignoreCase = true
                         )
                     ) {
-                        view?.showToast("You are not authorized")
+                        view?.showToast(R.string.not_authorized)
                         Log.d("observer_ex", "Not authorized: $t")
                     } else if (responseMessage.contains(
                             "HTTP 403",
                             ignoreCase = true
                         )
                     ) {
-                        view?.showToast("The idea has been released by an admin and can't be edited anymore.")
+                        view?.showToast(R.string.idea_released_mot_editable_error)
                         Log.d(
-                            "observer_ex", "\t\n" +
-                                    "Not the author of the idea, or idea already released.: $t"
+                            "observer_ex", "Not the author of the idea, or idea already released.: $t"
                         )
                     } else if (responseMessage.contains(
                             "HTTP 404",
                             ignoreCase = true
                         )
                     ) {
-                        view?.showToast("Something went wrong, the idea was not found")
+                        view?.showToast(R.string.idea_not_found_message)
                         Log.d("observer_ex", "Idea was not found: $t")
                     } else view?.showToast(R.string.network_issue_check_network)
                 }
@@ -286,7 +268,6 @@ class NewEditIdeaViewModel(
     }
 
     private fun updateImage(imagePart: InputStreamRequestBody, updateImage: Boolean): Completable {
-        // TODO make sure to add progress indicator for image upload
         if (updateImage) {
             val requestBodyForUpdatedImage = getRequestBodyForUpdatedImage(imagePart)
             return ideaApi.updateImageIdea(editIdea, requestBodyForUpdatedImage)
@@ -311,7 +292,6 @@ class NewEditIdeaViewModel(
         ideaImageUrl = uri.toString()
         view?.setIdeaImage(ideaImageUrl)
         uploadImageButtonText.set(R.string.change_image_idea_edit)
-        Log.d("observer_ex", "selected Image uri: $uri as string: $ideaImageUrl")
     }
 
     fun getRequestBodyForUpdatedImage(imagePart: InputStreamRequestBody) =
