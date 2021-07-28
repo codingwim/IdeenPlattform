@@ -14,5 +14,7 @@ interface NewEditIdeaView {
     fun setInputDescriptionError(any:Any)
     fun setInputCategoryError(any:Any)
     fun navigateBack()
+    fun infoDialog(id: String)
+    fun navigateToDetailFragment(id: String)
     fun navigateToAllIdeas()
 }

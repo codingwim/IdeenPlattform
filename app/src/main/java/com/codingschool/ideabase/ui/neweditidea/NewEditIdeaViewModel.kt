@@ -175,7 +175,7 @@ class NewEditIdeaViewModel(
             if (editIdea.isNotEmpty()) {
                 updateIdea(createIdea, imagePart)
             } else {
-
+                // NEW idea
                 val requestBodyForNewIdea = MultipartBody.Builder()
                     .setType(MultipartBody.FORM)
                     .addFormDataPart(
@@ -193,8 +193,7 @@ class NewEditIdeaViewModel(
                 ideaApi.addIdea(requestBodyForNewIdea)
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe({ idea ->
-                        view?.showToast(R.string.idea_added)
-                        view?.navigateToAllIdeas()
+                        view?.infoDialog(idea.id)
                     }, { t ->
                         val responseMessage = t.message
                         if (responseMessage != null) {

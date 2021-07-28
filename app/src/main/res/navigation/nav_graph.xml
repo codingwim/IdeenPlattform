@@ -115,6 +115,9 @@
         <action
             android:id="@+id/toAllIdeas"
             app:destination="@id/navigation_all_ideas" />
+        <action
+            android:id="@+id/toDetail"
+            app:destination="@id/detailFragment" />
     </fragment>
     <fragment
         android:id="@+id/commentFragment"
