@@ -1,5 +1,6 @@
 package com.codingschool.ideabase
 
+import android.content.ContentResolver
 import android.media.Image
 import androidx.room.Room
 import com.ashokvarma.gander.GanderInterceptor
@@ -82,6 +83,10 @@ val appModule = module {
         ImageHandler(androidContext(), get())
     }
 
+    single<ContentResolver> {
+        androidApplication().contentResolver
+    }
+
     factory { provideUserApi(get()) }
 
     factory<IdeaListAdapter> {
@@ -109,7 +114,7 @@ val appModule = module {
     }
 
     factory<NewEditIdeaViewModel> { parameters ->
-        NewEditIdeaViewModel(editIdea = parameters.get(), ideaApi = get(), prefs = get())
+        NewEditIdeaViewModel(editIdea = parameters.get(), ideaApi = get(), contentresolver = get(), prefs = get())
     }
 
     factory<CommentViewModel> { parameters ->
@@ -123,7 +128,6 @@ val appModule = module {
     factory<EditProfileViewModel> { parameters ->
         EditProfileViewModel(ideaApi = get(), prefs = get())
     }
-
 
 }
 

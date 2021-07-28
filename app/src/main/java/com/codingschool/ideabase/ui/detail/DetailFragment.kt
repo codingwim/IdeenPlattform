@@ -22,9 +22,9 @@ class DetailFragment: Fragment(), DetailView {
     }
 
     private lateinit var binding: FragmentDetailBinding
-    private lateinit var fab: FloatingActionButton
+
     private val imageHandler: ImageHandler by inject()
-    private var menuWithRelease = false
+    private var menuForManager = false
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -38,7 +38,6 @@ class DetailFragment: Fragment(), DetailView {
             container,
             false
         )
-
         return binding.root
     }
 
@@ -47,9 +46,7 @@ class DetailFragment: Fragment(), DetailView {
         val activityView = requireActivity().findViewById<View>(android.R.id.content)
 
         setHasOptionsMenu(true)
-
-        // hide fab button
-        fab = activityView.findViewById(R.id.fab)
+        val fab: FloatingActionButton = activityView.findViewById(R.id.fab)
         fab.hide()
 
         binding.vm = viewModel
@@ -86,7 +83,7 @@ class DetailFragment: Fragment(), DetailView {
 
     override fun addReleaseMenuItem() {
         // user MANGAGER, add release menu item
-        menuWithRelease = true
+        menuForManager = true
         requireActivity().invalidateOptionsMenu()
     }
 
@@ -102,8 +99,9 @@ class DetailFragment: Fragment(), DetailView {
     override fun onPrepareOptionsMenu(menu: Menu) {
         super.onPrepareOptionsMenu(menu)
         // if  admin, add release menu item
-        menu.findItem(R.id.release)?.setEnabled(menuWithRelease)
-        // if idea released, hide  menu item done with hide and hideMenu()
+        menu.findItem(R.id.release)?.setEnabled(menuForManager)
+        menu.findItem(R.id.delete)?.setEnabled(!menuForManager)
+        // if idea released, hide menu item done with hide and hideMenu()
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -118,7 +116,6 @@ class DetailFragment: Fragment(), DetailView {
                 viewModel.releaseIdea()
             }
         }
-
         return super.onOptionsItemSelected(item)
     }
 }

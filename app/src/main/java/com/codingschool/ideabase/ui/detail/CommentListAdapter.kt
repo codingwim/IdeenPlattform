@@ -19,16 +19,11 @@ class CommentListAdapter: RecyclerView.Adapter<CommentListAdapter.CommentViewHol
         ) {
             binding.tvCommentAuthor.text = comment.authorName
             binding.tvComment.text = comment.message
-            binding.root.setOnClickListener{
+            binding.tvCommentAuthor.setOnClickListener{
                 commentClickListener(comment.id)
             }
         }
     }
-
-/*    fun setData(list: List<Idea>) {
-        this.list = list
-        notifyDataSetChanged()
-    }*/
 
     fun updateList(newList: List<Comment>) {
         val diffResult = DiffUtil.calculateDiff(

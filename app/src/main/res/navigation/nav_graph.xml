@@ -27,7 +27,7 @@
     </fragment>
 
     <fragment
-        android:id="@+id/navigation_ideas"
+        android:id="@+id/navigation_all_ideas"
         android:name="com.codingschool.ideabase.ui.list.ListFragment"
         android:label="@string/ideas_bottom_nav"
         tools:layout="@layout/fragment_list" >
@@ -107,11 +107,17 @@
     <fragment
         android:id="@+id/newEditIdeaFragment"
         android:name="com.codingschool.ideabase.ui.neweditidea.NewEditIdeaFragment"
-        android:label="NewEditIdeaFragment" >
+        android:label="Add Idea">
         <argument
             android:name="editIdea"
-            app:argType="string"
-            android:defaultValue="" />
+            android:defaultValue=""
+            app:argType="string" />
+        <action
+            android:id="@+id/toAllIdeas"
+            app:destination="@id/navigation_all_ideas" />
+        <action
+            android:id="@+id/toDetail"
+            app:destination="@id/detailFragment" />
     </fragment>
     <fragment
         android:id="@+id/commentFragment"

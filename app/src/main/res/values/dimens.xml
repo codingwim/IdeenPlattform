@@ -29,5 +29,7 @@
     <dimen name="text_xlarge28">28sp</dimen>
 
     <dimen name="title_toolbar">16sp</dimen>
+    <dimen name="button_height">56dp</dimen>
+
 
 </resources>

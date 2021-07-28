@@ -15,8 +15,6 @@
         android:layout_height="match_parent"
         tools:context=".ui.detail.DetailFragment">
 
-
-
             <com.google.android.material.appbar.AppBarLayout
                 android:id="@+id/vwIdeaImage"
                 android:layout_width="match_parent"
@@ -45,7 +43,7 @@
                         android:layout_height="200dp"
                         android:scaleType="centerCrop"
                         app:layout_collapseMode="parallax"
-                        app:srcCompat="@drawable/idea_image" />
+                        app:srcCompat="@drawable/image_loading480_360" />
 
                     <!--<androidx.appcompat.widget.Toolbar
                         android:id="@+id/toolbar_detail"
@@ -124,6 +122,7 @@
                         android:layout_height="wrap_content"
                         android:layout_margin="@dimen/margin_standard"
                         android:text="@{vm.ideaDescritpion}"
+                        android:textSize="@dimen/text_medium18"
                         app:layout_constraintBottom_toTopOf="@id/tvCommentTitle"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
