@@ -159,4 +159,8 @@ class DetailViewModel(
     @get:Bindable
     var ideaDescritpion: String = ""
 
+    fun onAuthorClick() {
+        view?.navigateToProfile(id)
+    }
+
 }

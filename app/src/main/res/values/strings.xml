@@ -72,5 +72,6 @@
     <string name="error_not_email_adress">Your username should be an e-mail address</string>
     <string name="error_empty_password">Please enter your password</string>
     <string name="error_pwd_user_not_valid">Please enter a valid e-mail/password combination</string>
+    <string name="category_title">Category: </string>
 
 </resources>

@@ -6,6 +6,7 @@ interface ListView {
     fun navigateToDetailFragment(id: String)
     fun navigateToCommentFragment(id: String, title: String)
     fun navigateToNewIdeaFragment()
+    fun navigateToProfile(id: String)
     fun showSearchDialog(categoryArray: Array<String>, checkedItems: BooleanArray, searchText: String, messageSelecteCategories: String)
     fun showFilterDialog(categoryArray: Array<String>, checkedItems: BooleanArray, searchText: String, messageSelecteCategories: String)
 }

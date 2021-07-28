@@ -53,6 +53,8 @@ class DetailFragment: Fragment(), DetailView {
         binding.rvComments.adapter = viewModel.adapter
         viewModel.attachView(this)
         viewModel.init()
+
+
     }
 
     override fun showToast(any: Any) {

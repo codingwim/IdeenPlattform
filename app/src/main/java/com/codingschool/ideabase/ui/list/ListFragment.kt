@@ -10,6 +10,7 @@ import androidx.navigation.NavDirections
 import androidx.navigation.Navigation
 import com.codingschool.ideabase.R
 import com.codingschool.ideabase.databinding.FragmentListBinding
+import com.codingschool.ideabase.ui.detail.DetailFragmentDirections
 import com.codingschool.ideabase.utils.toast
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -103,6 +104,12 @@ class ListFragment : Fragment(), ListView {
     override fun navigateToNewIdeaFragment() {
         val action: NavDirections =
             ListFragmentDirections.toEditNewIdea("")
+        Navigation.findNavController(requireView()).navigate(action)
+    }
+
+    override fun navigateToProfile(id: String) {
+        val action: NavDirections =
+            ListFragmentDirections.toProfile(id)
         Navigation.findNavController(requireView()).navigate(action)
     }
 

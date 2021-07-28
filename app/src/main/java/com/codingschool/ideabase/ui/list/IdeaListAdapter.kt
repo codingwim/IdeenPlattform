@@ -14,19 +14,24 @@ class IdeaListAdapter(private val imageHandler: ImageHandler): RecyclerView.Adap
     lateinit var ideaClickListener: (String) -> Unit
     lateinit var commentClickListener: (String, String) -> Unit
     lateinit var rateClickListener: (String) -> Unit
+    lateinit var profileClickListener: (String) -> Unit
 
     class IdeaViewHolder(private val binding: IdeaItemBinding, private val imageHandler: ImageHandler ): RecyclerView.ViewHolder(binding.root) {
         fun setBinding(
             idea: Idea,
             ideaClickListener: (String) -> Unit,
             commentClickListener: (String, String) -> Unit,
-            rateClickListener: (String) -> Unit
+            rateClickListener: (String) -> Unit,
+            profileClickListener: (String) -> Unit
         ) {
             binding.tvIdeaTitle.text = idea.title //+ " R:" + idea.avgRating.toString()
             binding.tvAuthor.text = idea.authorName
             binding.tvIdeaDescription.text = idea.description
             imageHandler.getProfilePic(idea.author.profilePicture, binding.ivProfilePicture)
             imageHandler.getIdeaImage(idea.imageUrl, binding.ivIdea)
+            binding.ivProfilePicture.setOnClickListener {
+                profileClickListener(idea.author.id)
+            }
             binding.cvTop.setOnClickListener {
                 ideaClickListener(idea.id)
             }
@@ -84,7 +89,7 @@ class IdeaListAdapter(private val imageHandler: ImageHandler): RecyclerView.Adap
 
     override fun onBindViewHolder(holder: IdeaViewHolder, position: Int) {
         val idea = list[position]
-        holder.setBinding(idea, ideaClickListener, commentClickListener, rateClickListener)
+        holder.setBinding(idea, ideaClickListener, commentClickListener, rateClickListener, profileClickListener)
     }
 
     fun addIdeaClickListener(listener: (String) -> Unit) {
@@ -97,6 +102,10 @@ class IdeaListAdapter(private val imageHandler: ImageHandler): RecyclerView.Adap
 
     fun addRateClickListener(listener: (String) -> Unit) {
         this.rateClickListener = listener
+    }
+
+    fun addProfileClickListener(listener: (String) -> Unit) {
+        this.profileClickListener = listener
     }
 
     override fun getItemCount(): Int {

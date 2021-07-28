@@ -43,7 +43,9 @@ class ListViewModel(
         }
         adapter.addRateClickListener { id ->
             getMyRatingForThisIdeaAndStartDialog(id)
-
+        }
+        adapter.addProfileClickListener { id ->
+            view?.navigateToProfile(id)
         }
     }
 
