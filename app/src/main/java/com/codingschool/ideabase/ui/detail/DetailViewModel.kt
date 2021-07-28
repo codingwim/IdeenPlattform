@@ -91,7 +91,6 @@ class DetailViewModel(
                 view?.navigateBack()
             }, { t ->
                 val responseMessage = t.message
-                // TODO check response options
                 if (responseMessage != null) {
                     if (responseMessage.contains(
                             "HTTP 404",
@@ -125,7 +124,6 @@ class DetailViewModel(
 
             }, { t ->
                 val responseMessage = t.message
-                // TODO check response options
                 if (responseMessage != null) {
                     if (responseMessage.contains(
                             "HTTP 404",
