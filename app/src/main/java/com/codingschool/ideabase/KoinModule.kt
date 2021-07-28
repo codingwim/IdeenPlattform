@@ -97,7 +97,6 @@ val appModule = module {
         CommentListAdapter(imageHandler = get())
     }
 
-
     factory<LoginViewModel> { parameters ->
         LoginViewModel(uNameFromArgs = parameters.get(), ideaApi = get(), prefs = get())
     }
@@ -115,7 +114,7 @@ val appModule = module {
     }
 
     factory<NewEditIdeaViewModel> { parameters ->
-        NewEditIdeaViewModel(editIdea = parameters.get(), ideaApi = get(), contentresolver = get())
+        NewEditIdeaViewModel(editIdea = parameters.get(), ideaApi = get(), prefs = get(), contentresolver = get())
     }
 
     factory<CommentViewModel> { parameters ->

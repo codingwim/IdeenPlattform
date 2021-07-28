@@ -27,6 +27,7 @@ import retrofit2.HttpException
 class NewEditIdeaViewModel(
     private val editIdea: String,
     private val ideaApi: IdeaApi,
+    private val prefs: Preferences,
     private val contentresolver: ContentResolver
 ) : BaseObservable() {
 
@@ -34,7 +35,8 @@ class NewEditIdeaViewModel(
 
     private val compositeDisposable = CompositeDisposable()
 
-    private var categoryList = emptyList<String>()
+    private var categoryListDE = emptyList<String>()
+    private var categoryListEN = emptyList<String>()
     private var categoryListIds = emptyList<String>()
 
     fun attachView(view: NewEditIdeaView) {
@@ -54,14 +56,17 @@ class NewEditIdeaViewModel(
         ideaApi.getAllCategories()
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({ list ->
-                // TODO add locale check to take right value
-                categoryList = list.map { category ->
+                // locale check to take right value
+                categoryListEN = list.map { category ->
                     category.name_en
+                }
+                categoryListDE = list.map { category ->
+                    category.name_de
                 }
                 categoryListIds = list.map { category ->
                     category.id
                 }
-                view?.setCategoryListItems(categoryList)
+                view?.setCategoryListItems(if (prefs.isLangEn()) categoryListEN else categoryListDE)
             }, { t ->
                 val responseMessage = t.message
                 if (responseMessage != null) {
@@ -93,8 +98,8 @@ class NewEditIdeaViewModel(
                 ideaImageUrl = initialImageUrl
                 view?.setIdeaImage(ideaImageUrl)
                 ideaName = idea.title
-                // TODO locale check to get correct language category
-                ideaCategory = idea.category.name_en
+                // locale check to get correct language category
+                ideaCategory = if (prefs.isLangEn()) idea.category.name_en else idea.category.name_de
                 view?.setSelectedCategory(ideaCategory)
                 /*view?.setSelectedCategory(ideaCategory)*/
                 ideaDescritpion = idea.description
@@ -157,7 +162,8 @@ class NewEditIdeaViewModel(
         else fieldsNotEmpty = true
 
         if (fieldsNotEmpty) {
-            val categoryId = categoryListIds[categoryList.indexOf(ideaCategory)]
+            // locale check to retrieve position of selected category
+            val categoryId = categoryListIds[if (prefs.isLangEn()) categoryListEN.indexOf(ideaCategory) else categoryListDE.indexOf(ideaCategory) ]
             val createIdea = CreateIdea(
                 ideaName,
                 categoryId,

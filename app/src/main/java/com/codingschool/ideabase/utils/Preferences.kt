@@ -21,7 +21,7 @@ class Preferences(
     private val preferences: SharedPreferences =
         appContext.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
 
-    fun getLocale() = preferences.getString(LOCALE_STRING, "EN") ?: "EN"
+    fun getLocale() = preferences.getString(LOCALE_STRING, "en") ?: "en"
     fun getAuthString() = preferences.getString(BASE_AUTH_STRING, "") ?: ""
     fun getMyId() = preferences.getString(USER_ID, "") ?: ""
     fun isManager() = preferences.getBoolean(IS_MANAGER, false)
@@ -53,6 +53,7 @@ class Preferences(
     }
 
 
+    fun isLangEn() = getLocale().equals("en")
     /*fun setCredentialMail(mail: String) {
         preferences.edit().putString(Keys.USER_EMAIL, mail).apply()
     }
