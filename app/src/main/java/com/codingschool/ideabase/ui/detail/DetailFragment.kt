@@ -102,7 +102,8 @@ class DetailFragment: Fragment(), DetailView {
         super.onPrepareOptionsMenu(menu)
         // if  admin, add release menu item
         menu.findItem(R.id.release)?.setEnabled(menuWithRelease)
-        // if idea released, hide  menu item done with hide and hideMenu()
+        menu.findItem(R.id.delete)?.setEnabled(!menuWithRelease)
+        // if idea released, hide menu item done with hide and hideMenu()
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -117,7 +118,6 @@ class DetailFragment: Fragment(), DetailView {
                 viewModel.releaseIdea()
             }
         }
-
         return super.onOptionsItemSelected(item)
     }
 }

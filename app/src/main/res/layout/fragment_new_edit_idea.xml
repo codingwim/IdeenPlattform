@@ -27,8 +27,8 @@
             app:layout_constraintBottom_toTopOf="@+id/tilIdeaName"
             app:layout_constraintTop_toTopOf="parent"
 
-            app:srcCompat="@drawable/idea_image"
-            app:strokeColor="@color/yellow"
+            app:srcCompat="@drawable/image_not_set480_360"
+            app:strokeColor="@color/grey"
             app:strokeWidth="1dp"
 
             />

@@ -132,7 +132,7 @@ class NewEditIdeaFragment: Fragment(), NewEditIdeaView {
     }
 
     override fun navigateToAllIdeas() {
-        // todo add navgation to all ideas so we can see our newly added idea on top
+        // todo add navigation to all ideas so we can see our newly added idea on top
         Navigation.findNavController(requireView()).navigateUp()
     }
     /*   override fun setSelectedCategory(category: String) {
