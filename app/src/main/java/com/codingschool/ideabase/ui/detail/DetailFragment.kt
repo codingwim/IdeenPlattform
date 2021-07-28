@@ -45,11 +45,8 @@ class DetailFragment: Fragment(), DetailView {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val activityView = requireActivity().findViewById<View>(android.R.id.content)
 
         setHasOptionsMenu(true)
-        val fab: FloatingActionButton = activityView.findViewById(R.id.fab)
-        fab.hide()
 
         binding.vm = viewModel
         binding.rvComments.adapter = viewModel.adapter

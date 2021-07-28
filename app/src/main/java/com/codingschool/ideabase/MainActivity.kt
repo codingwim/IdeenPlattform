@@ -1,6 +1,7 @@
 package com.codingschool.ideabase
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.appcompat.app.ActionBar
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -11,16 +12,23 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.codingschool.ideabase.databinding.ActivityMainBinding
+import com.codingschool.ideabase.utils.Preferences
+import org.koin.android.ext.android.inject
+import java.util.*
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var navController: NavController
     private lateinit var binding: ActivityMainBinding
+    private val prefs: Preferences by inject()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        /*val locale = Locale.getDefault()
+        prefs.setLocale(locale.toString())*/
+        Log.d("observer_ex", "main activity locale: and prefs: ${prefs.getLocale()}")
         // TODO mianactivity binding
         val navView: BottomNavigationView = findViewById(R.id.nav_view)
         val actionBar = this.supportActionBar

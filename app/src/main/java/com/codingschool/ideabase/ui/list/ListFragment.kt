@@ -25,7 +25,6 @@ class ListFragment : Fragment(), ListView {
     }
 
     private lateinit var binding: FragmentListBinding
-    private lateinit var fab: FloatingActionButton
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -46,13 +45,8 @@ class ListFragment : Fragment(), ListView {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // get main activity view to access fab / toolbar
-        val activityView = requireActivity().findViewById<View>(android.R.id.content)
-
         // set fab button
-        fab = activityView.findViewById(R.id.fab)
-        fab.show()
-        fab.setOnClickListener {
+        binding.fab.setOnClickListener {
             viewModel.addIdeaClicked()
         }
         setHasOptionsMenu(true)

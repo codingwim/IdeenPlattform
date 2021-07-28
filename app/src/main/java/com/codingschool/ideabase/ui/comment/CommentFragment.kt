@@ -30,7 +30,6 @@ class CommentFragment : Fragment(), CommentView {
     }
 
     private lateinit var binding: FragmentCommentBinding
-    private lateinit var fab: FloatingActionButton
     private val imageHandler: ImageHandler by inject()
 
     override fun onCreateView(
@@ -51,12 +50,6 @@ class CommentFragment : Fragment(), CommentView {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        val activityView = requireActivity().findViewById<View>(android.R.id.content)
-
-        // hide fab button
-        fab = activityView.findViewById(R.id.fab)
-        fab.hide()
 
         //show keyboard and focus edittext
         binding.etComment.requestFocus()

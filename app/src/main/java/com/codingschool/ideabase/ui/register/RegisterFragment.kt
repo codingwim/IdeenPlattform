@@ -39,7 +39,6 @@ class RegisterFragment : Fragment(), RegisterView {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-
         binding.vm = viewModel
         viewModel.attachView(this)
     }

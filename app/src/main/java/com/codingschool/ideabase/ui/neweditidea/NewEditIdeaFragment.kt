@@ -36,7 +36,6 @@ class NewEditIdeaFragment: Fragment(), NewEditIdeaView {
 
     private lateinit var binding: FragmentNewEditIdeaBinding
     private val imageHandler: ImageHandler by inject()
-    private lateinit var fab: FloatingActionButton
     private lateinit var launcher: ActivityResultLauncher<Intent>
 
     override fun onAttach(context: Context) {
@@ -67,11 +66,6 @@ class NewEditIdeaFragment: Fragment(), NewEditIdeaView {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        // hide fab button
-        val activityView = requireActivity().findViewById<View>(android.R.id.content)
-        fab = activityView.findViewById(R.id.fab)
-        fab.hide()
 
         binding.vm = viewModel
         viewModel.attachView(this)

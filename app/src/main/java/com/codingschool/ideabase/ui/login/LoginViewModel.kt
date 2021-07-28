@@ -28,9 +28,11 @@ class LoginViewModel(
             // TODO
             // while "checking" in, rotate progressbar with info text!!
             // nice welcome screen like the beer screen, with progress indicator while also loading idealists!!!!
+
             checkCredentialsWithAPI()
             //Log.d("observer_ex", "prefs not empty")
         } else Log.d("observer_ex", "prefs empty")
+        Log.d("observer_ex", "logon prefs: ${prefs.getLocale()}")
     }
 
     fun attachView(view: LoginView) {

@@ -5,6 +5,7 @@ import android.content.SharedPreferences
 import com.codingschool.ideabase.utils.Keys.BASE_AUTH_STRING
 import com.codingschool.ideabase.utils.Keys.DRAFT_COMMENT
 import com.codingschool.ideabase.utils.Keys.IS_MANAGER
+import com.codingschool.ideabase.utils.Keys.LOCALE_STRING
 import com.codingschool.ideabase.utils.Keys.PREF_NAME
 import com.codingschool.ideabase.utils.Keys.USER_EMAIL
 import com.codingschool.ideabase.utils.Keys.USER_FNAME
@@ -20,7 +21,7 @@ class Preferences(
     private val preferences: SharedPreferences =
         appContext.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
 
-
+    fun getLocale() = preferences.getString(LOCALE_STRING, "EN") ?: "EN"
     fun getAuthString() = preferences.getString(BASE_AUTH_STRING, "") ?: ""
     fun getMyId() = preferences.getString(USER_ID, "") ?: ""
     fun isManager() = preferences.getBoolean(IS_MANAGER, false)
@@ -29,6 +30,9 @@ class Preferences(
 
     //fun getEmailString() = preferences.getString(USER_EMAIL, "")
 
+    fun setLocale(localeString: String) {
+        preferences.edit().putString(Keys.LOCALE_STRING, localeString).apply()
+    }
     fun setAuthString(authString: String) {
         preferences.edit().putString(Keys.BASE_AUTH_STRING, authString).apply()
     }
@@ -66,6 +70,7 @@ class Preferences(
 
 object Keys {
     const val PREF_NAME = "sharedpreferences"
+    const val LOCALE_STRING = "local_string"
     const val BASE_AUTH_STRING = "basic_auth_string"
     const val IS_MANAGER = "is_manager"
     const val USER_ID = "user_id"
