@@ -27,8 +27,7 @@ import retrofit2.HttpException
 class NewEditIdeaViewModel(
     private val editIdea: String,
     private val ideaApi: IdeaApi,
-    private val contentresolver: ContentResolver,
-    private val prefs: Preferences
+    private val contentresolver: ContentResolver
 ) : BaseObservable() {
 
     private var view: NewEditIdeaView? = null

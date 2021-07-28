@@ -31,7 +31,7 @@
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btSubmit"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/button_height"
             android:onClick="@{() -> vm.onSubmitClick()}"
             android:layout_margin="@dimen/margin_small"
             android:text="@string/submit_btn_comment"
@@ -53,7 +53,7 @@
             android:id="@+id/tvCommentTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/margin_standard"
+            android:layout_margin="@dimen/margin_large"
             android:ellipsize="end"
             android:maxLines="3"
             android:textSize="@dimen/text_medium18"
@@ -62,12 +62,14 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/vwLine"
-            tools:text="Idea: Wims Idea" />
+            android:text="@string/prof_info_will_be_visible_commenting"
+             />
 
         <EditText
             android:id="@+id/etComment"
             android:layout_width="match_parent"
             android:layout_height="0dp"
+            android:layout_margin="@dimen/margin_small"
             android:inputType="textMultiLine"
             android:hint="@string/write_comment_hint"
             android:focusable="true"

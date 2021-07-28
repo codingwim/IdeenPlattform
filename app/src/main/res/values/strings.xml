@@ -35,7 +35,7 @@
     <string name="cancel_comment_contenct_description">Cancel comment</string>
     <string name="submit_btn_comment">SUBMIT</string>
     <string name="write_comment_hint">Write comment…</string>
-    <string name="add_comment_cancelled">Adding comment cancelled</string>
+    <string name="add_comment_cancelled">Adding comment cancelled, without saving.</string>
     <string name="prof_info_will_be_visible_commenting">When you add a comment your profile information will be visible to all other registered users.</string>
     <string name="comment_empty_error_message">Please add some text.</string>
     <string name="thank_you_comment">Thank you for commenting!</string>
@@ -65,5 +65,8 @@
     <string name="error_empty_image">Please select and upload an image for your idea</string>
     <string name="idea_add_dialog_title">Your idea has been added</string>
     <string name="idea_add_dialog_message">An admin will review your idea in the coming days. When your idea is released by the admin, it cannot be deleted or edited anymore.</string>
+    <string name="filter_no_categories_selected">Filter: No categories selected</string>
+    <string name="search_for">Search for ...</string>
+    <string name="comment_saved_as_draft">The entered comment has been saved, but not posted</string>
 
 </resources>

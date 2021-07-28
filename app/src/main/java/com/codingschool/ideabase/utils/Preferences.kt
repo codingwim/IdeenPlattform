@@ -3,6 +3,7 @@ package com.codingschool.ideabase.utils
 import android.content.Context
 import android.content.SharedPreferences
 import com.codingschool.ideabase.utils.Keys.BASE_AUTH_STRING
+import com.codingschool.ideabase.utils.Keys.DRAFT_COMMENT
 import com.codingschool.ideabase.utils.Keys.IS_MANAGER
 import com.codingschool.ideabase.utils.Keys.PREF_NAME
 import com.codingschool.ideabase.utils.Keys.USER_EMAIL
@@ -22,6 +23,7 @@ class Preferences(
     fun getAuthString() = preferences.getString(BASE_AUTH_STRING, "") ?: ""
     fun getMyId() = preferences.getString(USER_ID, "") ?: ""
     fun isManager() = preferences.getBoolean(IS_MANAGER, false)
+    fun getCommentDraft() = preferences.getString(DRAFT_COMMENT, "") ?: ""
 
     //fun getEmailString() = preferences.getString(USER_EMAIL, "")
 
@@ -35,6 +37,10 @@ class Preferences(
 
     fun setCredentialID(id: String) {
         preferences.edit().putString(Keys.USER_ID, id).apply()
+    }
+
+    fun setCommentDraft(draft: String) {
+        preferences.edit().putString(Keys.DRAFT_COMMENT, draft).apply()
     }
 
     /*fun setCredentialMail(mail: String) {
@@ -60,5 +66,6 @@ object Keys {
     const val USER_FNAME = "user_fn"
     const val USER_LNAME = "user_ln"
     const val USER_EMAIL = "user_email"
+    const val DRAFT_COMMENT = "saved_comment_draft"
 
 }
