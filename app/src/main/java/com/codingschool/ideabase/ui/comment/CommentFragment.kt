@@ -19,6 +19,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import org.koin.android.ext.android.inject
 import org.koin.core.parameter.parametersOf
 import android.app.Activity
+import com.codingschool.ideabase.model.remote.ImageHandler
 import com.codingschool.ideabase.utils.hideKeyboard
 
 
@@ -26,13 +27,11 @@ class CommentFragment : Fragment(), CommentView {
 
     private val viewModel: CommentViewModel by inject<CommentViewModel> {
         parametersOf(arguments?.let { CommentFragmentArgs.fromBundle(it).id })
-        /*parametersOf(
-            arguments?.let { CommentFragmentArgs.fromBundle(it).id },
-            arguments?.let { CommentFragmentArgs.fromBundle(it).title })*/
     }
 
     private lateinit var binding: FragmentCommentBinding
     private lateinit var fab: FloatingActionButton
+    private val imageHandler: ImageHandler by inject()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -70,6 +69,11 @@ class CommentFragment : Fragment(), CommentView {
     override fun showToast(any: Any) {
         requireActivity().toast(any)
     }
+
+    override fun setProfileImage(url: String) {
+        imageHandler.getProfilePic(url, binding.ivProfilePicture)
+    }
+
 
     override fun setCommentEmptyError(any: Any) {
         binding.tvCommentTitle.text = requireActivity().getResString(any)

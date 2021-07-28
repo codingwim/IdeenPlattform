@@ -9,6 +9,7 @@ import com.codingschool.ideabase.utils.Keys.PREF_NAME
 import com.codingschool.ideabase.utils.Keys.USER_EMAIL
 import com.codingschool.ideabase.utils.Keys.USER_FNAME
 import com.codingschool.ideabase.utils.Keys.USER_ID
+import com.codingschool.ideabase.utils.Keys.USER_IMAGE
 import com.codingschool.ideabase.utils.Keys.USER_LNAME
 
 class Preferences(
@@ -24,6 +25,7 @@ class Preferences(
     fun getMyId() = preferences.getString(USER_ID, "") ?: ""
     fun isManager() = preferences.getBoolean(IS_MANAGER, false)
     fun getCommentDraft() = preferences.getString(DRAFT_COMMENT, "") ?: ""
+    fun getProfileImage()  = preferences.getString(USER_IMAGE, "") ?: ""
 
     //fun getEmailString() = preferences.getString(USER_EMAIL, "")
 
@@ -42,6 +44,10 @@ class Preferences(
     fun setCommentDraft(draft: String) {
         preferences.edit().putString(Keys.DRAFT_COMMENT, draft).apply()
     }
+    fun setProfileImage(imageUrl: String) {
+        preferences.edit().putString(USER_IMAGE, imageUrl).apply()
+    }
+
 
     /*fun setCredentialMail(mail: String) {
         preferences.edit().putString(Keys.USER_EMAIL, mail).apply()
@@ -63,6 +69,7 @@ object Keys {
     const val BASE_AUTH_STRING = "basic_auth_string"
     const val IS_MANAGER = "is_manager"
     const val USER_ID = "user_id"
+    const val USER_IMAGE = "profile_image_url"
     const val USER_FNAME = "user_fn"
     const val USER_LNAME = "user_ln"
     const val USER_EMAIL = "user_email"

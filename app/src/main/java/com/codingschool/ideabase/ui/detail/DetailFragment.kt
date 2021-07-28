@@ -59,8 +59,8 @@ class DetailFragment: Fragment(), DetailView {
         requireActivity().toast(any)
     }
 
-    override fun setIdeaImage(uri: String) {
-        imageHandler.getIdeaImage(uri, binding.ivIdea)
+    override fun setIdeaImage(url: String) {
+        imageHandler.getIdeaImage(url, binding.ivIdea)
     }
 
     override fun navigateBack() {
@@ -90,6 +90,12 @@ class DetailFragment: Fragment(), DetailView {
 
     override fun setActionBarTitle(title: String) {
         (activity as MainActivity).getSupportActionBar()?.title = title
+    }
+
+    override fun navigateToProfile(id: String) {
+        val action: NavDirections =
+            DetailFragmentDirections.toProfile(id)
+        Navigation.findNavController(requireView()).navigate(action)
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {

@@ -32,7 +32,9 @@ class DetailViewModel(
         view?.setActionBarTitle("Idea:")
         getIdeaAndShow()
         adapter.addCommentClickListener { id ->
-            Log.d("observer_ex", "Comment with id $id clicked")
+            Log.d("observer_ex", "Comment with user.id $id clicked")
+            view?.navigateToProfile(id)
+
 
         }
     }

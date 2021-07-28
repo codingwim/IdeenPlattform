@@ -6,21 +6,23 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.codingschool.ideabase.databinding.CommentItemBinding
 import com.codingschool.ideabase.model.data.Comment
+import com.codingschool.ideabase.model.remote.ImageHandler
 
-class CommentListAdapter: RecyclerView.Adapter<CommentListAdapter.CommentViewHolder>() {
+class CommentListAdapter(private val imageHandler: ImageHandler): RecyclerView.Adapter<CommentListAdapter.CommentViewHolder>() {
 
     private var list: List<Comment> = emptyList()
     lateinit var commentClickListener: (String) -> Unit
 
-    class CommentViewHolder(private val binding: CommentItemBinding): RecyclerView.ViewHolder(binding.root) {
+    class CommentViewHolder(private val binding: CommentItemBinding,private val imageHandler: ImageHandler): RecyclerView.ViewHolder(binding.root) {
         fun setBinding(
             comment: Comment,
             commentClickListener: (String) -> Unit
         ) {
             binding.tvCommentAuthor.text = comment.authorName
             binding.tvComment.text = comment.message
-            binding.tvCommentAuthor.setOnClickListener{
-                commentClickListener(comment.id)
+            imageHandler.getProfilePic(comment.author.profilePicture, binding.ivProfilePicture)
+            binding.ivProfilePicture.setOnClickListener{
+                commentClickListener(comment.author.id)
             }
         }
     }
@@ -58,7 +60,7 @@ class CommentListAdapter: RecyclerView.Adapter<CommentListAdapter.CommentViewHol
             parent,
             false
         )
-        return CommentViewHolder(binding)
+        return CommentViewHolder(binding, imageHandler)
     }
 
     override fun onBindViewHolder(holder: CommentViewHolder, position: Int) {

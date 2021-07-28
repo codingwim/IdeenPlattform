@@ -68,5 +68,9 @@
     <string name="filter_no_categories_selected">Filter: No categories selected</string>
     <string name="search_for">Search for ...</string>
     <string name="comment_saved_as_draft">The entered comment has been saved, but not posted</string>
+    <string name="error_empty_username">No empty username allowed</string>
+    <string name="error_not_email_adress">Your username should be an e-mail address</string>
+    <string name="error_empty_password">Please enter your password</string>
+    <string name="error_pwd_user_not_valid">Please enter a valid e-mail/password combination</string>
 
 </resources>

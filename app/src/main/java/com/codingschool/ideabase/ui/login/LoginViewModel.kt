@@ -29,7 +29,7 @@ class LoginViewModel(
             // while "checking" in, rotate progressbar with info text!!
             // nice welcome screen like the beer screen, with progress indicator while also loading idealists!!!!
             checkCredentialsWithAPI()
-            Log.d("observer_ex", "prefs not empty")
+            //Log.d("observer_ex", "prefs not empty")
         } else Log.d("observer_ex", "prefs empty")
     }
 
@@ -46,9 +46,9 @@ class LoginViewModel(
 
     fun onLoginClick() {
 
-        if (username.isEmpty()) view?.setInputUsernameError("No empty username allowed")
-        else if (!validEmail(username)) view?.setInputUsernameError("Your username should be an e-mail address")
-        else if (password.isEmpty()) view?.setInputPasswordError("Please your password ")
+        if (username.isEmpty()) view?.setInputUsernameError(R.string.error_empty_username)
+        else if (!validEmail(username)) view?.setInputUsernameError(R.string.error_not_email_adress)
+        else if (password.isEmpty()) view?.setInputPasswordError(R.string.error_empty_password)
         else {
             // fields are valid, letz build the encoded base Auth string, and try to "login" get own user data
             buildBasicAuthAndStoreInPrefs()
@@ -66,6 +66,7 @@ class LoginViewModel(
                 // TODO we could put the users firstname, etc in sharedprefs if we need to
                 prefs.setCredentialID(user.id)
                 prefs.setIsManager(user.isManager)
+                user.profilePicture?.let { prefs.setProfileImage(it) }
                 view?.navigateToTopRankedFragment()
                 //Log.d("observer_ex", "Current logged in user: ${user.firstname}")
             }, { t ->
@@ -83,7 +84,10 @@ class LoginViewModel(
                             "HTTP 401",
                             ignoreCase = true
                         )
-                    ) view?.showToast("You are not authorized to log in")
+                    ) {
+                        prefs.setCommentDraft("")
+                        view?.showToast(R.string.error_pwd_user_not_valid)
+                    }
                     else view?.showToast(R.string.network_issue_check_network)
                 }
                 Log.e("observer_ex", "exception adding new user: $t")
@@ -106,7 +110,7 @@ class LoginViewModel(
     }
 
     fun onPasswordTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-        if (count > 0) view?.resetPasswordError()
+        if (count in 1..2) view?.resetPasswordError()
     }
 
     private fun validEmail(email: String) =

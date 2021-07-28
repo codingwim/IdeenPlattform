@@ -26,6 +26,10 @@ class CommentViewModel (
         this.view = view
     }
 
+    fun init() {
+        view?.setProfileImage(prefs.getProfileImage())
+    }
+
     @get:Bindable
     var comment: String = prefs.getCommentDraft()
 
@@ -64,7 +68,7 @@ class CommentViewModel (
     }
 
     fun onCloseClick() {
-        view?.cancelDialog()
+        if (comment.isNotEmpty()) view?.cancelDialog() else view?.navigateBack()
     }
 
     fun onCancelWithoutDraft() {

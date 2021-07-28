@@ -94,8 +94,9 @@ val appModule = module {
     }
 
     factory<CommentListAdapter> {
-        CommentListAdapter()
+        CommentListAdapter(imageHandler = get())
     }
+
 
     factory<LoginViewModel> { parameters ->
         LoginViewModel(uNameFromArgs = parameters.get(), ideaApi = get(), prefs = get())

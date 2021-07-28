@@ -8,4 +8,5 @@ interface CommentView {
      fun resetCommentEmptyError()
      fun navigateBack()
      fun cancelDialog()
+     fun setProfileImage(url: String)
 }
