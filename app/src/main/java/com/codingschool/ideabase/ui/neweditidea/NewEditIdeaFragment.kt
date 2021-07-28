@@ -13,6 +13,7 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.Navigation
 import com.codingschool.ideabase.MainActivity
 import com.codingschool.ideabase.R
@@ -22,6 +23,7 @@ import com.codingschool.ideabase.utils.getResString
 import com.codingschool.ideabase.utils.toast
 import com.github.drjacky.imagepicker.ImagePicker
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 import org.koin.core.parameter.parametersOf
 
@@ -74,10 +76,6 @@ class NewEditIdeaFragment: Fragment(), NewEditIdeaView {
         binding.vm = viewModel
         viewModel.attachView(this)
         viewModel.init()
-
-        /*binding.tvCategory.onItemSelectedListener {
-
-        }*/
     }
 
 /*    override fun getStringResource(res: Int) {
@@ -117,13 +115,14 @@ class NewEditIdeaFragment: Fragment(), NewEditIdeaView {
         binding.tilCategory.error = requireActivity().getResString(any)
     }
 
-    override fun setIdeaImage(uri: String) {
-        imageHandler.getIdeaImage(uri, binding.ivIdeaImage)
+    override fun setIdeaImage(url: String) {
+        imageHandler.getIdeaImage(url, binding.ivIdeaImage)
     }
 
     override fun getImageDialog() {
         ImagePicker.with(requireActivity())
-            .maxResultSize(800,600,true)
+            .crop()
+            .maxResultSize(480,360,true)
             .createIntentFromDialog {
                 launcher.launch(it) }
     }
