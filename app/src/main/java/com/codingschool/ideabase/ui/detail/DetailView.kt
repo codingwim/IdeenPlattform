@@ -10,4 +10,6 @@ interface DetailView {
     fun addReleaseMenuItem()
     fun setActionBarTitle(title: String)
     fun navigateToProfile(id: String)
+    fun releaseDialog()
+    fun deleteDialog()
 }

@@ -64,7 +64,7 @@
     <string name="error_empty_category">Please choose a category for your idea</string>
     <string name="error_empty_image">Please select and upload an image for your idea</string>
     <string name="idea_add_dialog_title">Your idea has been added</string>
-    <string name="idea_add_dialog_message">An admin will review your idea in the coming days. When your idea is released by the admin, it cannot be deleted or edited anymore.</string>
+    <string name="idea_add_dialog_message">An admin will review your idea in the coming days. After your idea is released by the admin, it cannot be deleted or edited anymore.</string>
     <string name="filter_no_categories_selected">Filter: No categories selected</string>
     <string name="search_for">Search for ...</string>
     <string name="comment_saved_as_draft">The entered comment has been saved, but not posted</string>
@@ -73,5 +73,15 @@
     <string name="error_empty_password">Please enter your password</string>
     <string name="error_pwd_user_not_valid">Please enter a valid e-mail/password combination</string>
     <string name="category_title">Category: </string>
+    <string name="btn_release">RELEASE</string>
+    <string name="idea_released_message">Idea has been released</string>
+    <string name="release_cancelled_message">Release cancelled</string>
+    <string name="idea_deleted_message">Idea has been deleted</string>
+    <string name="delete_cancelled_message">Delete cancelled</string>
+    <string name="dialog_message_release">Once an idea is released, the author cannot edit or delete the idea anymore! The release cannot be undone.</string>
+    <string name="dialog_title_release">Release idea ?</string>
+    <string name="dialog_title_delete">Delete idea ?</string>
+    <string name="dialog_message_delete">This cannot be undone!</string>
+    <string name="btn_delete">DELETE</string>
 
 </resources>

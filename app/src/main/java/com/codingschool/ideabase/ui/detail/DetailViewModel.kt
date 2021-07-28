@@ -90,8 +90,7 @@ class DetailViewModel(
         ideaApi.deleteIdeaById(id)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
-                // todo add snacker with UNDO option ORRRRR warning message before deleting
-                view?.showToast("Idea has been deleted")
+                view?.showToast(R.string.idea_deleted_message)
                 view?.navigateBack()
             }, { t ->
                 val responseMessage = t.message
@@ -101,12 +100,12 @@ class DetailViewModel(
                             "HTTP 404",
                             ignoreCase = true
                         )
-                    ) view?.showToast("Some parameter was missing. Deleting idea failed.")
+                    ) view?.showToast(R.string.parameter_missing_message)
                     else if (responseMessage.contains(
                             "HTTP 400",
                             ignoreCase = true
                         )
-                    ) view?.showToast("Idea was not found. Deleting idea failed.")
+                    ) view?.showToast(R.string.idea_not_found_message)
                     else view?.showToast(R.string.network_issue_check_network)
                 }
                 Log.e("observer_ex", "exception deleting idea: $t")
@@ -123,10 +122,10 @@ class DetailViewModel(
         ideaApi.releaseIdea(id, updateReleased)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
-                // todo add snacker with UNDO option ORRRRR warning message before releasing
-                view?.showToast("Idea has been released")
-                // remove complete menu on release ?
+                view?.showToast(R.string.idea_released_message)
+                // remove complete menu on release
                 view?.hideMenu()
+
             }, { t ->
                 val responseMessage = t.message
                 // TODO check response options
@@ -135,12 +134,12 @@ class DetailViewModel(
                             "HTTP 404",
                             ignoreCase = true
                         )
-                    ) view?.showToast("Some parameter was missing. Release idea failed.")
+                    ) view?.showToast(R.string.parameter_missing_message)
                     else if (responseMessage.contains(
                             "HTTP 400",
                             ignoreCase = true
                         )
-                    ) view?.showToast("Idea was not found. Release idea failed failed.")
+                    ) view?.showToast(R.string.idea_not_found_message)
                     else view?.showToast(R.string.network_issue_check_network)
                 }
                 Log.e("observer_ex", "exception releasing idea: $t")
@@ -163,4 +162,19 @@ class DetailViewModel(
         view?.navigateToProfile(id)
     }
 
+    fun onConfirmRelease() {
+        releaseIdea()
+    }
+
+    fun onCancelRelease() {
+        view?.showToast(R.string.release_cancelled_message)
+    }
+
+    fun onConfirmDelete() {
+        deleteIdea()
+    }
+
+    fun onCancelDelete() {
+        view?.showToast(R.string.delete_cancelled_message)
+    }
 }
