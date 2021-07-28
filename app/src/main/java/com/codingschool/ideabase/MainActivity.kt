@@ -70,8 +70,4 @@ class MainActivity : AppCompatActivity() {
         return navController.navigateUp()
     }
 
-    fun setActionBarTitle(title: String) {
-        actionBar?.title = title
-    }
-
 }

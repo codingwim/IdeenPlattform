@@ -63,7 +63,6 @@ class NewEditIdeaFragment: Fragment(), NewEditIdeaView {
             container,
             false
         )
-
         return binding.root
     }
 
@@ -121,9 +120,13 @@ class NewEditIdeaFragment: Fragment(), NewEditIdeaView {
         imageHandler.getIdeaImage(url, binding.ivIdeaImage)
     }
 
+    override fun setSelectedCategory(category: String) {
+        binding.tvCategory.setText(category, true)
+    }
+
     override fun getImageDialog() {
         ImagePicker.with(requireActivity())
-            .crop()
+            .crop(16f, 9f)
             .maxResultSize(480,360,true)
             .createIntentFromDialog {
                 launcher.launch(it) }
@@ -138,7 +141,4 @@ class NewEditIdeaFragment: Fragment(), NewEditIdeaView {
             NewEditIdeaFragmentDirections.toAllIdeas()
         Navigation.findNavController(requireView()).navigate(action)
     }
-    /*   override fun setSelectedCategory(category: String) {
-           binding.tvCategory.setText(category, false)
-       }*/
 }

@@ -39,7 +39,6 @@ class NewEditIdeaViewModel(
     private var categoryList = emptyList<String>()
     private var categoryListIds = emptyList<String>()
 
-
     fun attachView(view: NewEditIdeaView) {
         this.view = view
     }
@@ -98,6 +97,7 @@ class NewEditIdeaViewModel(
                 ideaName = idea.title
                 // TODO locale check to get correct language category
                 ideaCategory = idea.category.name_en
+                view?.setSelectedCategory(ideaCategory)
                 /*view?.setSelectedCategory(ideaCategory)*/
                 ideaDescritpion = idea.description
                 notifyPropertyChanged(BR.ideaName)

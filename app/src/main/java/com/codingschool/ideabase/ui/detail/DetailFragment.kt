@@ -22,7 +22,7 @@ class DetailFragment: Fragment(), DetailView {
     }
 
     private lateinit var binding: FragmentDetailBinding
-    private lateinit var fab: FloatingActionButton
+
     private val imageHandler: ImageHandler by inject()
     private var menuForManager = false
 
@@ -46,9 +46,7 @@ class DetailFragment: Fragment(), DetailView {
         val activityView = requireActivity().findViewById<View>(android.R.id.content)
 
         setHasOptionsMenu(true)
-
-        // hide fab button
-        fab = activityView.findViewById(R.id.fab)
+        val fab: FloatingActionButton = activityView.findViewById(R.id.fab)
         fab.hide()
 
         binding.vm = viewModel

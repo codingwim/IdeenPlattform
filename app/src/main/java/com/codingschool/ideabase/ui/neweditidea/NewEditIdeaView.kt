@@ -6,7 +6,7 @@ interface NewEditIdeaView {
     fun setActionBarTitle(title: String)
     fun setCategoryListItems(items: List<String>)
     fun setIdeaImage(url: String)
-    //fun setSelectedCategory(category: String)
+    fun setSelectedCategory(category: String)
     fun getImageDialog()
     fun resetEmptyIdeaName()
     fun resetEmptyDescription()
