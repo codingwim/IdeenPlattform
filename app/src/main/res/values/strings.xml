@@ -83,5 +83,10 @@
     <string name="dialog_title_delete">Delete idea ?</string>
     <string name="dialog_message_delete">This cannot be undone!</string>
     <string name="btn_delete">DELETE</string>
+    <string name="rating_1">I don\'t like it at all</string>
+    <string name="rating_2">Not so cool</string>
+    <string name="rating_3">Its fine</string>
+    <string name="rating_4">Cool</string>
+    <string name="rating_5">\"Mega Cool \"</string>
 
 </resources>

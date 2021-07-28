@@ -11,6 +11,7 @@ import androidx.navigation.Navigation
 import com.codingschool.ideabase.R
 import com.codingschool.ideabase.databinding.FragmentListBinding
 import com.codingschool.ideabase.ui.detail.DetailFragmentDirections
+import com.codingschool.ideabase.utils.getResString
 import com.codingschool.ideabase.utils.toast
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -55,14 +56,23 @@ class ListFragment : Fragment(), ListView {
         binding.rvIdeas.adapter = viewModel.adapter
         viewModel.attachView(this)
         viewModel.init()
-
     }
 
     override fun showToast(any: Any) {
         requireActivity().toast(any)
     }
 
-    override fun showPopupRatingDialog(id: String, ratingArray: Array<String>, checkedItem: Int) {
+    override fun getString(any: Any) =
+        requireActivity().getResString(any)
+
+    override fun showPopupRatingDialog(id: String, checkedItem: Int) {
+        val ratingArray =
+            arrayOf(
+                getString(R.string.rating_1),
+                getString(R.string.rating_2),
+                getString(R.string.rating_3),
+                getString(R.string.rating_4),
+                getString(R.string.rating_5))
         var newCheckedItem = 0
         MaterialAlertDialogBuilder(
             requireActivity(),

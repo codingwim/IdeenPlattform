@@ -2,7 +2,8 @@ package com.codingschool.ideabase.ui.list
 
 interface ListView {
     fun showToast(any: Any)
-    fun showPopupRatingDialog(id: String, ratingArray: Array<String>, checkedItem: Int)
+    fun getString(any: Any): String
+    fun showPopupRatingDialog(id: String, checkedItem: Int)
     fun navigateToDetailFragment(id: String)
     fun navigateToCommentFragment(id: String, title: String)
     fun navigateToNewIdeaFragment()
