@@ -28,14 +28,11 @@ class DetailViewModel(
     }
 
     fun init() {
-        //get idea with api, and set the bindables, set menu items, set comment ist
+        //get idea with api, and set the bindables, set menu items, set comment, set comment author click
         view?.setActionBarTitle("Idea:")
         getIdeaAndShow()
         adapter.addCommentClickListener { id ->
-            Log.d("observer_ex", "Comment with user.id $id clicked")
             view?.navigateToProfile(id)
-
-
         }
     }
 
@@ -52,9 +49,9 @@ class DetailViewModel(
                 view?.setIdeaImage(idea.imageUrl)
                 ideaTitle = idea.title
                 ideaAuthor = idea.authorName
-                // TODO locale check to get correct language category
-                ideaCategory = idea.category.name_en
-                ideaDescritpion = idea.description
+                // locale check to get correct language category
+                ideaCategory = if (prefs.isLangEn()) idea.category.name_en else idea.category.name_de
+                ideaDescription = idea.description
                 if (idea.comments.isEmpty()) view?.hideCommentTitle()
                 notifyPropertyChanged(BR.ideaTitle)
                 notifyPropertyChanged(BR.ideaAuthor)
@@ -71,14 +68,14 @@ class DetailViewModel(
                         )
                     ) {
                         Log.d("observer_ex", "401 Authorization not valid")
-                        view?.showToast("You are not autorized to log in")
+                        view?.showToast(R.string.not_authorized)
                     } else if (responseMessage.contains(
                             "HTTP 404",
                             ignoreCase = true
                         )
                     ) {
                         Log.d("observer_ex", "404 Idea not found")
-                        view?.showToast("Idea not found")
+                        view?.showToast(R.string.idea_not_found_message)
                     } else view?.showToast(R.string.network_issue_check_network)
                 }
                 Log.e("observer_ex", "exception getting idea: $t")
@@ -156,7 +153,7 @@ class DetailViewModel(
     var ideaCategory: String = ""
 
     @get:Bindable
-    var ideaDescritpion: String = ""
+    var ideaDescription: String = ""
 
     fun onAuthorClick() {
         view?.navigateToProfile(id)

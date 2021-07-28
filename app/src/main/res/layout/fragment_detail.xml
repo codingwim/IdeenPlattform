@@ -145,7 +145,7 @@
                         android:layout_marginStart="@dimen/margin_large"
                         android:layout_marginEnd="@dimen/margin_large"
                         android:layout_marginBottom="@dimen/margin_small"
-                        android:text="@{vm.ideaDescritpion}"
+                        android:text="@{vm.ideaDescription}"
                         android:textSize="@dimen/text_medium22"
                         app:layout_constraintBottom_toTopOf="@id/tvCommentTitle"
                         app:layout_constraintEnd_toEndOf="parent"
