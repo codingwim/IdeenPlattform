@@ -24,7 +24,7 @@ class DetailFragment: Fragment(), DetailView {
     private lateinit var binding: FragmentDetailBinding
     private lateinit var fab: FloatingActionButton
     private val imageHandler: ImageHandler by inject()
-    private var menuWithRelease = false
+    private var menuForManager = false
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -85,7 +85,7 @@ class DetailFragment: Fragment(), DetailView {
 
     override fun addReleaseMenuItem() {
         // user MANGAGER, add release menu item
-        menuWithRelease = true
+        menuForManager = true
         requireActivity().invalidateOptionsMenu()
     }
 
@@ -101,8 +101,8 @@ class DetailFragment: Fragment(), DetailView {
     override fun onPrepareOptionsMenu(menu: Menu) {
         super.onPrepareOptionsMenu(menu)
         // if  admin, add release menu item
-        menu.findItem(R.id.release)?.setEnabled(menuWithRelease)
-        menu.findItem(R.id.delete)?.setEnabled(!menuWithRelease)
+        menu.findItem(R.id.release)?.setEnabled(menuForManager)
+        menu.findItem(R.id.delete)?.setEnabled(!menuForManager)
         // if idea released, hide menu item done with hide and hideMenu()
     }
 

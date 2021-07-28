@@ -14,11 +14,13 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.NavDirections
 import androidx.navigation.Navigation
 import com.codingschool.ideabase.MainActivity
 import com.codingschool.ideabase.R
 import com.codingschool.ideabase.databinding.FragmentNewEditIdeaBinding
 import com.codingschool.ideabase.model.remote.ImageHandler
+import com.codingschool.ideabase.ui.detail.DetailFragmentDirections
 import com.codingschool.ideabase.utils.getResString
 import com.codingschool.ideabase.utils.toast
 import com.github.drjacky.imagepicker.ImagePicker
@@ -132,8 +134,9 @@ class NewEditIdeaFragment: Fragment(), NewEditIdeaView {
     }
 
     override fun navigateToAllIdeas() {
-        // todo add navigation to all ideas so we can see our newly added idea on top
-        Navigation.findNavController(requireView()).navigateUp()
+        val action: NavDirections =
+            NewEditIdeaFragmentDirections.toAllIdeas()
+        Navigation.findNavController(requireView()).navigate(action)
     }
     /*   override fun setSelectedCategory(category: String) {
            binding.tvCategory.setText(category, false)
