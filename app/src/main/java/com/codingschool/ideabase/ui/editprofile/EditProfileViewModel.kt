@@ -1,20 +1,28 @@
 package com.codingschool.ideabase.ui.editprofile
 
+import android.content.ContentResolver
+import android.net.Uri
 import android.util.Log
+import androidx.core.net.toUri
 import androidx.databinding.BaseObservable
 import androidx.databinding.Bindable
 import androidx.databinding.library.baseAdapters.BR
 import com.codingschool.ideabase.R
 import com.codingschool.ideabase.model.data.UpdateUser
 import com.codingschool.ideabase.model.remote.IdeaApi
+import com.codingschool.ideabase.model.remote.InputStreamRequestBody
 import com.codingschool.ideabase.utils.Preferences
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.addTo
+import okhttp3.MediaType.Companion.toMediaType
+import okhttp3.MultipartBody
+import retrofit2.HttpException
 
 class EditProfileViewModel(
     private val ideaApi: IdeaApi,
-    private val prefs: Preferences
+    private val prefs: Preferences,
+    private val contentresolver: ContentResolver
 ) : BaseObservable() {
 
 
@@ -24,12 +32,19 @@ class EditProfileViewModel(
     fun init() {
         if (prefs.getAuthString().isNotEmpty()) {
             setMyCredentialsFromAPI()
-            Log.d("observer_ex", "prefs not empty")
-        } else Log.d("observer_ex", "prefs empty")
+        } else {
+            view?.showToast("You are not authorized to edit this profile")
+            //view?.navigateBack()
+        }
     }
+
     fun attachView(view: EditProfileView) {
         this.view = view
     }
+
+    private var initialProfileImageUrl: String = ""
+    private var profileImageUri: Uri = "".toUri()
+    private var profileImageUrl: String = ""
 
     var email: String =""
 
@@ -47,6 +62,66 @@ class EditProfileViewModel(
 
     @get:Bindable
     var profilepicture: String = ""
+
+    fun onGetProfileImageClick() {
+        view?.getProfileImageDialog()
+    }
+
+    fun setSelectedProfileImage(uri: Uri) {
+        profileImageUri = uri
+        profileImageUrl = uri.toString()
+        view?.setProfilePicture(profileImageUrl)
+        view?.showOverlayChangePicture()
+
+        updateProfilePicture()
+    }
+
+    private fun updateMyProfilePicture() {
+        TODO("Not yet implemented")
+    }
+
+    private fun updateProfilePicture() {
+        val imagePart =
+            InputStreamRequestBody("image/*".toMediaType(), contentresolver, profileImageUri)
+        val requestBodyForUpdatedImage = getRequestBodyForUpdatedImage(imagePart)
+        ideaApi.updateMyProfilePicture(requestBodyForUpdatedImage)
+            .onErrorComplete {
+                it is HttpException
+            }
+            .andThen {
+                initialProfileImageUrl = profileImageUrl
+            }
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({
+                // TODO snacker to say you can leave withour savinf if you only wanted to edit the profile picture
+                view?.showToast("You're profile picture has been updated")
+                Log.d("observer_ex", "Profile image updated")
+                //view?.navigateBack()
+            }, { t ->
+                val responseMessage = t.message
+                if (responseMessage != null) {
+                    if (responseMessage.contains(
+                            "HTTP 400",
+                            ignoreCase = true
+                        )
+                    ) {
+                        view?.showToast(R.string.parameter_missing_message)
+                        Log.d("observer_ex", "Parameter missing: $t")
+                    } else if (responseMessage.contains(
+                            "HTTP 401",
+                            ignoreCase = true
+                        )
+                    ) {
+                        view?.showToast(R.string.not_authorized)
+                        Log.d("observer_ex", "Not authorized: $t")
+                    } else view?.showToast(R.string.network_issue_check_network)
+                }
+                Log.e("observer_ex", "exception updating idea: $t")
+            }).addTo(compositeDisposable)
+
+
+
+    }
 
     fun onSaveClick() {
         // check empty fields
@@ -86,7 +161,6 @@ class EditProfileViewModel(
                 password,
                 firstname,
                 lastname,
-
             )
             ideaApi.updateUser(updatedUser)
                 .observeOn(AndroidSchedulers.mainThread())
@@ -118,21 +192,23 @@ class EditProfileViewModel(
         ideaApi.getOwnUser().observeOn(AndroidSchedulers.mainThread())
             //.subscribeOn(Schedulers.io())
             .subscribe({ user ->
+                // todo change to snacker with OK button
                 view?.showToast("Hi ${user.firstname}, if you change your password, you will be redirected to login again!")
+
+                initialProfileImageUrl = user.profilePicture ?: ""
+                profileImageUrl = initialProfileImageUrl
+                if (profileImageUrl.isNotEmpty())
+                view?.setProfilePicture(profileImageUrl)
+                view?.showOverlayChangePicture()
+
                 email = user.email
                 firstname = user.firstname
                 lastname = user.lastname
 
-               // profilepicture= user.profilePicture.toString()
-
                 notifyPropertyChanged(BR.firstname)
                 notifyPropertyChanged(BR.lastname)
-
-                //notifyPropertyChanged(BR.profilepicture)
-
-
             }, { t ->
-                val responseMessage = t.message
+                /*val responseMessage = t.message
                 if (responseMessage != null) {
                     if (responseMessage.contains(
                             "HTTP 404",
@@ -148,7 +224,7 @@ class EditProfileViewModel(
                         )
                     ) view?.showToast("You are not autorized to log in")
                     else view?.showToast(R.string.network_issue_check_network)
-                }
+                }*/
                 Log.e("observer_ex", "exception getting user info: $t")
             }).addTo(compositeDisposable)
     }
@@ -172,4 +248,13 @@ class EditProfileViewModel(
     fun onPassword2TextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
         view?.resetPasswordRepeatError()
     }
+    fun getRequestBodyForUpdatedImage(imagePart: InputStreamRequestBody) =
+        MultipartBody.Builder()
+            .setType(MultipartBody.FORM)
+            .addFormDataPart(
+                "image",
+                "idea_image.jpeg",
+                imagePart
+            )
+            .build()
 }

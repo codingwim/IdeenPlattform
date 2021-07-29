@@ -1,6 +1,7 @@
 package com.codingschool.ideabase
 
 import android.content.ContentResolver
+import android.icu.util.TimeUnit
 import androidx.room.Room
 import com.ashokvarma.gander.GanderInterceptor
 import com.codingschool.ideabase.model.data.room.AppDataBase
@@ -19,6 +20,7 @@ import com.codingschool.ideabase.ui.register.RegisterViewModel
 import com.codingschool.ideabase.utils.Preferences
 import com.codingschool.ideabase.utils.baseUrl
 import io.reactivex.schedulers.Schedulers
+import okhttp3.CacheControl
 import okhttp3.OkHttpClient
 import org.koin.android.ext.koin.androidApplication
 import org.koin.android.ext.koin.androidContext
@@ -59,6 +61,19 @@ val appModule = module {
                         .build()
                 )
             }
+            /*.addNetworkInterceptor { chain ->
+                val cacheControl = CacheControl.Builder()
+                    .maxAge(100, java.util.concurrent.TimeUnit.DAYS)
+                    .build()
+                chain.proceed(
+                    chain.request().newBuilder()
+                        .header(
+                            "Cache-Control",
+                            cacheControl.toString()
+                        )
+                        .build()
+                )
+            }*/
             .addInterceptor(
                 GanderInterceptor(androidApplication())
                     .showNotification(true)
@@ -110,7 +125,7 @@ val appModule = module {
     }
 
     factory<NewEditIdeaViewModel> { parameters ->
-        NewEditIdeaViewModel(editIdea = parameters.get(), ideaApi = get(), prefs = get(), contentresolver = get())
+        NewEditIdeaViewModel(editIdeaId = parameters.get(), ideaApi = get(), prefs = get(), contentresolver = get())
     }
 
     factory<CommentViewModel> { parameters ->
@@ -122,7 +137,7 @@ val appModule = module {
         ProfileViewModel(id = get(), ideaApi = get(),prefs = get())
     }
     factory<EditProfileViewModel> { parameters ->
-        EditProfileViewModel(ideaApi = get(), prefs = get())
+        EditProfileViewModel(ideaApi = get(), prefs = get(), contentresolver = get())
     }
 
 }

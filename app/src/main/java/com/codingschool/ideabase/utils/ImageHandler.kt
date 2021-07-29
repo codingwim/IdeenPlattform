@@ -17,7 +17,6 @@ class ImageHandler(
         .downloader(OkHttp3Downloader(okHttpClient))
         .build()
 
-
     fun getProfilePic(url: String?, view: ImageView) {
         val uriOrDrawable = if (url != null) url else "R.drawable.ic_baseline_person_24"
         picasso

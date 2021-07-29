@@ -31,4 +31,5 @@
     <dimen name="title_toolbar">16sp</dimen>
     <dimen name="margin_special">30dp</dimen>
     <dimen name="button_height">56dp</dimen>
+    <dimen name="profile_picture_edit_profile">160dp</dimen>
 </resources>

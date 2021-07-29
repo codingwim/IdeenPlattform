@@ -27,7 +27,7 @@ interface IdeaApi {
 
     // cath response error or empty
     @POST("user/image")
-    fun updateMyProfilePicture(@Body multiPartImageBody:  RequestBody): Response<Unit>
+    fun updateMyProfilePicture(@Body multiPartImageBody:  RequestBody): Completable
 
     @DELETE("user/image")
     fun deleteProfilePicture(): Completable

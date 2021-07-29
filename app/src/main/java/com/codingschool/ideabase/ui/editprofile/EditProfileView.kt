@@ -2,6 +2,9 @@ package com.codingschool.ideabase.ui.editprofile
 
 interface EditProfileView {
     fun showToast(any: Any)
+    fun setProfilePicture(url: String?)
+    fun getProfileImageDialog()
+    fun showOverlayChangePicture()
     fun setInputFirstnameError(any: Any)
     fun resetFirstnameError()
     fun setInputLastnameError(any: Any)

@@ -25,7 +25,7 @@ import okhttp3.RequestBody.Companion.toRequestBody
 import retrofit2.HttpException
 
 class NewEditIdeaViewModel(
-    private val editIdea: String,
+    private val editIdeaId: String,
     private val ideaApi: IdeaApi,
     private val prefs: Preferences,
     private val contentresolver: ContentResolver
@@ -47,7 +47,7 @@ class NewEditIdeaViewModel(
         // optionally: add progress indicator loading categories / prefill and wait (completable?) disable update button till loaded
         getAndSetCategoryItems()
         // set edittexts with hint or prefill depending on editIdea (id) or editIdea("") (default)
-        if (editIdea.isNotEmpty()) {
+        if (editIdeaId.isNotEmpty()) {
             getIdeaAndPrefill()
         }
     }
@@ -88,7 +88,7 @@ class NewEditIdeaViewModel(
         uploadImageButtonText.set(R.string.change_image_idea_edit)
         view?.setActionBarTitle("Edit idea")
 
-        ideaApi.getIdeaById(editIdea)
+        ideaApi.getIdeaById(editIdeaId)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({ idea ->
                 // now set all the bindable details, including image
@@ -177,7 +177,7 @@ class NewEditIdeaViewModel(
                 InputStreamRequestBody("image/*".toMediaType(), contentresolver, ideaImageUri)
 
             // UPDATE OR NEW ?
-            if (editIdea.isNotEmpty()) {
+            if (editIdeaId.isNotEmpty()) {
                 updateIdea(createIdea, imagePart)
             } else {
                 // NEW idea
@@ -220,7 +220,7 @@ class NewEditIdeaViewModel(
     private fun updateIdea(createIdea: CreateIdea, imagePart: InputStreamRequestBody) {
 
         val updateImage = !ideaImageUrl.equals(initialImageUrl, false)
-        ideaApi.updateIdea(editIdea, createIdea)
+        ideaApi.updateIdea(editIdeaId, createIdea)
             .onErrorComplete {
                 it is HttpException
             }
@@ -274,7 +274,7 @@ class NewEditIdeaViewModel(
     private fun updateImage(imagePart: InputStreamRequestBody, updateImage: Boolean): Completable {
         if (updateImage) {
             val requestBodyForUpdatedImage = getRequestBodyForUpdatedImage(imagePart)
-            return ideaApi.updateImageIdea(editIdea, requestBodyForUpdatedImage)
+            return ideaApi.updateImageIdea(editIdeaId, requestBodyForUpdatedImage)
         } else return Completable.complete()
     }
 

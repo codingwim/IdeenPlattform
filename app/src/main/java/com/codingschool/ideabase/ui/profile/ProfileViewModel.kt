@@ -1,6 +1,8 @@
 package com.codingschool.ideabase.ui.profile
 
+import android.net.Uri
 import android.util.Log
+import androidx.core.net.toUri
 import androidx.databinding.BaseObservable
 import androidx.databinding.Bindable
 import com.codingschool.ideabase.R
@@ -28,6 +30,10 @@ class ProfileViewModel(
     fun init() {
         getUserProfileAndShow()
     }
+
+    //private var profilePictureUri: Uri = "".toUri()
+    private var profilePictureUrl: String = ""
+
     @get:Bindable
     var email: String =""
 
@@ -48,6 +54,7 @@ class ProfileViewModel(
         ideaApi.getUserById(getId)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({ user ->
+                view?.setProfilePicture(user.profilePicture)
                 name = user.firstname + " " + user.lastname
                 email = if (isMyProfile()) user.email else ""
                 firstname = user.firstname
@@ -61,8 +68,7 @@ class ProfileViewModel(
                 notifyPropertyChanged(BR.lastname)
                 notifyPropertyChanged(BR.role)
 
-
-                if (!isMyProfile()) view?.hideMenu()
+                if (isMyProfile()) view?.showMenu()
 
 
             }, { t ->
@@ -104,6 +110,6 @@ class ProfileViewModel(
         view?.navigateToLoginFragment("")
     }
 
-    private fun isMyProfile() = id.isEmpty()
+    private fun isMyProfile() = id.isEmpty() or id.equals(prefs.getMyId())
 
 }

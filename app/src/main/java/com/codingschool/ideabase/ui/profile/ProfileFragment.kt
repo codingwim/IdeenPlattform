@@ -10,6 +10,7 @@ import com.codingschool.ideabase.R
 import com.codingschool.ideabase.databinding.FragmentProfileBinding
 import com.codingschool.ideabase.ui.detail.DetailFragmentArgs
 import com.codingschool.ideabase.ui.register.RegisterFragmentDirections
+import com.codingschool.ideabase.utils.ImageHandler
 import com.codingschool.ideabase.utils.toast
 import org.koin.android.ext.android.inject
 import org.koin.core.parameter.parametersOf
@@ -20,6 +21,7 @@ import org.koin.core.parameter.parametersOf
         parametersOf(arguments?.let { ProfileFragmentArgs.fromBundle(it).id })
     }
     private lateinit var binding: FragmentProfileBinding
+     private val imageHandler: ImageHandler by inject()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -39,8 +41,6 @@ import org.koin.core.parameter.parametersOf
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        setHasOptionsMenu(true)
 
         binding.vm = viewModel
         viewModel.attachView(this)
@@ -69,8 +69,16 @@ import org.koin.core.parameter.parametersOf
         requireActivity().toast(any)
     }
 
+     override fun setProfilePicture(url: String?) {
+         imageHandler.getProfilePic(url, binding.ivProfilePicture)
+     }
+
      override fun hideMenu() {
          setHasOptionsMenu(false)
+     }
+
+     override fun showMenu() {
+         setHasOptionsMenu(true)
      }
 
     override fun navigateToEditProfileFragment() {
@@ -86,9 +94,9 @@ import org.koin.core.parameter.parametersOf
         Navigation.findNavController(requireView()).navigate(action)
     }
 
-    override fun navigateToNewIdeaFragment(editIdea: String) {
+    override fun navigateToNewIdeaFragment(editIdeaId: String) {
         val action: NavDirections =
-            ProfileFragmentDirections.toEditNewIdea("")
+            ProfileFragmentDirections.toEditNewIdea(editIdeaId)
         Navigation.findNavController(requireView()).navigate(action)
     }
 

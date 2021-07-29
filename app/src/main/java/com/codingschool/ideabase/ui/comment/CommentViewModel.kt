@@ -34,7 +34,7 @@ class CommentViewModel (
     var comment: String = prefs.getCommentDraft()
 
     fun onCommentTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-        if (count < 3) view?.resetCommentEmptyError()
+        if (count > 0) view?.resetCommentEmptyError()
     }
 
     fun onSubmitClick() {
