@@ -64,8 +64,7 @@ class LoginViewModel(
         ideaApi.getOwnUser().observeOn(AndroidSchedulers.mainThread())
             //.subscribeOn(Schedulers.io())
             .subscribe({ user ->
-                view?.showToast("Hi ${user.firstname}")
-                // TODO we could put the users firstname, etc in sharedprefs if we need to
+                // we could put the users firstname, etc in sharedprefs if we need to...
                 prefs.setCredentialID(user.id)
                 prefs.setIsManager(user.isManager)
                 user.profilePicture?.let { prefs.setProfileImage(it) }
@@ -81,7 +80,7 @@ class LoginViewModel(
                     ) {
                         view?.setInputUsernameError("")
                         view?.setInputPasswordError("")
-                        view?.showToast("This username/password combination is not valid")
+                        view?.showToast(R.string.worng_login_credentials_message)
                     } else if (responseMessage.contains(
                             "HTTP 401",
                             ignoreCase = true
@@ -96,10 +95,8 @@ class LoginViewModel(
             }).addTo(compositeDisposable)
     }
 
-    // TODO could be done as completable to link these actions ?
     private fun buildBasicAuthAndStoreInPrefs() {
-         val authString : String = Credentials.basic(username, password)
-        //Log.d("observer_ex", "encoded: $authString")
+        val authString : String = Credentials.basic(username, password)
         prefs.setAuthString(authString)
     }
 

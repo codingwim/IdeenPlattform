@@ -90,5 +90,6 @@
     <string name="rating_5">\"Mega Cool \"</string>
     <string name="dialog_title_rate">How do you rate this idea?</string>
     <string name="btn_rate">RATE</string>
+    <string name="worng_login_credentials_message">This username/password combination is not valid</string>
 
 </resources>
