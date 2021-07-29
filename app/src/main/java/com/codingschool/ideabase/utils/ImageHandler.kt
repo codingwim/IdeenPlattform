@@ -32,15 +32,15 @@ class ImageHandler(
     }
 
     fun getIdeaImage(uri: String, view: ImageView) {
-        val uriOrDrawable = if (uri.isNotEmpty()) uri else "R.drawable.image_not_set480_360"
+        val uriOrDrawable = if (uri.isNotEmpty()) uri else "R.drawable.image_placeholder_480_360"
 
         picasso
             .setIndicatorsEnabled(true)
         picasso
             .load(uriOrDrawable)
             .resize(480,360)
-            .placeholder(R.drawable.image_loading480_360)
-            .error(R.drawable.image_not_set480_360)
+            .placeholder(R.drawable.image_placeholder_480_360)
+            .error(R.drawable.image_not_found480_360)
             .into(view)
     }
 

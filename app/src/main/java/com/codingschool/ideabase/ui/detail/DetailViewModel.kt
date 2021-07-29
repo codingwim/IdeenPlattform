@@ -56,7 +56,7 @@ class DetailViewModel(
                 notifyPropertyChanged(BR.ideaTitle)
                 notifyPropertyChanged(BR.ideaAuthor)
                 notifyPropertyChanged(BR.ideaCategory)
-                notifyPropertyChanged(BR.ideaDescritpion)
+                notifyPropertyChanged(BR.ideaDescription)
                 // add comment list
                 adapter.updateList(idea.comments)
             }, { t ->

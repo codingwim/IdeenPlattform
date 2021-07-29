@@ -105,7 +105,7 @@ class NewEditIdeaViewModel(
                 ideaDescritpion = idea.description
                 notifyPropertyChanged(BR.ideaName)
                 notifyPropertyChanged(BR.ideaCategory)
-                notifyPropertyChanged(BR.ideaDescritpion)
+                notifyPropertyChanged(BR.ideaDescription)
 
             }, { t ->
                 val responseMessage = t.message
