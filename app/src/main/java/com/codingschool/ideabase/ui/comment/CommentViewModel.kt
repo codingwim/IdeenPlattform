@@ -20,7 +20,7 @@ class CommentViewModel (
 
     private var view: CommentView? = null
 
-    private val compositeDisposable = CompositeDisposable()
+    val compositeDisposable = CompositeDisposable()
 
     fun attachView(view: CommentView) {
         this.view = view

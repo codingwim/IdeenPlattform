@@ -88,5 +88,7 @@
     <string name="rating_3">Its fine</string>
     <string name="rating_4">Cool</string>
     <string name="rating_5">\"Mega Cool \"</string>
+    <string name="dialog_title_rate">How do you rate this idea?</string>
+    <string name="btn_rate">RATE</string>
 
 </resources>

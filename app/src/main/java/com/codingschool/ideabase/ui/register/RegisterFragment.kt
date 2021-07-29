@@ -106,4 +106,9 @@ class RegisterFragment : Fragment(), RegisterView {
         Navigation.findNavController(requireView()).navigate(action)
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        viewModel.compositeDisposable.clear()
+    }
+
 }

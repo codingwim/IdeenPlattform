@@ -1,4 +1,4 @@
-package com.codingschool.ideabase.model.remote
+package com.codingschool.ideabase.utils
 
 import android.content.Context
 import android.widget.ImageView
@@ -39,8 +39,8 @@ class ImageHandler(
         picasso
             .load(uriOrDrawable)
             .resize(480,360)
-            .placeholder(R.drawable.image_not_set480_360)
-            .error(R.drawable.image_loading480_360)
+            .placeholder(R.drawable.image_loading480_360)
+            .error(R.drawable.image_not_set480_360)
             .into(view)
     }
 

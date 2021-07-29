@@ -21,7 +21,7 @@ class DetailViewModel(
 
     private var view: DetailView? = null
 
-    private val compositeDisposable = CompositeDisposable()
+    val compositeDisposable = CompositeDisposable()
 
     fun attachView(view: DetailView) {
         this.view = view

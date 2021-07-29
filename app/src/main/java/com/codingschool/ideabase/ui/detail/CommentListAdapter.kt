@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.codingschool.ideabase.databinding.CommentItemBinding
 import com.codingschool.ideabase.model.data.Comment
-import com.codingschool.ideabase.model.remote.ImageHandler
+import com.codingschool.ideabase.utils.ImageHandler
 
 class CommentListAdapter(private val imageHandler: ImageHandler): RecyclerView.Adapter<CommentListAdapter.CommentViewHolder>() {
 

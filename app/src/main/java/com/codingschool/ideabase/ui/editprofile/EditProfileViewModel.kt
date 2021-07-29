@@ -19,7 +19,7 @@ class EditProfileViewModel(
 
 
     private var view: EditProfileView? = null
-    private val compositeDisposable = CompositeDisposable()
+    val compositeDisposable = CompositeDisposable()
 
     fun init() {
         if (prefs.getAuthString().isNotEmpty()) {

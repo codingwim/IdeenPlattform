@@ -1,12 +1,11 @@
 package com.codingschool.ideabase
 
 import android.content.ContentResolver
-import android.media.Image
 import androidx.room.Room
 import com.ashokvarma.gander.GanderInterceptor
 import com.codingschool.ideabase.model.data.room.AppDataBase
 import com.codingschool.ideabase.model.remote.IdeaApi
-import com.codingschool.ideabase.model.remote.ImageHandler
+import com.codingschool.ideabase.utils.ImageHandler
 import com.codingschool.ideabase.ui.comment.CommentViewModel
 import com.codingschool.ideabase.ui.detail.CommentListAdapter
 import com.codingschool.ideabase.ui.detail.DetailViewModel
@@ -14,14 +13,11 @@ import com.codingschool.ideabase.ui.editprofile.EditProfileViewModel
 import com.codingschool.ideabase.ui.list.IdeaListAdapter
 import com.codingschool.ideabase.ui.list.ListViewModel
 import com.codingschool.ideabase.ui.login.LoginViewModel
-import com.codingschool.ideabase.ui.neweditidea.NewEditIdeaFragment
 import com.codingschool.ideabase.ui.neweditidea.NewEditIdeaViewModel
 import com.codingschool.ideabase.ui.profile.ProfileViewModel
 import com.codingschool.ideabase.ui.register.RegisterViewModel
 import com.codingschool.ideabase.utils.Preferences
 import com.codingschool.ideabase.utils.baseUrl
-import com.squareup.picasso.OkHttp3Downloader
-import com.squareup.picasso.Picasso
 import io.reactivex.schedulers.Schedulers
 import okhttp3.OkHttpClient
 import org.koin.android.ext.koin.androidApplication

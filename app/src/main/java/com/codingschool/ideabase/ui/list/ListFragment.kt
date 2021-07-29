@@ -78,7 +78,7 @@ class ListFragment : Fragment(), ListView {
             requireActivity(),
             R.style.materialDialog
         )
-            .setTitle("How do you rate this idea?")
+            .setTitle(getString(R.string.dialog_title_rate))
             .setSingleChoiceItems(ratingArray,checkedItem) { dialog, which ->
                 newCheckedItem = which
 
@@ -86,7 +86,7 @@ class ListFragment : Fragment(), ListView {
             .setNegativeButton(getString(R.string.btn_cancel_dialog)) { dialog, _ ->
                 dialog.dismiss()
             }
-            .setPositiveButton("RATE") { dialog, _ ->
+            .setPositiveButton(getString(R.string.btn_rate)) { dialog, _ ->
                 viewModel.setRating(id, checkedItem, newCheckedItem)
                 dialog.dismiss()
             }
@@ -194,6 +194,11 @@ class ListFragment : Fragment(), ListView {
                 dialog.dismiss()
             }
             .show()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        viewModel.compositeDisposable.clear()
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {

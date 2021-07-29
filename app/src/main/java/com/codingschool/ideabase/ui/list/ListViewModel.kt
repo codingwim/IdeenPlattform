@@ -22,7 +22,7 @@ class ListViewModel(
 
     private var view: ListView? = null
 
-    private val compositeDisposable = CompositeDisposable()
+    val compositeDisposable = CompositeDisposable()
 
     private var categoryList: List<Category> = emptyList()
 

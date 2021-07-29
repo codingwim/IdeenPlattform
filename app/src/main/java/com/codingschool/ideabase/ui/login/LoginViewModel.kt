@@ -20,7 +20,7 @@ class LoginViewModel(
 
     private var view: LoginView? = null
 
-    private val compositeDisposable = CompositeDisposable()
+    val compositeDisposable = CompositeDisposable()
 
     fun init() {
         if (prefs.getAuthString().isNotEmpty()) {

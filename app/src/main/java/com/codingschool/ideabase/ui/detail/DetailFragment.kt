@@ -9,11 +9,9 @@ import androidx.navigation.Navigation
 import com.codingschool.ideabase.MainActivity
 import com.codingschool.ideabase.R
 import com.codingschool.ideabase.databinding.FragmentDetailBinding
-import com.codingschool.ideabase.model.remote.ImageHandler
-import com.codingschool.ideabase.utils.hideKeyboard
+import com.codingschool.ideabase.utils.ImageHandler
 import com.codingschool.ideabase.utils.toast
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.google.android.material.floatingactionbutton.FloatingActionButton
 import org.koin.android.ext.android.inject
 import org.koin.core.parameter.parametersOf
 
@@ -133,6 +131,11 @@ class DetailFragment: Fragment(), DetailView {
         val action: NavDirections =
             DetailFragmentDirections.toProfile(id)
         Navigation.findNavController(requireView()).navigate(action)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        viewModel.compositeDisposable.clear()
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {

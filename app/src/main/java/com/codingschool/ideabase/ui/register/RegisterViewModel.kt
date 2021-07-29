@@ -16,7 +16,7 @@ import kotlinx.coroutines.withContext
 class RegisterViewModel(private val ideaApi: IdeaApi) : BaseObservable() {
     private var view: RegisterView? = null
 
-    private val compositeDisposable = CompositeDisposable()
+    val compositeDisposable = CompositeDisposable()
 
     fun attachView(view: RegisterView) {
         this.view = view

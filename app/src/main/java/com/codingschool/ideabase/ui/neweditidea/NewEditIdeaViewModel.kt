@@ -11,7 +11,7 @@ import androidx.databinding.library.baseAdapters.BR
 import com.codingschool.ideabase.R
 import com.codingschool.ideabase.model.data.CreateIdea
 import com.codingschool.ideabase.model.remote.IdeaApi
-import com.codingschool.ideabase.utils.InputStreamRequestBody
+import com.codingschool.ideabase.model.remote.InputStreamRequestBody
 import com.codingschool.ideabase.utils.Preferences
 import com.google.gson.Gson
 import io.reactivex.Completable
@@ -33,7 +33,7 @@ class NewEditIdeaViewModel(
 
     private var view: NewEditIdeaView? = null
 
-    private val compositeDisposable = CompositeDisposable()
+    val compositeDisposable = CompositeDisposable()
 
     private var categoryListDE = emptyList<String>()
     private var categoryListEN = emptyList<String>()

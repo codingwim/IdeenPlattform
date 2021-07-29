@@ -48,23 +48,6 @@ fun Context.getResString(any: Any): String {
         else -> ""
     }
 }
-class InputStreamRequestBody(
-    private val contentType: MediaType,
-    private val contentResolver: ContentResolver,
-    private val uri: Uri
-) : RequestBody() {
-    override fun contentType() = contentType
-
-    override fun contentLength(): Long = -1
-
-    @Throws(IOException::class)
-    override fun writeTo(sink: BufferedSink) {
-        val input = contentResolver.openInputStream(uri)
-
-        input?.use { sink.writeAll(it.source()) }
-            ?: throw IOException("Could not open $uri")
-    }
-}
 
 
 fun Context.showKeyboard(editText: EditText) {

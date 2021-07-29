@@ -78,4 +78,9 @@ class LoginFragment : Fragment(), LoginView {
     override fun resetPasswordError() {
         binding.tilPassword.error = null
     }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        viewModel.compositeDisposable.clear()
+    }
 }

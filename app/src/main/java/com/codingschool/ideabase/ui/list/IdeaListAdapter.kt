@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.codingschool.ideabase.databinding.IdeaItemBinding
 import com.codingschool.ideabase.model.data.Idea
-import com.codingschool.ideabase.model.remote.ImageHandler
+import com.codingschool.ideabase.utils.ImageHandler
 
 class IdeaListAdapter(private val imageHandler: ImageHandler): RecyclerView.Adapter<IdeaListAdapter.IdeaViewHolder>() {
 
@@ -16,7 +16,7 @@ class IdeaListAdapter(private val imageHandler: ImageHandler): RecyclerView.Adap
     lateinit var rateClickListener: (String) -> Unit
     lateinit var profileClickListener: (String) -> Unit
 
-    class IdeaViewHolder(private val binding: IdeaItemBinding, private val imageHandler: ImageHandler ): RecyclerView.ViewHolder(binding.root) {
+    class IdeaViewHolder(private val binding: IdeaItemBinding, private val imageHandler: ImageHandler): RecyclerView.ViewHolder(binding.root) {
         fun setBinding(
             idea: Idea,
             ideaClickListener: (String) -> Unit,

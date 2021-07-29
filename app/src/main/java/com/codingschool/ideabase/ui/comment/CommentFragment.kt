@@ -2,7 +2,6 @@ package com.codingschool.ideabase.ui.comment
 
 import android.graphics.Color
 import android.os.Bundle
-import android.provider.CalendarContract
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,11 +14,9 @@ import com.codingschool.ideabase.utils.getResString
 import com.codingschool.ideabase.utils.showKeyboard
 import com.codingschool.ideabase.utils.toast
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.google.android.material.floatingactionbutton.FloatingActionButton
 import org.koin.android.ext.android.inject
 import org.koin.core.parameter.parametersOf
-import android.app.Activity
-import com.codingschool.ideabase.model.remote.ImageHandler
+import com.codingschool.ideabase.utils.ImageHandler
 import com.codingschool.ideabase.utils.hideKeyboard
 
 
@@ -103,6 +100,9 @@ class CommentFragment : Fragment(), CommentView {
             .show()
     }
 
-
+    override fun onDestroy() {
+        super.onDestroy()
+        viewModel.compositeDisposable.clear()
+    }
 
 }
