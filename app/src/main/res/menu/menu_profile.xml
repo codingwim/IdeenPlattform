@@ -4,8 +4,8 @@
     >
     <item
         android:id="@+id/editProfile"
-        android:orderInCategory="100"
-        android:title="Edit profile"/>
+        android:title="Edit profile"
+        app:showAsAction="never"/>
     <item
         android:id="@+id/addIdea"
         android:title="Add idea"
