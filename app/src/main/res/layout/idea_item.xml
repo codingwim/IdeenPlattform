@@ -79,7 +79,7 @@
                     <com.google.android.material.imageview.ShapeableImageView
                         android:id="@+id/ivIdea"
                         android:layout_width="match_parent"
-                        android:layout_height="240dp"
+                        android:layout_height="200dp"
                         android:scaleType="centerCrop"
                         card_view:layout_constraintBottom_toTopOf="@id/tvIdeaDescription"
                         card_view:layout_constraintEnd_toEndOf="parent"

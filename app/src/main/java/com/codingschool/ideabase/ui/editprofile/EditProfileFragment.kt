@@ -76,6 +76,7 @@ class EditProfileFragment: Fragment(), EditProfileView {
     override fun getProfileImageDialog() {
         ImagePicker.with(requireActivity())
             .cropSquare()
+            .cropOval()
             .maxResultSize(180,180,true)
             .createIntentFromDialog {
                 launcher.launch(it) }
