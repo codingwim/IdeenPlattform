@@ -14,7 +14,7 @@ import com.codingschool.ideabase.utils.toast
 import org.koin.android.ext.android.inject
 import org.koin.core.parameter.parametersOf
 
-class ProfileFragment : Fragment(), ProfileView {
+ class ProfileFragment : Fragment(), ProfileView {
 
     private val viewModel: ProfileViewModel by inject<ProfileViewModel> {
         parametersOf(arguments?.let { ProfileFragmentArgs.fromBundle(it).id })

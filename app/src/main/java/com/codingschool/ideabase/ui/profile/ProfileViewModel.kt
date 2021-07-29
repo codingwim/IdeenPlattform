@@ -2,6 +2,8 @@ package com.codingschool.ideabase.ui.profile
 
 import android.util.Log
 import androidx.databinding.BaseObservable
+import androidx.databinding.Bindable
+import androidx.databinding.library.baseAdapters.BR
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -31,16 +33,41 @@ class ProfileViewModel(
     fun init() {
         getUserProfileAndShow()
     }
+    @get:Bindable
+    var email: String =""
+
+    @get:Bindable
+    var firstname: String = ""
+
+    @get:Bindable
+    var lastname: String = ""
+    @get:Bindable
+    var ismanager: Boolean = false
 
     private fun getUserProfileAndShow() {
         val getId = if (id.isEmpty()) prefs.getMyId() else id
         ideaApi.getUserById(getId)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({ user ->
+                email = user.email
+                firstname = user.firstname
+                lastname = user.lastname
+                ismanager=user.isManager
+
+                notifyPropertyChanged(BR.firstname)
+                notifyPropertyChanged(BR.lastname)
+
+
 
                 // add user fileds to vm fields
-                //if (id.isEmpty()) visibilty email ok ELSE visibility GONE
-                Log.d("observer_ex", "received profile")
+                if (id.isEmpty()) {
+                    notifyPropertyChanged(BR.email)
+
+                }else{
+
+                            Log.d("observer_ex", "not your profile, so no mail for you")
+                }
+
 
             }, { t ->
                 val responseMessage = t.message
@@ -66,6 +93,7 @@ class ProfileViewModel(
             }).addTo(compositeDisposable)
 
     }
+
 
     fun editProfile() {
         view?.navigateToEditProfileFragment()

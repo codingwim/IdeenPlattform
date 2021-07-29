@@ -24,7 +24,9 @@ data class User(
     val profilePicture: String?,
 
     @ColumnInfo(name = "isManager")
-    val isManager: Boolean
+    val isManager: Boolean,
+
+
 )
 
 {

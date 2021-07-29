@@ -45,6 +45,9 @@ class EditProfileViewModel(
     @get:Bindable
     var password2: String = ""
 
+    @get:Bindable
+    var profilepicture: String = ""
+
     fun onSaveClick() {
         // check empty fields
         var fieldsNotEmpty = false
@@ -82,7 +85,8 @@ class EditProfileViewModel(
                 email,
                 password,
                 firstname,
-                lastname
+                lastname,
+
             )
             ideaApi.updateUser(updatedUser)
                 .observeOn(AndroidSchedulers.mainThread())
@@ -117,9 +121,15 @@ class EditProfileViewModel(
                 view?.showToast("Hi ${user.firstname}, if you change your password, you will be redirected to login again!")
                 email = user.email
                 firstname = user.firstname
+                lastname = user.lastname
+
+               // profilepicture= user.profilePicture.toString()
 
                 notifyPropertyChanged(BR.firstname)
-                // TODO fill edittext fields with user data
+                notifyPropertyChanged(BR.lastname)
+
+                //notifyPropertyChanged(BR.profilepicture)
+
 
             }, { t ->
                 val responseMessage = t.message
