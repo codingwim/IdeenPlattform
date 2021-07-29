@@ -102,7 +102,7 @@
                     android:inputType="textMultiLine"
                     android:lines="3"
                     android:onTextChanged="@{vm::onDescriptionTextChanged}"
-                    android:text="@={vm.ideaDescritpion}" />
+                    android:text="@={vm.ideaDescription}" />
 
             </com.google.android.material.textfield.TextInputLayout>
 

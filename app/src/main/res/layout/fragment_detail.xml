@@ -30,10 +30,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:fitsSystemWindows="true"
-                app:collapsedTitleTextAppearance="@style/collapsedToolbarLayoutTitle"
                 app:contentScrim="@color/yellow"
-                app:expandedTitleTextAppearance="@style/expandingToolbarLayoutTitle"
-                app:layout_scrollFlags="scroll|enterAlways|enterAlwaysCollapsed"
+                app:layout_scrollFlags="scroll|enterAlwaysCollapsed|snap"
                 app:toolbarId="@+id/toolbar_detail">
 
 

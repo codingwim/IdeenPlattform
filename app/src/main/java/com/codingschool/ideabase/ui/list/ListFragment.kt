@@ -173,8 +173,7 @@ class ListFragment : Fragment(), ListView {
     ) {
 
         MaterialAlertDialogBuilder(
-            requireActivity(),
-            R.style.materialDialog
+            requireActivity()
         )
             .setTitle(getString(R.string.title_filter_dialog))
             //.setMessage("If no categories are selected, the result includes all possible categories.")

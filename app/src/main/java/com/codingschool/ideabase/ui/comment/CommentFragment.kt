@@ -84,8 +84,7 @@ class CommentFragment : Fragment(), CommentView {
     override fun cancelDialog() {
         view?.let { requireActivity().hideKeyboard(it) }
         MaterialAlertDialogBuilder(
-            requireActivity(),
-            R.style.materialDialog
+            requireActivity()
         )
             .setTitle("Save draft?")
             .setMessage("It will be available the next time you comment anywhere!")

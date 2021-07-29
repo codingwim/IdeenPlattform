@@ -102,7 +102,7 @@ class NewEditIdeaViewModel(
                 ideaCategory = if (prefs.isLangEn()) idea.category.name_en else idea.category.name_de
                 view?.setSelectedCategory(ideaCategory)
                 /*view?.setSelectedCategory(ideaCategory)*/
-                ideaDescritpion = idea.description
+                ideaDescription = idea.description
                 notifyPropertyChanged(BR.ideaName)
                 notifyPropertyChanged(BR.ideaCategory)
                 notifyPropertyChanged(BR.ideaDescription)
@@ -142,7 +142,7 @@ class NewEditIdeaViewModel(
     var ideaCategory: String = ""
 
     @get:Bindable
-    var ideaDescritpion: String = ""
+    var ideaDescription: String = ""
 
     @get: Bindable
     val saveButtonText = ObservableInt(R.string.save_idea_new)
@@ -156,7 +156,7 @@ class NewEditIdeaViewModel(
         var fieldsNotEmpty = false
 
         if (ideaName.isEmpty()) view?.setInputNameError(R.string.error_empty_name)
-        else if (ideaDescritpion.isEmpty()) view?.setInputDescriptionError(R.string.error_empty_description)
+        else if (ideaDescription.isEmpty()) view?.setInputDescriptionError(R.string.error_empty_description)
         else if (ideaCategory.isEmpty()) view?.setInputCategoryError(R.string.error_empty_category)
         else if (ideaImageUrl.isEmpty()) view?.showToast(R.string.error_empty_image)
         else fieldsNotEmpty = true
@@ -167,7 +167,7 @@ class NewEditIdeaViewModel(
             val createIdea = CreateIdea(
                 ideaName,
                 categoryId,
-                ideaDescritpion
+                ideaDescription
             )
             val gson = Gson()
             val ideaString = gson.toJson(createIdea)

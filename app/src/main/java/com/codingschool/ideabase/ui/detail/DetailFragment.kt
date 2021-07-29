@@ -93,8 +93,7 @@ class DetailFragment: Fragment(), DetailView {
 
     override fun releaseDialog() {
         MaterialAlertDialogBuilder(
-            requireActivity(),
-            R.style.materialDialog
+            requireActivity()
         )
             .setTitle(getString(R.string.dialog_title_release))
             .setMessage(getString(R.string.dialog_message_release))
