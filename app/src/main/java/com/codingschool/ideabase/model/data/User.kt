@@ -24,13 +24,12 @@ data class User(
     val profilePicture: String?,
 
     @ColumnInfo(name = "isManager")
-    val isManager: Boolean,
-
+    val isManager: Boolean
 
 )
 
 {
     override fun toString(): String {
-        return let { it.id + it.firstname + it.lastname }
+        return let { it.firstname + " " + it.lastname }
     }
 }

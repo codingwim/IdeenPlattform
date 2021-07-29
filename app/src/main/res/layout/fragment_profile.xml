@@ -28,8 +28,8 @@
             app:layout_constraintBottom_toTopOf="@+id/guideline"
             app:layout_constraintTop_toTopOf="parent"
             app:shapeAppearanceOverlay="@style/circleImageView"
-            app:srcCompat="@drawable/profile_pic"
-            app:strokeColor="@color/yellow"
+            app:srcCompat="@drawable/ic_baseline_person_24"
+            app:strokeColor="@color/grey"
             app:strokeWidth="1dp"
 
             />
@@ -41,30 +41,21 @@
             app:layout_constraintGuide_percent="0.35"/>
         <TextView
             android:id="@+id/tvUserNameFL"
-            android:text="@={vm.firstname}"
+            android:text="@{vm.name}"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-
             app:layout_constraintTop_toBottomOf="@+id/guideline"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/margin_special">
+            tools:text="Wim Janssen"
+            >
 
         </TextView>
-        <TextView
-            android:id="@+id/tvUserNameFL2"
-            android:text="@={vm.lastname}"
-            app:layout_constraintStart_toEndOf="@id/tvUserNameFL"
-            app:layout_constraintTop_toBottomOf="@+id/guideline"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/margin_large">
 
-        </TextView>
         <TextView
             android:id="@+id/tvUserMail"
-
             android:text="@={vm.email}"
+            tools:text="Wim.Janssen@mail.com"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tvUserNameFL"
@@ -86,7 +77,7 @@
             android:orientation="vertical"
             app:layout_constraintGuide_percent="0.05"/>
         <TextView
-            android:id="@+id/tvFName"
+            android:id="@+id/tvFNameTitle"
             android:text="FirstName:"
             android:layout_marginEnd="@dimen/margin_large"
             android:layout_width="wrap_content"
@@ -97,11 +88,12 @@
 
         </TextView>
         <TextView
-            android:id="@+id/tvFName2"
-            android:text="@={vm.firstname}"
+            android:id="@+id/tvFName"
+            android:text="@{vm.firstname}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintStart_toEndOf="@+id/tvFName"
+            tools:text="Wim"
+            app:layout_constraintStart_toEndOf="@+id/tvFNameTitle"
             android:layout_marginStart="@dimen/margin_large"
             app:layout_constraintTop_toBottomOf="@+id/guideline2"
             >
@@ -109,7 +101,7 @@
         </TextView>
 
         <TextView
-            android:id="@+id/tvLName"
+            android:id="@+id/tvLNameTitle"
             android:text="LastName:"
             android:layout_marginEnd="@dimen/margin_large"
             android:layout_width="wrap_content"
@@ -121,10 +113,11 @@
         </TextView>
         <TextView
             android:id="@+id/tvLName2"
-            android:text="@={vm.lastname}"
+            android:text="@{vm.lastname}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintStart_toEndOf="@+id/tvFName"
+            tools:text="Janssen"
+            app:layout_constraintStart_toEndOf="@+id/tvLNameTitle"
             android:layout_marginStart="@dimen/margin_large"
             app:layout_constraintTop_toBottomOf="@+id/tvFName"
             >
@@ -138,7 +131,7 @@
             app:layout_constraintGuide_percent="0.7"/>
 
         <TextView
-            android:id="@+id/tvRolle"
+            android:id="@+id/tvRolleTitle"
             android:text="Role:"
             android:layout_marginEnd="@dimen/margin_large"
             android:layout_width="wrap_content"
@@ -147,10 +140,11 @@
             app:layout_constraintTop_toBottomOf="@+id/guideline3"/>
         <TextView
             android:id="@+id/tvRole2"
-            android:text="Ideenmanager"
+            android:text="@{vm.role}"
+            tools:text="Ideenmanager"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintStart_toEndOf="@+id/tvFName"
+            app:layout_constraintStart_toEndOf="@+id/tvRolleTitle"
             android:layout_marginStart="@dimen/margin_large"
             app:layout_constraintTop_toBottomOf="@+id/guideline3"
             >

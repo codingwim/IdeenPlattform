@@ -7,4 +7,5 @@ interface ProfileView {
     fun navigateToEditProfileFragment()
     fun navigateToLoginFragment(username: String)
     fun navigateToNewIdeaFragment(editIdea: String)
+    fun hideMenu()
 }

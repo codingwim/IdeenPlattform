@@ -69,7 +69,9 @@ import org.koin.core.parameter.parametersOf
         requireActivity().toast(any)
     }
 
-
+     override fun hideMenu() {
+         setHasOptionsMenu(false)
+     }
 
     override fun navigateToEditProfileFragment() {
         val action: NavDirections =
