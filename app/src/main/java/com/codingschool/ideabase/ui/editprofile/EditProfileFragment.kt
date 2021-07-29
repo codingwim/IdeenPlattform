@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavDirections
@@ -18,6 +19,11 @@ class EditProfileFragment: Fragment(), EditProfileView {
 
     private val viewModel: EditProfileViewModel by inject()
     private lateinit var binding: FragmentEditProfileBinding
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+    }
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -35,12 +41,14 @@ class EditProfileFragment: Fragment(), EditProfileView {
         return binding.root
     }
 
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         viewModel.attachView(this)
         binding.vm = viewModel
         viewModel.init()
+
 
     }
 

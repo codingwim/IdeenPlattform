@@ -23,7 +23,6 @@
             android:scaleType="centerCrop"
             android:clickable="true"
             android:focusable="true"
-
             app:layout_constraintBottom_toTopOf="@+id/tilFirstname"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"

@@ -41,7 +41,8 @@ class ProfileViewModel(
 
     @get:Bindable
     var lastname: String = ""
-
+    @get:Bindable
+    var ismanager: Boolean = false
 
     private fun getUserProfileAndShow() {
         val getId = if (id.isEmpty()) prefs.getMyId() else id
@@ -51,6 +52,7 @@ class ProfileViewModel(
                 email = user.email
                 firstname = user.firstname
                 lastname = user.lastname
+                ismanager=user.isManager
 
                 notifyPropertyChanged(BR.firstname)
                 notifyPropertyChanged(BR.lastname)
