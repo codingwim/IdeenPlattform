@@ -13,7 +13,6 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-
         >
 
         <ImageView
@@ -31,7 +30,7 @@
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btSubmit"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/button_height"
             android:onClick="@{() -> vm.onSubmitClick()}"
             android:layout_margin="@dimen/margin_small"
             android:text="@string/submit_btn_comment"
@@ -51,23 +50,41 @@
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/tvCommentTitle"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/margin_standard"
+            android:layout_margin="@dimen/margin_large"
             android:ellipsize="end"
             android:maxLines="3"
             android:textSize="@dimen/text_medium18"
             app:errorEnabled="true"
             app:layout_constraintBottom_toTopOf="@id/etComment"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/ivProfilePicture"
             app:layout_constraintTop_toBottomOf="@id/vwLine"
-            tools:text="Idea: Wims Idea" />
+            android:text="@string/prof_info_will_be_visible_commenting"
+             />
 
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/ivProfilePicture"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_margin="@dimen/margin_large"
+            android:scaleType="centerCrop"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/tvCommentTitle"
+            app:layout_constraintBottom_toBottomOf="@+id/tvCommentTitle"
+            app:layout_constraintTop_toTopOf="@id/tvCommentTitle"
+            app:shapeAppearanceOverlay="@style/circleImageView"
+            app:srcCompat="@drawable/ic_baseline_person_outline_24"
+            app:strokeColor="@color/grey"
+            app:strokeWidth="1dp"
+
+            />
         <EditText
             android:id="@+id/etComment"
             android:layout_width="match_parent"
             android:layout_height="0dp"
+            android:layout_margin="@dimen/margin_small"
             android:inputType="textMultiLine"
             android:hint="@string/write_comment_hint"
             android:focusable="true"
@@ -77,7 +94,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tvCommentTitle"
+            app:layout_constraintTop_toBottomOf="@+id/ivProfilePicture"
             tools:ignore="Autofill" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

@@ -14,30 +14,45 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
+
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/ivProfilePicture"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_margin="@dimen/margin_standard"
+                android:scaleType="centerCrop"
+                card_view:layout_constraintStart_toStartOf="parent"
+                card_view:layout_constraintEnd_toStartOf="@+id/tvCommentAuthor"
+                card_view:layout_constraintTop_toTopOf="parent"
+                card_view:shapeAppearanceOverlay="@style/circleImageView"
+                card_view:srcCompat="@drawable/ic_baseline_person_outline_24"
+                card_view:strokeColor="@color/grey"
+                card_view:strokeWidth="1dp"
+                />
             <TextView
                 android:id="@+id/tvCommentAuthor"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/margin_standard"
                 android:textSize="@dimen/text_standard16"
                 android:textStyle="bold"
+                android:textAllCaps="true"
                 card_view:layout_constraintBottom_toTopOf="@id/tvComment"
                 card_view:layout_constraintEnd_toEndOf="parent"
-                card_view:layout_constraintStart_toStartOf="parent"
+                card_view:layout_constraintStart_toEndOf="@+id/ivProfilePicture"
                 card_view:layout_constraintTop_toTopOf="parent"
-                tools:text="JOHNNY DEPP " />
+                tools:text="Jhonny Depp" />
 
             <TextView
                 android:id="@+id/tvComment"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/margin_standard"
                 android:layout_marginEnd="@dimen/margin_standard"
                 android:layout_marginBottom="@dimen/margin_standard"
                 android:textSize="@dimen/text_medium18"
                 card_view:layout_constraintBottom_toTopOf="@id/vwLine"
                 card_view:layout_constraintEnd_toEndOf="parent"
-                card_view:layout_constraintStart_toStartOf="parent"
+                card_view:layout_constraintStart_toStartOf="@id/tvCommentAuthor"
                 card_view:layout_constraintTop_toBottomOf="@id/tvCommentAuthor"
                 tools:text="This is the coolest idea ever " />
 
@@ -52,11 +67,6 @@
                 card_view:layout_constraintStart_toStartOf="parent"
                 card_view:layout_constraintTop_toBottomOf="@id/tvComment"/>
 
-
-
         </androidx.constraintlayout.widget.ConstraintLayout>
-
     </com.google.android.material.card.MaterialCardView>
-
-
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

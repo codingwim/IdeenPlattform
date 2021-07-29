@@ -85,7 +85,7 @@
                         card_view:layout_constraintEnd_toEndOf="parent"
                         card_view:layout_constraintStart_toStartOf="parent"
                         card_view:layout_constraintTop_toBottomOf="@id/ivProfilePicture"
-                        card_view:srcCompat="@drawable/image_loading480_360" />
+                        card_view:srcCompat="@drawable/image_placeholder_480_360" />
 
                     <TextView
                         android:id="@+id/tvIdeaDescription"

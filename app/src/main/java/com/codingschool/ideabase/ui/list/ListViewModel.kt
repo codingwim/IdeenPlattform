@@ -22,12 +22,9 @@ class ListViewModel(
 
     private var view: ListView? = null
 
-    private val compositeDisposable = CompositeDisposable()
+    val compositeDisposable = CompositeDisposable()
 
     private var categoryList: List<Category> = emptyList()
-
-    private val ratingArray =
-        arrayOf("I don't like it at all", "Not so cool", "Its fine", "Cool", "Mega Cool ")
 
     fun init() {
         //Log.d("observer_ex", "toporall $topOrAll")
@@ -43,7 +40,9 @@ class ListViewModel(
         }
         adapter.addRateClickListener { id ->
             getMyRatingForThisIdeaAndStartDialog(id)
-
+        }
+        adapter.addProfileClickListener { id ->
+            view?.navigateToProfile(id)
         }
     }
 
@@ -60,7 +59,7 @@ class ListViewModel(
                 Log.d("observer_ex", "ratingGiven : $ratingGiven")
                 val ratingItem = ratingGiven ?: -1
                 Log.d("observer_ex", "ratingItem : $ratingItem")
-                view?.showPopupRatingDialog(id, ratingArray, ratingItem-1)
+                view?.showPopupRatingDialog(id, ratingItem-1)
             }, { t ->
                 val responseMessage = t.message
                 if (responseMessage != null) {

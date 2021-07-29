@@ -18,13 +18,11 @@ import androidx.navigation.Navigation
 import com.codingschool.ideabase.MainActivity
 import com.codingschool.ideabase.R
 import com.codingschool.ideabase.databinding.FragmentNewEditIdeaBinding
-import com.codingschool.ideabase.model.remote.ImageHandler
-import com.codingschool.ideabase.ui.list.ListFragmentDirections
+import com.codingschool.ideabase.utils.ImageHandler
 import com.codingschool.ideabase.utils.getResString
 import com.codingschool.ideabase.utils.toast
 import com.github.drjacky.imagepicker.ImagePicker
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.google.android.material.floatingactionbutton.FloatingActionButton
 import org.koin.android.ext.android.inject
 import org.koin.core.parameter.parametersOf
 
@@ -36,7 +34,6 @@ class NewEditIdeaFragment: Fragment(), NewEditIdeaView {
 
     private lateinit var binding: FragmentNewEditIdeaBinding
     private val imageHandler: ImageHandler by inject()
-    private lateinit var fab: FloatingActionButton
     private lateinit var launcher: ActivityResultLauncher<Intent>
 
     override fun onAttach(context: Context) {
@@ -67,11 +64,6 @@ class NewEditIdeaFragment: Fragment(), NewEditIdeaView {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        // hide fab button
-        val activityView = requireActivity().findViewById<View>(android.R.id.content)
-        fab = activityView.findViewById(R.id.fab)
-        fab.hide()
 
         binding.vm = viewModel
         viewModel.attachView(this)
@@ -159,5 +151,10 @@ class NewEditIdeaFragment: Fragment(), NewEditIdeaView {
         val action: NavDirections =
             NewEditIdeaFragmentDirections.toAllIdeas()
         Navigation.findNavController(requireView()).navigate(action)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        viewModel.compositeDisposable.clear()
     }
 }

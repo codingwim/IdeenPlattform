@@ -89,4 +89,9 @@ class ProfileFragment : Fragment(), ProfileView {
             ProfileFragmentDirections.toEditNewIdea("")
         Navigation.findNavController(requireView()).navigate(action)
     }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        viewModel.compositeDisposable.clear()
+    }
 }

@@ -11,7 +11,7 @@ import androidx.databinding.library.baseAdapters.BR
 import com.codingschool.ideabase.R
 import com.codingschool.ideabase.model.data.CreateIdea
 import com.codingschool.ideabase.model.remote.IdeaApi
-import com.codingschool.ideabase.utils.InputStreamRequestBody
+import com.codingschool.ideabase.model.remote.InputStreamRequestBody
 import com.codingschool.ideabase.utils.Preferences
 import com.google.gson.Gson
 import io.reactivex.Completable
@@ -27,15 +27,16 @@ import retrofit2.HttpException
 class NewEditIdeaViewModel(
     private val editIdea: String,
     private val ideaApi: IdeaApi,
-    private val contentresolver: ContentResolver,
-    private val prefs: Preferences
+    private val prefs: Preferences,
+    private val contentresolver: ContentResolver
 ) : BaseObservable() {
 
     private var view: NewEditIdeaView? = null
 
-    private val compositeDisposable = CompositeDisposable()
+    val compositeDisposable = CompositeDisposable()
 
-    private var categoryList = emptyList<String>()
+    private var categoryListDE = emptyList<String>()
+    private var categoryListEN = emptyList<String>()
     private var categoryListIds = emptyList<String>()
 
     fun attachView(view: NewEditIdeaView) {
@@ -55,14 +56,17 @@ class NewEditIdeaViewModel(
         ideaApi.getAllCategories()
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({ list ->
-                // TODO add locale check to take right value
-                categoryList = list.map { category ->
+                // locale check to take right value
+                categoryListEN = list.map { category ->
                     category.name_en
+                }
+                categoryListDE = list.map { category ->
+                    category.name_de
                 }
                 categoryListIds = list.map { category ->
                     category.id
                 }
-                view?.setCategoryListItems(categoryList)
+                view?.setCategoryListItems(if (prefs.isLangEn()) categoryListEN else categoryListDE)
             }, { t ->
                 val responseMessage = t.message
                 if (responseMessage != null) {
@@ -94,14 +98,14 @@ class NewEditIdeaViewModel(
                 ideaImageUrl = initialImageUrl
                 view?.setIdeaImage(ideaImageUrl)
                 ideaName = idea.title
-                // TODO locale check to get correct language category
-                ideaCategory = idea.category.name_en
+                // locale check to get correct language category
+                ideaCategory = if (prefs.isLangEn()) idea.category.name_en else idea.category.name_de
                 view?.setSelectedCategory(ideaCategory)
                 /*view?.setSelectedCategory(ideaCategory)*/
-                ideaDescritpion = idea.description
+                ideaDescription = idea.description
                 notifyPropertyChanged(BR.ideaName)
                 notifyPropertyChanged(BR.ideaCategory)
-                notifyPropertyChanged(BR.ideaDescritpion)
+                notifyPropertyChanged(BR.ideaDescription)
 
             }, { t ->
                 val responseMessage = t.message
@@ -138,7 +142,7 @@ class NewEditIdeaViewModel(
     var ideaCategory: String = ""
 
     @get:Bindable
-    var ideaDescritpion: String = ""
+    var ideaDescription: String = ""
 
     @get: Bindable
     val saveButtonText = ObservableInt(R.string.save_idea_new)
@@ -152,17 +156,18 @@ class NewEditIdeaViewModel(
         var fieldsNotEmpty = false
 
         if (ideaName.isEmpty()) view?.setInputNameError(R.string.error_empty_name)
-        else if (ideaDescritpion.isEmpty()) view?.setInputDescriptionError(R.string.error_empty_description)
+        else if (ideaDescription.isEmpty()) view?.setInputDescriptionError(R.string.error_empty_description)
         else if (ideaCategory.isEmpty()) view?.setInputCategoryError(R.string.error_empty_category)
         else if (ideaImageUrl.isEmpty()) view?.showToast(R.string.error_empty_image)
         else fieldsNotEmpty = true
 
         if (fieldsNotEmpty) {
-            val categoryId = categoryListIds[categoryList.indexOf(ideaCategory)]
+            // locale check to retrieve position of selected category
+            val categoryId = categoryListIds[if (prefs.isLangEn()) categoryListEN.indexOf(ideaCategory) else categoryListDE.indexOf(ideaCategory) ]
             val createIdea = CreateIdea(
                 ideaName,
                 categoryId,
-                ideaDescritpion
+                ideaDescription
             )
             val gson = Gson()
             val ideaString = gson.toJson(createIdea)

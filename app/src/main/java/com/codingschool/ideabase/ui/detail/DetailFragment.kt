@@ -9,9 +9,9 @@ import androidx.navigation.Navigation
 import com.codingschool.ideabase.MainActivity
 import com.codingschool.ideabase.R
 import com.codingschool.ideabase.databinding.FragmentDetailBinding
-import com.codingschool.ideabase.model.remote.ImageHandler
+import com.codingschool.ideabase.utils.ImageHandler
 import com.codingschool.ideabase.utils.toast
-import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import org.koin.android.ext.android.inject
 import org.koin.core.parameter.parametersOf
 
@@ -43,24 +43,23 @@ class DetailFragment: Fragment(), DetailView {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val activityView = requireActivity().findViewById<View>(android.R.id.content)
 
         setHasOptionsMenu(true)
-        val fab: FloatingActionButton = activityView.findViewById(R.id.fab)
-        fab.hide()
 
         binding.vm = viewModel
         binding.rvComments.adapter = viewModel.adapter
         viewModel.attachView(this)
         viewModel.init()
+
+
     }
 
     override fun showToast(any: Any) {
         requireActivity().toast(any)
     }
 
-    override fun setIdeaImage(uri: String) {
-        imageHandler.getIdeaImage(uri, binding.ivIdea)
+    override fun setIdeaImage(url: String) {
+        imageHandler.getIdeaImage(url, binding.ivIdea)
     }
 
     override fun navigateBack() {
@@ -92,6 +91,52 @@ class DetailFragment: Fragment(), DetailView {
         (activity as MainActivity).getSupportActionBar()?.title = title
     }
 
+    override fun releaseDialog() {
+        MaterialAlertDialogBuilder(
+            requireActivity()
+        )
+            .setTitle(getString(R.string.dialog_title_release))
+            .setMessage(getString(R.string.dialog_message_release))
+            .setNegativeButton(getString(R.string.btn_cancel_dialog)) { dialog, _ ->
+                viewModel.onCancelRelease()
+                dialog.dismiss()
+            }
+            .setPositiveButton(getString(R.string.btn_release)) { dialog, _ ->
+                viewModel.onConfirmRelease()
+                dialog.dismiss()
+            }
+            .show()
+    }
+
+    override fun deleteDialog() {
+        MaterialAlertDialogBuilder(
+            requireActivity(),
+            R.style.materialDialog
+        )
+            .setTitle(getString(R.string.dialog_title_delete))
+            .setMessage(getString(R.string.dialog_message_delete))
+            .setNegativeButton(getString(R.string.btn_cancel_dialog)) { dialog, _ ->
+                viewModel.onCancelDelete()
+                dialog.dismiss()
+            }
+            .setPositiveButton(getString(R.string.btn_delete)) { dialog, _ ->
+                viewModel.onConfirmDelete()
+                dialog.dismiss()
+            }
+            .show()
+    }
+
+    override fun navigateToProfile(id: String) {
+        val action: NavDirections =
+            DetailFragmentDirections.toProfile(id)
+        Navigation.findNavController(requireView()).navigate(action)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        viewModel.compositeDisposable.clear()
+    }
+
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.menu_idea_detail, menu)
     }
@@ -107,13 +152,13 @@ class DetailFragment: Fragment(), DetailView {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.delete -> {
-                viewModel.deleteIdea()
+                deleteDialog()
             }
             R.id.edit -> {
                 viewModel.editIdea()
             }
             R.id.release -> {
-                viewModel.releaseIdea()
+                releaseDialog()
             }
         }
         return super.onOptionsItemSelected(item)

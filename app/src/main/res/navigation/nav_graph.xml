@@ -24,6 +24,9 @@
         <action
             android:id="@+id/toComment"
             app:destination="@id/commentFragment" />
+        <action
+            android:id="@+id/toProfile"
+            app:destination="@id/navigation_profile" />
     </fragment>
 
     <fragment
@@ -45,6 +48,9 @@
         <action
             android:id="@+id/toComment"
             app:destination="@id/commentFragment" />
+        <action
+            android:id="@+id/toProfile"
+            app:destination="@id/navigation_profile" />
     </fragment>
 
     <fragment
@@ -103,6 +109,9 @@
         <action
             android:id="@+id/toEditNewIdea"
             app:destination="@id/newEditIdeaFragment" />
+        <action
+            android:id="@+id/toProfile"
+            app:destination="@id/navigation_profile" />
     </fragment>
     <fragment
         android:id="@+id/newEditIdeaFragment"

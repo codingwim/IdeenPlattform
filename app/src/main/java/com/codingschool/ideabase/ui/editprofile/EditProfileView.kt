@@ -11,6 +11,5 @@ interface EditProfileView {
     fun setInputPasswordRepeatError(any: Any)
     fun resetPasswordRepeatError()
     fun setFocusPasswordInput()
-    // after changing pwd, we need to let user login again, as base auth has changed!!
     fun navigateToLoginRegistered(username: String)
 }
