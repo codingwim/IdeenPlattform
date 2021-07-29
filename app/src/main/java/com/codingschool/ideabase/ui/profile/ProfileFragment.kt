@@ -89,4 +89,9 @@ import org.koin.core.parameter.parametersOf
             ProfileFragmentDirections.toEditNewIdea("")
         Navigation.findNavController(requireView()).navigate(action)
     }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        viewModel.compositeDisposable.clear()
+    }
 }

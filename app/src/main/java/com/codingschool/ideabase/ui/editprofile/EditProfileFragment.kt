@@ -96,4 +96,9 @@ class EditProfileFragment: Fragment(), EditProfileView {
             EditProfileFragmentDirections.toLogin(username)
         Navigation.findNavController(requireView()).navigate(action)
     }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        viewModel.compositeDisposable.clear()
+    }
 }

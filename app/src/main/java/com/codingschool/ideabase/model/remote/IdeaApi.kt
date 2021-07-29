@@ -48,13 +48,13 @@ interface IdeaApi {
 
     // catch reponse error or Idea
     @POST("idea")
-    fun addIdea(@Body multiPartIdeaBody:  RequestBody): Response<Unit>
+    fun addIdea(@Body multiPartIdeaBody:  RequestBody): Single<Idea>
 
     @GET("idea/{id}")
     fun getIdeaById(@Path ("id") id: String): Single<Idea>
 
     @PUT("idea/{id}")
-    fun updateIdea(@Path ("id") id: String, @Body updateIdea:  CreateIdea): Single<Idea>
+    fun updateIdea(@Path ("id") id: String, @Body updateIdea:  CreateIdea): Completable
 
     @DELETE("idea/{id}")
     fun deleteIdeaById(@Path ("id") id: String): Completable
@@ -82,6 +82,6 @@ interface IdeaApi {
     fun deleteOwnRatingForIdeaById(@Path ("id") id: String): Completable
 
     @POST("idea/{id}/image")
-    fun updateImageIdea(@Path ("id") id: String, @Body multiPartImageBody:  RequestBody): Response<Unit>
+    fun updateImageIdea(@Path ("id") id: String, @Body multiPartImageBody:  RequestBody): Completable
 
 }

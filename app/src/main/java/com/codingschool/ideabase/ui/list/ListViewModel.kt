@@ -22,15 +22,11 @@ class ListViewModel(
 
     private var view: ListView? = null
 
-    private val compositeDisposable = CompositeDisposable()
+    val compositeDisposable = CompositeDisposable()
 
     private var categoryList: List<Category> = emptyList()
 
-    private val ratingArray =
-        arrayOf("I don't like it at all", "Not so cool", "Its fine", "Cool", "Mega Cool ")
-
     fun init() {
-
         //Log.d("observer_ex", "toporall $topOrAll")
         // set initial adapter list here
         getIdeasToAdapter(emptyList(), NO_SEARCH_QUERY)
@@ -44,7 +40,9 @@ class ListViewModel(
         }
         adapter.addRateClickListener { id ->
             getMyRatingForThisIdeaAndStartDialog(id)
-
+        }
+        adapter.addProfileClickListener { id ->
+            view?.navigateToProfile(id)
         }
     }
 
@@ -61,7 +59,7 @@ class ListViewModel(
                 Log.d("observer_ex", "ratingGiven : $ratingGiven")
                 val ratingItem = ratingGiven ?: -1
                 Log.d("observer_ex", "ratingItem : $ratingItem")
-                view?.showPopupRatingDialog(id, ratingArray, ratingItem-1)
+                view?.showPopupRatingDialog(id, ratingItem-1)
             }, { t ->
                 val responseMessage = t.message
                 if (responseMessage != null) {
@@ -175,15 +173,55 @@ class ListViewModel(
         searchQuery: String
     ) {
         // if searchQuery = empty,
-        //      we use searchquery "id" to return complete list !! ELSE return list with search keyword
+        //      we use getAllIdeas to return complete list !! ELSE return list with search keyword
         //      and THAN filter with the categoryList (if not empty)
         //      TODO add sort with the sorting pref
         //      TODO IF RESULT = EMPTY -> put overlay "no ideas found matching your search and/or filter criteria
         //
 
-        val newSearchQuery = if (searchQuery.isEmpty()) "id" else searchQuery
+        if (searchQuery.isEmpty()) getAllIdeas(listOfSearchCategories)
+        else ideaApi.searchIdeas(searchQuery)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({ list ->
+                    val listFromSearch =
+                        if (listOfSearchCategories.isNotEmpty())
+                            list.filter {
+                                it.category.id in listOfSearchCategories
+                            } else list
+                    // search list now filtered with selected categories
+                    Log.d("observer_ex", "sorting by $topOrAll ")
+                    val sortedList = when(topOrAll) {
+                        // TODO add average cal or map  sum and count...
+                        true -> {
+                            listFromSearch.filter {it.numberOfRatings >= MIN_NUM_RATINGS_SHOW_IDEA_ON_TOP_RANKED }.sortedWith(
+                                compareByDescending { it.avgRating })
+                        }
+                        false -> {
+                            listFromSearch.sortedWith(compareByDescending { it.created })
+                        }
 
-        ideaApi.searchIdeas(newSearchQuery)
+                    }
+                    adapter.updateList(sortedList)
+
+                }, { t ->
+                    val responseMessage = t.message
+                    if (responseMessage != null) {
+                        if (responseMessage.contains(
+                                "HTTP 401",
+                                ignoreCase = true
+                            )
+                        ) {
+                            Log.d("observer_ex", "401 Authorization not valid")
+                            view?.showToast("You are not autorized to search")
+                        } else view?.showToast(R.string.network_issue_check_network)
+                    }
+                    Log.e("observer_ex", "exception getting searched ideas: $t")
+
+                }).addTo(compositeDisposable)
+        }
+
+    private fun getAllIdeas(listOfSearchCategories: List<String>) {
+        ideaApi.getAllIdeasNoFilter()
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({ list ->
                 val listFromSearch =
@@ -222,6 +260,7 @@ class ListViewModel(
 
             }).addTo(compositeDisposable)
     }
+
 
     private fun getlistOfSearchCategories(checkedItems: BooleanArray): List<String> {
         val listOfSearchCategories = emptyList<String>().toMutableList()

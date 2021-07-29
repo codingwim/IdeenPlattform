@@ -8,7 +8,7 @@
 
     <EditText
         android:id="@+id/etDialogSearch"
-        android:hint="Search for ..."
+        android:hint="@string/search_for"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/margin_large"
@@ -19,7 +19,7 @@
         android:id="@+id/tvDialogCheckedCategories"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Filter: No categories selected"
+        android:text="@string/filter_no_categories_selected"
         />
 
 </LinearLayout>

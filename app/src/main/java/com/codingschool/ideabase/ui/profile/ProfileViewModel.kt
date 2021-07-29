@@ -24,7 +24,7 @@ class ProfileViewModel(
 
     private var view: ProfileView? = null
 
-    private val compositeDisposable = CompositeDisposable()
+    val compositeDisposable = CompositeDisposable()
 
     fun attachView(view: ProfileView) {
         this.view = view

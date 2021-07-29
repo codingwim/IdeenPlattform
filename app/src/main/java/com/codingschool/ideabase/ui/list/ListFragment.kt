@@ -10,6 +10,8 @@ import androidx.navigation.NavDirections
 import androidx.navigation.Navigation
 import com.codingschool.ideabase.R
 import com.codingschool.ideabase.databinding.FragmentListBinding
+import com.codingschool.ideabase.ui.detail.DetailFragmentDirections
+import com.codingschool.ideabase.utils.getResString
 import com.codingschool.ideabase.utils.toast
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -24,7 +26,6 @@ class ListFragment : Fragment(), ListView {
     }
 
     private lateinit var binding: FragmentListBinding
-    private lateinit var fab: FloatingActionButton
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -45,13 +46,8 @@ class ListFragment : Fragment(), ListView {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // get main activity view to access fab / toolbar
-        val activityView = requireActivity().findViewById<View>(android.R.id.content)
-
         // set fab button
-        fab = activityView.findViewById(R.id.fab)
-        fab.show()
-        fab.setOnClickListener {
+        binding.fab.setOnClickListener {
             viewModel.addIdeaClicked()
         }
         setHasOptionsMenu(true)
@@ -60,20 +56,29 @@ class ListFragment : Fragment(), ListView {
         binding.rvIdeas.adapter = viewModel.adapter
         viewModel.attachView(this)
         viewModel.init()
-
     }
 
     override fun showToast(any: Any) {
         requireActivity().toast(any)
     }
 
-    override fun showPopupRatingDialog(id: String, ratingArray: Array<String>, checkedItem: Int) {
+    override fun getString(any: Any) =
+        requireActivity().getResString(any)
+
+    override fun showPopupRatingDialog(id: String, checkedItem: Int) {
+        val ratingArray =
+            arrayOf(
+                getString(R.string.rating_1),
+                getString(R.string.rating_2),
+                getString(R.string.rating_3),
+                getString(R.string.rating_4),
+                getString(R.string.rating_5))
         var newCheckedItem = 0
         MaterialAlertDialogBuilder(
             requireActivity(),
             R.style.materialDialog
         )
-            .setTitle("How do you rate this idea?")
+            .setTitle(getString(R.string.dialog_title_rate))
             .setSingleChoiceItems(ratingArray,checkedItem) { dialog, which ->
                 newCheckedItem = which
 
@@ -81,7 +86,7 @@ class ListFragment : Fragment(), ListView {
             .setNegativeButton(getString(R.string.btn_cancel_dialog)) { dialog, _ ->
                 dialog.dismiss()
             }
-            .setPositiveButton("RATE") { dialog, _ ->
+            .setPositiveButton(getString(R.string.btn_rate)) { dialog, _ ->
                 viewModel.setRating(id, checkedItem, newCheckedItem)
                 dialog.dismiss()
             }
@@ -103,6 +108,12 @@ class ListFragment : Fragment(), ListView {
     override fun navigateToNewIdeaFragment() {
         val action: NavDirections =
             ListFragmentDirections.toEditNewIdea("")
+        Navigation.findNavController(requireView()).navigate(action)
+    }
+
+    override fun navigateToProfile(id: String) {
+        val action: NavDirections =
+            ListFragmentDirections.toProfile(id)
         Navigation.findNavController(requireView()).navigate(action)
     }
 
@@ -162,8 +173,7 @@ class ListFragment : Fragment(), ListView {
     ) {
 
         MaterialAlertDialogBuilder(
-            requireActivity(),
-            R.style.materialDialog
+            requireActivity()
         )
             .setTitle(getString(R.string.title_filter_dialog))
             //.setMessage("If no categories are selected, the result includes all possible categories.")
@@ -183,6 +193,11 @@ class ListFragment : Fragment(), ListView {
                 dialog.dismiss()
             }
             .show()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        viewModel.compositeDisposable.clear()
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {

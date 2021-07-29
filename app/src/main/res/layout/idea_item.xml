@@ -48,8 +48,8 @@
                         card_view:layout_constraintTop_toTopOf="parent"
                         card_view:shapeAppearanceOverlay="@style/circleImageView"
                         card_view:srcCompat="@drawable/ic_baseline_person_24"
-                        card_view:strokeColor="@color/yellow"
-                        card_view:strokeWidth="0dp"
+                        card_view:strokeColor="@color/grey"
+                        card_view:strokeWidth="1dp"
 
                         />
 
@@ -85,7 +85,7 @@
                         card_view:layout_constraintEnd_toEndOf="parent"
                         card_view:layout_constraintStart_toStartOf="parent"
                         card_view:layout_constraintTop_toBottomOf="@id/ivProfilePicture"
-                        card_view:srcCompat="@drawable/idea_image" />
+                        card_view:srcCompat="@drawable/image_placeholder_480_360" />
 
                     <TextView
                         android:id="@+id/tvIdeaDescription"

@@ -1,48 +1,47 @@
-package com.codingschool.ideabase.model.remote
+package com.codingschool.ideabase.utils
 
-import android.content.ContentResolver
 import android.content.Context
-import android.net.Uri
 import android.widget.ImageView
-import androidx.annotation.DrawableRes
 import com.codingschool.ideabase.R
 import com.squareup.picasso.OkHttp3Downloader
 import com.squareup.picasso.Picasso
 import okhttp3.OkHttpClient
-
 
 class ImageHandler(
     context: Context,
     okHttpClient: OkHttpClient
 ) {
     private val appContext = context.applicationContext
+
     val picasso = Picasso.Builder(appContext)
         .downloader(OkHttp3Downloader(okHttpClient))
         .build()
 
-    fun getProfilePic(uri: String?, view: ImageView) {
-        val uriOrDrawable = if (uri != null) uri else "R.drawable.ic_baseline_emoji_objects_24"
 
+    fun getProfilePic(url: String?, view: ImageView) {
+        val uriOrDrawable = if (url != null) url else "R.drawable.ic_baseline_person_24"
         picasso
             .setIndicatorsEnabled(true)
         picasso
             .load(uriOrDrawable)
+            .resize(240,240)
+            .centerCrop()
             .placeholder(R.drawable.ic_baseline_person_24)
-            .error(R.drawable.ic_baseline_emoji_objects_24)
+            .error(R.drawable.ic_baseline_person_outline_24)
             .into(view)
     }
 
     fun getIdeaImage(uri: String, view: ImageView) {
-        val uriOrDrawable = if (uri.isNotEmpty()) uri else "R.drawable.placeholder_idea_image_not_found"
+        val uriOrDrawable = if (uri.isNotEmpty()) uri else "R.drawable.image_placeholder_480_360"
 
         picasso
             .setIndicatorsEnabled(true)
         picasso
             .load(uriOrDrawable)
-            .placeholder(R.drawable.placeholder_idea_image)
-            .error(R.drawable.placeholder_idea_image_not_found)
+            .resize(480,360)
+            .placeholder(R.drawable.image_placeholder_480_360)
+            .error(R.drawable.image_not_found480_360)
             .into(view)
     }
-
 
 }

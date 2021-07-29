@@ -1,6 +1,7 @@
 package com.codingschool.ideabase
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.appcompat.app.ActionBar
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -11,17 +12,22 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.codingschool.ideabase.databinding.ActivityMainBinding
-import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.codingschool.ideabase.utils.Preferences
+import org.koin.android.ext.android.inject
+import java.util.*
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var navController: NavController
     private lateinit var binding: ActivityMainBinding
+    private val prefs: Preferences by inject()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        prefs.setLocale(Locale.getDefault().language)
+        Log.d("observer_ex", "main activity locale: and prefs: ${prefs.getLocale()}")
         // TODO mianactivity binding
         val navView: BottomNavigationView = findViewById(R.id.nav_view)
         val actionBar = this.supportActionBar
@@ -30,7 +36,7 @@ class MainActivity : AppCompatActivity() {
 
         val appBarConfiguration = AppBarConfiguration(
             setOf(
-                R.id.navigation_top_ranked, R.id.navigation_ideas, R.id.navigation_profile
+                R.id.navigation_top_ranked, R.id.navigation_all_ideas, R.id.navigation_profile
             )
         )
 
@@ -50,6 +56,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+
     private fun showAppBarAndBottomNaviagtionBar(
         navView: BottomNavigationView,
         actionBar: ActionBar?
@@ -68,10 +75,6 @@ class MainActivity : AppCompatActivity() {
 
     override fun onSupportNavigateUp(): Boolean {
         return navController.navigateUp()
-    }
-
-    fun setActionBarTitle(title: String) {
-        actionBar?.title = title
     }
 
 }

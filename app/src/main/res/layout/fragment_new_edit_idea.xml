@@ -1,19 +1,162 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    >
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <variable
-            name = "vm"
-            type = "com.codingschool.ideabase.ui.neweditidea.NewEditIdeaViewModel"/>
+            name="vm"
+            type="com.codingschool.ideabase.ui.neweditidea.NewEditIdeaViewModel" />
     </data>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:context=".ui.neweditidea.NewEditIdeaFragment">
+        android:layout_height="match_parent">
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fitsSystemWindows="true"
+            app:layout_constraintVertical_chainStyle="packed"
+            tools:context=".ui.neweditidea.NewEditIdeaFragment">
+
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/ivIdeaImage"
+                android:layout_width="160dp"
+                android:layout_height="160dp"
+                android:layout_margin="@dimen/margin_large"
+                android:scaleType="centerCrop"
+                app:layout_constraintBottom_toTopOf="@+id/tilIdeaName"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+
+                app:srcCompat="@drawable/image_placeholder_480_360"
+                app:strokeColor="@color/grey"
+                app:strokeWidth="1dp"
+
+                />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btImage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/margin_large"
+                android:backgroundTint="@color/yellow"
+                android:onClick="@{() -> vm.onGetImageClick()}"
+                android:text="@{vm.uploadImageButtonText}"
+                android:textColor="@color/black"
+                app:layout_constraintBottom_toBottomOf="@+id/ivIdeaImage"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/ivIdeaImage"
+                tools:text="UPLOAD IMAGE" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/tilIdeaName"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_large"
+                android:layout_marginEnd="@dimen/margin_large"
+                android:layout_marginBottom="@dimen/margin_small"
+                android:hint="@string/idea_name_hint"
+                app:errorEnabled="true"
+                app:helperText="@string/idea_name_hint"
+                app:layout_constraintBottom_toTopOf="@+id/tilDescription"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/ivIdeaImage">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etIdeaName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textNoSuggestions"
+                    android:onTextChanged="@{vm::onIdeaNameTextChanged}"
+                    android:text="@={vm.ideaName}" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/tilDescription"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_large"
+                android:layout_marginEnd="@dimen/margin_large"
+                android:layout_marginBottom="@dimen/margin_small"
+                android:hint="@string/description_hint_new_idea"
+                app:errorEnabled="true"
+                app:helperText="@string/description_hint_new_idea"
+                app:layout_constraintBottom_toTopOf="@+id/tilCategory"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tilIdeaName">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etLastname"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="top"
+                    android:inputType="textMultiLine"
+                    android:lines="3"
+                    android:onTextChanged="@{vm::onDescriptionTextChanged}"
+                    android:text="@={vm.ideaDescription}" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/tilCategory"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_large"
+                android:layout_marginEnd="@dimen/margin_large"
+
+                android:hint="@string/hint_choose_category_new"
+                app:errorEnabled="true"
+                app:helperText="@string/helper_categroy"
+                app:layout_constraintBottom_toTopOf="@+id/guideline"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tilDescription">
+
+                <AutoCompleteTextView
+                    android:id="@+id/tvCategory"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="none"
+                    android:text="@={vm.ideaCategory}"
+                    tools:ignore="LabelFor" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guideline"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                app:layout_constraintGuide_percent="0.85" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnSave"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/button_height"
+                android:layout_marginStart="@dimen/margin_large"
+                android:layout_marginEnd="@dimen/margin_large"
+                android:layout_marginBottom="@dimen/margin_small"
+                android:backgroundTint="@color/yellow"
+                android:onClick="@{() -> vm.onSaveClick()}"
+                android:text="@{vm.saveButtonText}"
+                android:textColor="@color/black"
+                app:layout_constraintBottom_toBottomOf="parent"
+
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/guideline"
+                tools:text="UPLOAD IDEA" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.core.widget.NestedScrollView>
 </layout>

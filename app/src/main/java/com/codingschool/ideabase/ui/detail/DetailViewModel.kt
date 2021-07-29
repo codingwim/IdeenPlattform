@@ -21,19 +21,18 @@ class DetailViewModel(
 
     private var view: DetailView? = null
 
-    private val compositeDisposable = CompositeDisposable()
+    val compositeDisposable = CompositeDisposable()
 
     fun attachView(view: DetailView) {
         this.view = view
     }
 
     fun init() {
-        //get idea with api, and set the bindables, set menu items, set comment ist
+        //get idea with api, and set the bindables, set menu items, set comment, set comment author click
         view?.setActionBarTitle("Idea:")
         getIdeaAndShow()
         adapter.addCommentClickListener { id ->
-            Log.d("observer_ex", "Comment with id $id clicked")
-
+            view?.navigateToProfile(id)
         }
     }
 
@@ -50,14 +49,14 @@ class DetailViewModel(
                 view?.setIdeaImage(idea.imageUrl)
                 ideaTitle = idea.title
                 ideaAuthor = idea.authorName
-                // TODO locale check to get correct language category
-                ideaCategory = idea.category.name_en
-                ideaDescritpion = idea.description
+                // locale check to get correct language category
+                ideaCategory = if (prefs.isLangEn()) idea.category.name_en else idea.category.name_de
+                ideaDescription = idea.description
                 if (idea.comments.isEmpty()) view?.hideCommentTitle()
                 notifyPropertyChanged(BR.ideaTitle)
                 notifyPropertyChanged(BR.ideaAuthor)
                 notifyPropertyChanged(BR.ideaCategory)
-                notifyPropertyChanged(BR.ideaDescritpion)
+                notifyPropertyChanged(BR.ideaDescription)
                 // add comment list
                 adapter.updateList(idea.comments)
             }, { t ->
@@ -69,14 +68,14 @@ class DetailViewModel(
                         )
                     ) {
                         Log.d("observer_ex", "401 Authorization not valid")
-                        view?.showToast("You are not autorized to log in")
+                        view?.showToast(R.string.not_authorized)
                     } else if (responseMessage.contains(
                             "HTTP 404",
                             ignoreCase = true
                         )
                     ) {
                         Log.d("observer_ex", "404 Idea not found")
-                        view?.showToast("Idea not found")
+                        view?.showToast(R.string.idea_not_found_message)
                     } else view?.showToast(R.string.network_issue_check_network)
                 }
                 Log.e("observer_ex", "exception getting idea: $t")
@@ -88,23 +87,21 @@ class DetailViewModel(
         ideaApi.deleteIdeaById(id)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
-                // todo add snacker with UNDO option ORRRRR warning message before deleting
-                view?.showToast("Idea has been deleted")
+                view?.showToast(R.string.idea_deleted_message)
                 view?.navigateBack()
             }, { t ->
                 val responseMessage = t.message
-                // TODO check response options
                 if (responseMessage != null) {
                     if (responseMessage.contains(
                             "HTTP 404",
                             ignoreCase = true
                         )
-                    ) view?.showToast("Some parameter was missing. Deleting idea failed.")
+                    ) view?.showToast(R.string.parameter_missing_message)
                     else if (responseMessage.contains(
                             "HTTP 400",
                             ignoreCase = true
                         )
-                    ) view?.showToast("Idea was not found. Deleting idea failed.")
+                    ) view?.showToast(R.string.idea_not_found_message)
                     else view?.showToast(R.string.network_issue_check_network)
                 }
                 Log.e("observer_ex", "exception deleting idea: $t")
@@ -121,24 +118,23 @@ class DetailViewModel(
         ideaApi.releaseIdea(id, updateReleased)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
-                // todo add snacker with UNDO option ORRRRR warning message before releasing
-                view?.showToast("Idea has been released")
-                // remove complete menu on release ?
+                view?.showToast(R.string.idea_released_message)
+                // remove complete menu on release
                 view?.hideMenu()
+
             }, { t ->
                 val responseMessage = t.message
-                // TODO check response options
                 if (responseMessage != null) {
                     if (responseMessage.contains(
                             "HTTP 404",
                             ignoreCase = true
                         )
-                    ) view?.showToast("Some parameter was missing. Release idea failed.")
+                    ) view?.showToast(R.string.parameter_missing_message)
                     else if (responseMessage.contains(
                             "HTTP 400",
                             ignoreCase = true
                         )
-                    ) view?.showToast("Idea was not found. Release idea failed failed.")
+                    ) view?.showToast(R.string.idea_not_found_message)
                     else view?.showToast(R.string.network_issue_check_network)
                 }
                 Log.e("observer_ex", "exception releasing idea: $t")
@@ -155,6 +151,25 @@ class DetailViewModel(
     var ideaCategory: String = ""
 
     @get:Bindable
-    var ideaDescritpion: String = ""
+    var ideaDescription: String = ""
 
+    fun onAuthorClick() {
+        view?.navigateToProfile(id)
+    }
+
+    fun onConfirmRelease() {
+        releaseIdea()
+    }
+
+    fun onCancelRelease() {
+        view?.showToast(R.string.release_cancelled_message)
+    }
+
+    fun onConfirmDelete() {
+        deleteIdea()
+    }
+
+    fun onCancelDelete() {
+        view?.showToast(R.string.delete_cancelled_message)
+    }
 }

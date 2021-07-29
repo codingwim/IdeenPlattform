@@ -39,7 +39,6 @@ class RegisterFragment : Fragment(), RegisterView {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-
         binding.vm = viewModel
         viewModel.attachView(this)
     }
@@ -105,6 +104,11 @@ class RegisterFragment : Fragment(), RegisterView {
         val action: NavDirections =
             RegisterFragmentDirections.toLogin()
         Navigation.findNavController(requireView()).navigate(action)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        viewModel.compositeDisposable.clear()
     }
 
 }
