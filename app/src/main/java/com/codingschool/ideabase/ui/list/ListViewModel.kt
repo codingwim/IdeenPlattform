@@ -67,9 +67,18 @@ class ListViewModel(
         }
         adapter.registerAdapterDataObserver(object : AdapterDataObserver() {
             override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
-                view?.moveToTopOfRecyclerview()
                 super.onItemRangeInserted(positionStart, itemCount)
                 view?.moveToTopOfRecyclerview()
+            }
+
+            override fun onItemRangeChanged(positionStart: Int, itemCount: Int) {
+                // works !! dont move but put a star to icon?
+                super.onItemRangeChanged(positionStart, itemCount)
+                view?.moveToTopOfRecyclerview()
+            }
+
+            override fun onItemRangeMoved(fromPosition: Int, toPosition: Int, itemCount: Int) {
+                super.onItemRangeMoved(fromPosition, toPosition, itemCount)
             }
         })
 
