@@ -9,6 +9,7 @@ interface ListView {
     fun navigateToNewIdeaFragment()
     fun navigateToProfile(id: String)
     //fun navigateOffline(online: Boolean)
+    fun moveToTopOfRecyclerview()
     fun showSearchDialog(categoryArray: Array<String>, checkedItems: BooleanArray, searchText: String, messageSelecteCategories: String)
     fun showFilterDialog(categoryArray: Array<String>, checkedItems: BooleanArray, searchText: String, messageSelecteCategories: String)
 }

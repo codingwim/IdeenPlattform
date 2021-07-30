@@ -117,6 +117,10 @@ class ListFragment : Fragment(), ListView {
         Navigation.findNavController(requireView()).navigate(action)
     }
 
+    override fun moveToTopOfRecyclerview() {
+        binding.rvIdeas.smoothScrollToPosition(0)
+    }
+
     override fun showSearchDialog(
         categoryArray: Array<String>,
         checkedItems: BooleanArray,

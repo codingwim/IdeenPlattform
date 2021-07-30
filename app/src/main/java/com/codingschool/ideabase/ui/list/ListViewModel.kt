@@ -15,6 +15,9 @@ import io.reactivex.rxkotlin.addTo
 import io.reactivex.schedulers.Schedulers
 import retrofit2.HttpException
 import java.util.concurrent.TimeUnit
+import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView.AdapterDataObserver
+
 
 class ListViewModel(
     private val topOrAll: Boolean,
@@ -44,6 +47,10 @@ class ListViewModel(
     fun init() {
         // set initial adapter list here
         getIdeasToAdapter(listOfSearchCategories, searchString)
+
+        // check periodically for "newer" ideas if in ALL IDEA
+        if (!topOrAll) checkApiForUpdatesPeriodically()
+
         adapter.addIdeaClickListener { id ->
             Log.d("observer_ex", "Idea clicked")
             view?.navigateToDetailFragment(id)
@@ -58,8 +65,14 @@ class ListViewModel(
         adapter.addProfileClickListener { id ->
             view?.navigateToProfile(id)
         }
-        // check periodically for "newer" ideas if in ALL IDEA
-        if (!topOrAll) checkApiForUpdatesPeriodically()
+        adapter.registerAdapterDataObserver(object : AdapterDataObserver() {
+            override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
+                view?.moveToTopOfRecyclerview()
+                super.onItemRangeInserted(positionStart, itemCount)
+                view?.moveToTopOfRecyclerview()
+            }
+        })
+
     }
 
     private fun checkApiForUpdatesPeriodically() {
@@ -237,9 +250,9 @@ class ListViewModel(
                     false -> {
                         listFromSearch.sortedWith(compareByDescending { it.lastUpdated })
                     }
-
                 }
                 adapter.updateList(sortedList)
+
 
             }, { t ->
                 val responseMessage = t.message
