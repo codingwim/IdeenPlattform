@@ -355,4 +355,5 @@ class NewEditIdeaViewModel(
         view?.showToast("The entered idea has been saved, but not posted")
         view?.navigateBack()
     }
+
 }

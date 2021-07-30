@@ -4,13 +4,17 @@ import android.util.Log
 import androidx.databinding.BaseObservable
 import com.codingschool.ideabase.R
 import com.codingschool.ideabase.model.data.Category
+import com.codingschool.ideabase.model.data.Idea
 import com.codingschool.ideabase.model.data.PostIdeaRating
 import com.codingschool.ideabase.model.remote.IdeaApi
 import com.codingschool.ideabase.utils.*
+import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.addTo
+import io.reactivex.schedulers.Schedulers
 import retrofit2.HttpException
+import java.util.concurrent.TimeUnit
 
 class ListViewModel(
     private val topOrAll: Boolean,
@@ -26,9 +30,20 @@ class ListViewModel(
 
     private var categoryList: List<Category> = emptyList()
 
+    private var ideaListBeforeUpdate: List<Idea> = emptyList()
+    private var newestCreatedDate: String = ""
+    private var newestLastUpdatedDate: String = ""
+
+    private var listOfSearchCategories: List<String> = emptyList()
+    private var searchString = ""
+
+    private fun updateObservable(): Observable<Long> {
+        return Observable.interval(INITIAL_DELAY, UPDATE_INTERVAL, TimeUnit.SECONDS)
+    }
+
     fun init() {
         // set initial adapter list here
-        getIdeasToAdapter(emptyList(), NO_SEARCH_QUERY)
+        getIdeasToAdapter(listOfSearchCategories, searchString)
         adapter.addIdeaClickListener { id ->
             Log.d("observer_ex", "Idea clicked")
             view?.navigateToDetailFragment(id)
@@ -43,6 +58,26 @@ class ListViewModel(
         adapter.addProfileClickListener { id ->
             view?.navigateToProfile(id)
         }
+        // check periodically for "newer" ideas if in ALL IDEA
+        if (!topOrAll) checkApiForUpdatesPeriodically()
+    }
+
+    private fun checkApiForUpdatesPeriodically() {
+        Log.d("observer_ex", "fun checkApiForUpdatesPeriodically called ")
+        updateObservable()
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({
+                //Log.d("observer_ex", "checking for updates now")
+                getIdeasToAdapter(
+                    listOfSearchCategories,
+                    searchString
+                )
+            },
+                { t ->
+                    Log.e("observer_ex", "exception with periodic update: $t")
+                }).addTo(compositeDisposable)
+
     }
 
     private fun getMyRatingForThisIdeaAndStartDialog(id: String) {
@@ -58,7 +93,7 @@ class ListViewModel(
                 Log.d("observer_ex", "ratingGiven : $ratingGiven")
                 val ratingItem = ratingGiven ?: -1
                 Log.d("observer_ex", "ratingItem : $ratingItem")
-                view?.showPopupRatingDialog(id, ratingItem-1)
+                view?.showPopupRatingDialog(id, ratingItem - 1)
             }, { t ->
                 val responseMessage = t.message
                 if (responseMessage != null) {
@@ -110,8 +145,8 @@ class ListViewModel(
         val selectedCategoriesAsString = listOfSearchCategories.joinToString(", ")
         // TODO how to extract string here ? add view getString with context (as taost...)
         val newMessageSelectedCategories =
-            if (selectedCategoriesAsString.isEmpty()) "You can add categories to filter the result. Just click FILTER below"
-            else "Filter by: " + selectedCategoriesAsString
+            if (selectedCategoriesAsString.isEmpty()) "Click FILTER below to filter the result by categories"
+            else "Result will be filtered by: " + selectedCategoriesAsString
         view?.showSearchDialog(
             categoryArray,
             checkedItems,
@@ -157,13 +192,17 @@ class ListViewModel(
             }).addTo(compositeDisposable)
     }
 
-    fun filterWithSelectedItemsAndSearchText(checkedItems: BooleanArray, searchText: String) {
+    fun filterWithSelectedItemsAndSearchText(
+        checkedItems: BooleanArray,
+        searchTextFromDialog: String
+    ) {
         // Build the category search List for the filtering
-        val listOfSearchCategories = getlistOfSearchCategories(checkedItems)
+        listOfSearchCategories = getlistOfSearchCategories(checkedItems)
+        searchString = searchTextFromDialog
         //Log.d("observer_ex", "selectedItems: $searchCategoryString ")
         getIdeasToAdapter(
             listOfSearchCategories,
-            searchText
+            searchString
         )
     }
 
@@ -180,43 +219,44 @@ class ListViewModel(
 
         if (searchQuery.isEmpty()) getAllIdeas(listOfSearchCategories)
         else ideaApi.searchIdeas(searchQuery)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({ list ->
-                    val listFromSearch =
-                        if (listOfSearchCategories.isNotEmpty())
-                            list.filter {
-                                it.category.id in listOfSearchCategories
-                            } else list
-                    // search list now filtered with selected categories
-                    Log.d("observer_ex", "sorting by $topOrAll ")
-                    val sortedList = when(topOrAll) {
-                        true -> {
-                            listFromSearch.filter {it.numberOfRatings >= MIN_NUM_RATINGS_SHOW_IDEA_ON_TOP_RANKED }.sortedWith(
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({ list ->
+                val listFromSearch =
+                    if (listOfSearchCategories.isNotEmpty())
+                        list.filter {
+                            it.category.id in listOfSearchCategories
+                        } else list
+                // search list now filtered with selected categories
+                Log.d("observer_ex", "sorting by $topOrAll and $searchQuery")
+                val sortedList = when (topOrAll) {
+                    true -> {
+                        listFromSearch.filter { it.numberOfRatings >= MIN_NUM_RATINGS_SHOW_IDEA_ON_TOP_RANKED }
+                            .sortedWith(
                                 compareByDescending { it.avgRating })
-                        }
-                        false -> {
-                            listFromSearch.sortedWith(compareByDescending { it.created })
-                        }
-
                     }
-                    adapter.updateList(sortedList)
-
-                }, { t ->
-                    val responseMessage = t.message
-                    if (responseMessage != null) {
-                        if (responseMessage.contains(
-                                "HTTP 401",
-                                ignoreCase = true
-                            )
-                        ) {
-                            Log.d("observer_ex", "401 Authorization not valid")
-                            view?.showToast("You are not autorized to search")
-                        } else view?.showToast(R.string.network_issue_check_network)
+                    false -> {
+                        listFromSearch.sortedWith(compareByDescending { it.lastUpdated })
                     }
-                    Log.e("observer_ex", "exception getting searched ideas: $t")
 
-                }).addTo(compositeDisposable)
-        }
+                }
+                adapter.updateList(sortedList)
+
+            }, { t ->
+                val responseMessage = t.message
+                if (responseMessage != null) {
+                    if (responseMessage.contains(
+                            "HTTP 401",
+                            ignoreCase = true
+                        )
+                    ) {
+                        Log.d("observer_ex", "401 Authorization not valid")
+                        view?.showToast("You are not autorized to search")
+                    } else view?.showToast(R.string.network_issue_check_network)
+                }
+                Log.e("observer_ex", "exception getting searched ideas: $t")
+
+            }).addTo(compositeDisposable)
+    }
 
     private fun getAllIdeas(listOfSearchCategories: List<String>) {
         ideaApi.getAllIdeasNoFilter()
@@ -228,15 +268,16 @@ class ListViewModel(
                             it.category.id in listOfSearchCategories
                         } else list
                 // search list now filtered with selected categories
-                Log.d("observer_ex", "sorting by $topOrAll ")
-                val sortedList = when(topOrAll) {
+                Log.d("observer_ex", "sorting by $topOrAll and $listOfSearchCategories")
+                val sortedList = when (topOrAll) {
                     // TODO add average cal or map  sum and count...
                     true -> {
-                        listFromSearch.filter {it.numberOfRatings >= MIN_NUM_RATINGS_SHOW_IDEA_ON_TOP_RANKED }.sortedWith(
-                            compareByDescending { it.avgRating })
+                        listFromSearch.filter { it.numberOfRatings >= MIN_NUM_RATINGS_SHOW_IDEA_ON_TOP_RANKED }
+                            .sortedWith(
+                                compareByDescending { it.avgRating })
                     }
                     false -> {
-                        listFromSearch.sortedWith(compareByDescending { it.created })
+                        listFromSearch.sortedWith(compareByDescending { it.lastUpdated })
                     }
 
                 }
@@ -287,7 +328,6 @@ class ListViewModel(
                     Log.e("observer_ex", "exception adding/updating rating user: $t")
                 }).addTo(compositeDisposable)
         }
-
     }
 
     fun addIdeaClicked() {
