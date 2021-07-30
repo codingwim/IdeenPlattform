@@ -28,6 +28,9 @@
         <action
             android:id="@+id/toProfile"
             app:destination="@id/navigation_profile" />
+        <action
+            android:id="@+id/toOffline"
+            app:destination="@id/loadingFragment" />
     </fragment>
 
     <fragment
@@ -52,6 +55,9 @@
         <action
             android:id="@+id/toProfile"
             app:destination="@id/navigation_profile" />
+        <action
+            android:id="@+id/toOffline"
+            app:destination="@id/loadingFragment" />
     </fragment>
 
     <fragment
@@ -72,6 +78,9 @@
             android:name="id"
             app:argType="string"
             android:defaultValue="" />
+        <action
+            android:id="@+id/toOffline"
+            app:destination="@id/loadingFragment" />
     </fragment>
 
     <fragment
@@ -88,6 +97,9 @@
         <action
             android:id="@+id/toTopRanked"
             app:destination="@id/navigation_top_ranked" />
+        <action
+            android:id="@+id/toOffline"
+            app:destination="@id/loadingFragment" />
     </fragment>
     <fragment
         android:id="@+id/registerFragment"
@@ -96,6 +108,9 @@
         <action
             android:id="@+id/toLogin"
             app:destination="@id/loginFragment" />
+        <action
+            android:id="@+id/toOffline"
+            app:destination="@id/loadingFragment" />
     </fragment>
     <fragment
         android:id="@+id/detailFragment"
@@ -113,6 +128,9 @@
         <action
             android:id="@+id/toProfile"
             app:destination="@id/navigation_profile" />
+        <action
+            android:id="@+id/toOffline"
+            app:destination="@id/loadingFragment" />
     </fragment>
     <fragment
         android:id="@+id/newEditIdeaFragment"
@@ -128,6 +146,9 @@
         <action
             android:id="@+id/toDetail"
             app:destination="@id/detailFragment" />
+        <action
+            android:id="@+id/toOffline"
+            app:destination="@id/loadingFragment" />
     </fragment>
     <fragment
         android:id="@+id/commentFragment"
@@ -136,6 +157,9 @@
         <argument
             android:name="id"
             app:argType="string" />
+        <action
+            android:id="@+id/toOffline"
+            app:destination="@id/loadingFragment" />
     </fragment>
     <fragment
         android:id="@+id/editProfileFragment"
@@ -144,6 +168,9 @@
         <action
             android:id="@+id/toLogin"
             app:destination="@id/loginFragment" />
+        <action
+            android:id="@+id/toOffline"
+            app:destination="@id/loadingFragment" />
     </fragment>
     <fragment
         android:id="@+id/loadingFragment"
