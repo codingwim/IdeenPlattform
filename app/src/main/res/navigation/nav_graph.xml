@@ -91,7 +91,7 @@
     <fragment
         android:id="@+id/registerFragment"
         android:name="com.codingschool.ideabase.ui.register.RegisterFragment"
-        android:label="RegisterFragment" >
+        android:label="@string/actionbar_title_register">
         <action
             android:id="@+id/toLogin"
             app:destination="@id/loginFragment" />

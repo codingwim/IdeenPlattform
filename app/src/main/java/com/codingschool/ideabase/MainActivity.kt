@@ -27,8 +27,8 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         prefs.setLocale(Locale.getDefault().language)
-        Log.d("observer_ex", "main activity locale: and prefs: ${prefs.getLocale()}")
-        // TODO mianactivity binding
+        //Log.d("observer_ex", "main activity locale: and prefs: ${prefs.getLocale()}")
+        // TODO mainactivity binding
         val navView: BottomNavigationView = findViewById(R.id.nav_view)
         val actionBar = this.supportActionBar
 
@@ -46,12 +46,18 @@ class MainActivity : AppCompatActivity() {
 
         navController.addOnDestinationChangedListener { controller, destination, arguments ->
             when (destination.id) {
-                R.id.loginFragment, R.id.registerFragment, R.id.commentFragment -> hideAppBarAndBottomNaviagtionBar(
-                    navView,
-                    actionBar
-                )
-                /*R.id.detailFragment -> actionBar?.hide()*/
-                else -> showAppBarAndBottomNaviagtionBar(navView, actionBar)
+                R.id.loginFragment, R.id.commentFragment -> {
+                    actionBar?.hide()
+                    navView.visibility = View.GONE
+                }
+                R.id.registerFragment -> {
+                    actionBar?.show()
+                    navView.visibility = View.GONE
+                }
+                else -> {
+                    actionBar?.show()
+                    navView.visibility = View.VISIBLE
+                }
             }
         }
     }
