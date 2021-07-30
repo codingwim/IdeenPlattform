@@ -46,7 +46,7 @@ class MainActivity : AppCompatActivity() {
 
         navController.addOnDestinationChangedListener { controller, destination, arguments ->
             when (destination.id) {
-                R.id.loginFragment, R.id.commentFragment -> {
+                R.id.loginFragment, R.id.commentFragment, R.id.loadingFragment -> {
                     actionBar?.hide()
                     navView.visibility = View.GONE
                 }

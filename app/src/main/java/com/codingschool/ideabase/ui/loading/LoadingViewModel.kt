@@ -38,12 +38,12 @@ class LoadingViewModel(
             errorVisibility = View.VISIBLE
             refreshButtonVisibility = View.VISIBLE
 
-        }
-        if (prefs.getAuthString().isNotEmpty()) {
+        } else if (prefs.getAuthString().isNotEmpty()) {
             // on loading viewmodel, check if we have valid credentials in shared prefs,
             // do check login auto login and navigate to Top Ranked
             // while "checking" in, rotate progressbar with info text!!
             loadingMessage = "Checking credentials..."
+            notifyPropertyChanged(BR.loadingMessage)
             checkCredentialsWithAPI()
         } else {
             loadingMessage = "..."
@@ -73,7 +73,8 @@ class LoadingViewModel(
     var loadingMessage: String = ""
 
     fun onRefreshClick() {
-
+            layoutRetry()
+            checkCredentialsWithAPI()
     }
 
 
@@ -95,13 +96,13 @@ class LoadingViewModel(
                             ignoreCase = true
                         )
                     ) {
-                        view?.showToast(R.string.worng_login_credentials_message)
+                        view?.navigateToLogin()
                     } else if (responseMessage.contains(
                             "HTTP 401",
                             ignoreCase = true
                         )
                     ) {
-                        view?.showToast(R.string.error_pwd_user_not_valid)
+                        view?.navigateToLogin()
                     } else {
                         layoutOffline()
                         //view?.showToast(R.string.network_issue_check_network)
@@ -117,6 +118,20 @@ class LoadingViewModel(
         progressIndicatorVisibility = View.INVISIBLE
         errorVisibility = View.VISIBLE
         refreshButtonVisibility = View.VISIBLE
+
+        notifyPropertyChanged(BR.logoVisibility)
+        notifyPropertyChanged(BR.progressIndicatorVisibility)
+        notifyPropertyChanged(BR.loadingMessage)
+        notifyPropertyChanged(BR.errorVisibility)
+        notifyPropertyChanged(BR.refreshButtonVisibility)
+    }
+
+    private fun layoutRetry() {
+        loadingMessage = "Trying to check credentials again..."
+        logoVisibility = View.INVISIBLE
+        progressIndicatorVisibility = View.VISIBLE
+        errorVisibility = View.VISIBLE
+        refreshButtonVisibility = View.INVISIBLE
 
         notifyPropertyChanged(BR.logoVisibility)
         notifyPropertyChanged(BR.progressIndicatorVisibility)
