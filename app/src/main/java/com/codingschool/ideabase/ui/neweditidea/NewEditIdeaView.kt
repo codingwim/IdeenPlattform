@@ -17,4 +17,5 @@ interface NewEditIdeaView {
     fun infoDialog(id: String)
     fun navigateToDetailFragment(id: String)
     fun navigateToAllIdeas()
+    //fun navigateOffline(online: Boolean)
 }

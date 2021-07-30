@@ -27,7 +27,6 @@ class ListViewModel(
     private var categoryList: List<Category> = emptyList()
 
     fun init() {
-        //Log.d("observer_ex", "toporall $topOrAll")
         // set initial adapter list here
         getIdeasToAdapter(emptyList(), NO_SEARCH_QUERY)
         adapter.addIdeaClickListener { id ->
@@ -191,7 +190,6 @@ class ListViewModel(
                     // search list now filtered with selected categories
                     Log.d("observer_ex", "sorting by $topOrAll ")
                     val sortedList = when(topOrAll) {
-                        // TODO add average cal or map  sum and count...
                         true -> {
                             listFromSearch.filter {it.numberOfRatings >= MIN_NUM_RATINGS_SHOW_IDEA_ON_TOP_RANKED }.sortedWith(
                                 compareByDescending { it.avgRating })

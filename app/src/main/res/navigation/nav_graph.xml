@@ -96,7 +96,9 @@
             android:defaultValue= "" />
         <action
             android:id="@+id/toTopRanked"
-            app:destination="@id/navigation_top_ranked" />
+            app:destination="@id/navigation_top_ranked"
+            app:popUpTo="@+id/loginFragment"
+            app:popUpToInclusive="true"/>
         <action
             android:id="@+id/toOffline"
             app:destination="@id/loadingFragment" />

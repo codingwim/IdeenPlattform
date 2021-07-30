@@ -15,4 +15,5 @@ interface EditProfileView {
     fun resetPasswordRepeatError()
     fun setFocusPasswordInput()
     fun navigateToLoginRegistered(username: String)
+    //fun navigateOffline(online: Boolean)
 }

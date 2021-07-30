@@ -10,4 +10,5 @@ interface ProfileView {
     fun navigateToNewIdeaFragment(editIdeaId: String)
     fun hideMenu()
     fun showMenu()
+    //fun navigateOffline(online: Boolean)
 }

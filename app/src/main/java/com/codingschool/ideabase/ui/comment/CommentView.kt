@@ -7,6 +7,7 @@ interface CommentView {
      fun setCommentEmptyError(any: Any)
      fun resetCommentEmptyError()
      fun navigateBack()
+     //fun navigateOffline(online: Boolean)
      fun cancelDialog()
      fun setProfileImage(url: String)
 }

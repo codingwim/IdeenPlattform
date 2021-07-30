@@ -51,8 +51,6 @@ class LoadingViewModel(
         }
     }
 
-
-
     fun attachView(view: LoadingView) {
         this.view = view
     }

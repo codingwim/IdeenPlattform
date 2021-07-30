@@ -8,5 +8,6 @@ interface LoginView {
     fun resetPasswordError()
     fun navigateToRegisterFragment()
     fun navigateToTopRankedFragment()
+    //fun navigateOffline(online: Boolean)
 
 }

@@ -15,4 +15,5 @@ interface RegisterView {
     fun setFocusPasswordInput()
     fun navigateToLoginRegistered(username: String)
     fun navigateCancelRegistration()
+    //fun navigateOffline(online: Boolean)
 }

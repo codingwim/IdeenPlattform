@@ -43,14 +43,18 @@ class DetailViewModel(
                 // set idea name in title
                 view?.setActionBarTitle(idea.title)
                 // first set the menu options: add release if manager // no menu when released OR not owner // not "release" and owner sees Edit/delete
-                if (prefs.isManager()) view?.addReleaseMenuItem()
-                else if (idea.released or (prefs.getMyId() != idea.author.id)) view?.hideMenu()
+                if (!idea.released) {
+                    if (prefs.isManager()) view?.addReleaseMenuItem()
+                    if ((prefs.getMyId() == idea.author.id) or (prefs.isManager())) view?.showMenu()
+                }
+
                 // now set all the bindable details, including image
                 view?.setIdeaImage(idea.imageUrl)
                 ideaTitle = idea.title
                 ideaAuthor = idea.authorName
                 // locale check to get correct language category
-                ideaCategory = if (prefs.isLangEn()) idea.category.name_en else idea.category.name_de
+                ideaCategory =
+                    if (prefs.isLangEn()) idea.category.name_en else idea.category.name_de
                 ideaDescription = idea.description
                 if (idea.comments.isEmpty()) view?.hideCommentTitle()
                 notifyPropertyChanged(BR.ideaTitle)

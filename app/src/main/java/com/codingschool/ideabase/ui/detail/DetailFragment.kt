@@ -44,8 +44,6 @@ class DetailFragment: Fragment(), DetailView {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        setHasOptionsMenu(true)
-
         binding.vm = viewModel
         binding.rvComments.adapter = viewModel.adapter
         viewModel.attachView(this)
@@ -72,6 +70,10 @@ class DetailFragment: Fragment(), DetailView {
             Navigation.findNavController(requireView()).navigate(action)
     }
 
+    override fun showMenu() {
+        setHasOptionsMenu(true)
+    }
+
     override fun hideMenu() {
         setHasOptionsMenu(false)
     }
@@ -85,7 +87,6 @@ class DetailFragment: Fragment(), DetailView {
         menuForManager = true
         requireActivity().invalidateOptionsMenu()
     }
-
 
     override fun setActionBarTitle(title: String) {
         (activity as MainActivity).getSupportActionBar()?.title = title
@@ -145,8 +146,6 @@ class DetailFragment: Fragment(), DetailView {
         super.onPrepareOptionsMenu(menu)
         // if  admin, add release menu item
         menu.findItem(R.id.release)?.setEnabled(menuForManager)
-        menu.findItem(R.id.delete)?.setEnabled(!menuForManager)
-        // if idea released, hide menu item done with hide and hideMenu()
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
