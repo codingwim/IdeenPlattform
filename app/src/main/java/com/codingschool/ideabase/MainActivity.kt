@@ -19,7 +19,7 @@ import java.util.*
 class MainActivity : AppCompatActivity() {
 
     private lateinit var navController: NavController
-    private lateinit var binding: ActivityMainBinding
+    //private lateinit var binding: ActivityMainBinding
     private val prefs: Preferences by inject()
 
     override fun onCreate(savedInstanceState: Bundle?) {
