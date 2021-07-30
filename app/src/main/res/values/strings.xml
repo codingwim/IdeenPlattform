@@ -95,6 +95,5 @@
     <string name="first_name_profile">First name:</string>
     <string name="last_name_profile">Last name:</string>
     <string name="role_profile">Role:</string>
-    <string name="try_again_btn_no_internet">TRY AGAIN</string>
 
 </resources>
