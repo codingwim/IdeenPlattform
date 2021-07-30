@@ -18,7 +18,7 @@ import org.koin.core.parameter.parametersOf
 
 class LoadingFragment: Fragment(), LoadingView {
     private val viewModel: LoadingViewModel by inject<LoadingViewModel> {
-        parametersOf(arguments?.let { LoadingFragmentArgs.fromBundle(it).online })
+        parametersOf(arguments?.let { LoadingFragmentArgs.fromBundle(it).onLine })
     }
     private lateinit var binding: FragmentLoadingBinding
 
