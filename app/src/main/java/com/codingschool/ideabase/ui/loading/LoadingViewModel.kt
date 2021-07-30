@@ -102,7 +102,10 @@ class LoadingViewModel(
                         )
                     ) {
                         view?.showToast(R.string.error_pwd_user_not_valid)
-                    } else view?.showToast(R.string.network_issue_check_network)
+                    } else {
+                        layoutOffline()
+                        //view?.showToast(R.string.network_issue_check_network)
+                    }
                 }
                 Log.e("observer_ex", "exception checking user credentials: $t")
             }).addTo(compositeDisposable)
