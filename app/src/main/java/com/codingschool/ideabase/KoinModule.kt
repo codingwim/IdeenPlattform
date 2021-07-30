@@ -13,6 +13,8 @@ import com.codingschool.ideabase.ui.detail.DetailViewModel
 import com.codingschool.ideabase.ui.editprofile.EditProfileViewModel
 import com.codingschool.ideabase.ui.list.IdeaListAdapter
 import com.codingschool.ideabase.ui.list.ListViewModel
+import com.codingschool.ideabase.ui.loading.LoadingFragment
+import com.codingschool.ideabase.ui.loading.LoadingViewModel
 import com.codingschool.ideabase.ui.login.LoginViewModel
 import com.codingschool.ideabase.ui.neweditidea.NewEditIdeaViewModel
 import com.codingschool.ideabase.ui.profile.ProfileViewModel
@@ -106,6 +108,10 @@ val appModule = module {
 
     factory<CommentListAdapter> {
         CommentListAdapter(imageHandler = get())
+    }
+
+    factory<LoadingViewModel> { parameters ->
+        LoadingViewModel(online = parameters.get(), ideaApi = get(), prefs = get())
     }
 
     factory<LoginViewModel> { parameters ->

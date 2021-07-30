@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
-    app:startDestination="@+id/loginFragment">
+    app:startDestination="@+id/loadingFragment">
 
     <fragment
         android:id="@+id/navigation_top_ranked"
@@ -143,5 +143,20 @@
         <action
             android:id="@+id/toLogin"
             app:destination="@id/loginFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/loadingFragment"
+        android:name="com.codingschool.ideabase.ui.loading.LoadingFragment"
+        android:label="LoadingFragment" >
+        <action
+            android:id="@+id/toTopRanked"
+            app:destination="@id/navigation_top_ranked" />
+        <action
+            android:id="@+id/toLogin"
+            app:destination="@id/loginFragment" />
+        <argument
+            android:name="onLine"
+            app:argType="boolean"
+            android:defaultValue="true" />
     </fragment>
 </navigation>

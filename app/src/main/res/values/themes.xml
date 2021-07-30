@@ -16,4 +16,12 @@
         <item name="bottomNavigationStyle">@style/Widget.MaterialComponents.BottomNavigationView.Colored</item>
         <item name="materialAlertDialogTheme">@style/materialDialog</item>
     </style>
+
+    <style name="Theme.Transparent" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowActionBar">false</item>
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowBackground">@color/yellow</item>
+    </style>
 </resources>
