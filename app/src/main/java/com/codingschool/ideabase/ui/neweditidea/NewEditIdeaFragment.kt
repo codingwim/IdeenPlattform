@@ -5,21 +5,26 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
+import androidx.activity.addCallback
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavDirections
 import androidx.navigation.Navigation
+import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
 import com.codingschool.ideabase.MainActivity
 import com.codingschool.ideabase.R
 import com.codingschool.ideabase.databinding.FragmentNewEditIdeaBinding
 import com.codingschool.ideabase.utils.ImageHandler
 import com.codingschool.ideabase.utils.getResString
+import com.codingschool.ideabase.utils.hideKeyboard
 import com.codingschool.ideabase.utils.toast
 import com.github.drjacky.imagepicker.ImagePicker
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -35,6 +40,7 @@ class NewEditIdeaFragment: Fragment(), NewEditIdeaView {
     private lateinit var binding: FragmentNewEditIdeaBinding
     private val imageHandler: ImageHandler by inject()
     private lateinit var launcher: ActivityResultLauncher<Intent>
+    private val navcontroller by lazy(::findNavController)
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -45,6 +51,17 @@ class NewEditIdeaFragment: Fragment(), NewEditIdeaView {
                 viewModel.setSelectedImage(uri)
             }
         }
+
+        // we need menu to catch back arrow in action bar
+        setHasOptionsMenu(true)
+
+        // below catches android back button
+        requireActivity()
+            .onBackPressedDispatcher
+            .addCallback(this) {
+                viewModel.onBackPressed()
+            }
+
     }
 
     override fun onCreateView(
@@ -68,6 +85,8 @@ class NewEditIdeaFragment: Fragment(), NewEditIdeaView {
         binding.vm = viewModel
         viewModel.attachView(this)
         viewModel.init()
+
+
     }
 
 /*    override fun getStringResource(res: Int) {
@@ -137,6 +156,24 @@ class NewEditIdeaFragment: Fragment(), NewEditIdeaView {
             .show()
     }
 
+    override fun cancelDialog() {
+        view?.let { requireActivity().hideKeyboard(it) }
+        MaterialAlertDialogBuilder(
+            requireActivity()
+        )
+            .setTitle("Save idea as draft?")
+            .setMessage("It will be available the next time you click the add idea button!")
+            .setNegativeButton("REMOVE") { dialog, _ ->
+                viewModel.onCancelWithoutDraft()
+                dialog.dismiss()
+            }
+            .setPositiveButton("SAVE") { dialog, _ ->
+                viewModel.onCancelWithDraft()
+                dialog.dismiss()
+            }
+            .show()
+    }
+
     override fun navigateToDetailFragment(id: String) {
         val action: NavDirections =
             NewEditIdeaFragmentDirections.toDetail(id)
@@ -157,4 +194,14 @@ class NewEditIdeaFragment: Fragment(), NewEditIdeaView {
         super.onDestroy()
         viewModel.compositeDisposable.clear()
     }
+
+    override fun onOptionsItemSelected(menuItem : MenuItem) : Boolean {
+        if (menuItem.getItemId() == android.R.id.home) {
+            requireActivity().onBackPressed()
+            return true // must return true to consume it here
+        }
+        return super.onOptionsItemSelected(menuItem)
+    }
+
+
 }

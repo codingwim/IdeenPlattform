@@ -49,8 +49,9 @@ class NewEditIdeaViewModel(
         // set edittexts with hint or prefill depending on editIdea (id) or editIdea("") (default)
         if (editIdeaId.isNotEmpty()) {
             getIdeaAndPrefill()
-        }
+        } else if (prefs.hasSavedIdeaDraft()) getPrefillDraft()
     }
+
 
     private fun getAndSetCategoryItems() {
         ideaApi.getAllCategories()
@@ -83,6 +84,18 @@ class NewEditIdeaViewModel(
             }).addTo(compositeDisposable)
     }
 
+    private fun getPrefillDraft() {
+        ideaImageUrl = prefs.getImageDraft()
+        ideaName = prefs.getIdeaNameDraft()
+        ideaDescription = prefs.getIdeaDescriptionDraft()
+        ideaCategory = prefs.getIdeaCategoryDraft()
+        view?.setIdeaImage(ideaImageUrl)
+        view?.setSelectedCategory(ideaCategory)
+        notifyPropertyChanged(BR.ideaName)
+        notifyPropertyChanged(BR.ideaCategory)
+        notifyPropertyChanged(BR.ideaDescription)
+    }
+
     private fun getIdeaAndPrefill() {
         saveButtonText.set(R.string.save_idea_edit)
         uploadImageButtonText.set(R.string.change_image_idea_edit)
@@ -99,7 +112,8 @@ class NewEditIdeaViewModel(
                 view?.setIdeaImage(ideaImageUrl)
                 ideaName = idea.title
                 // locale check to get correct language category
-                ideaCategory = if (prefs.isLangEn()) idea.category.name_en else idea.category.name_de
+                ideaCategory =
+                    if (prefs.isLangEn()) idea.category.name_en else idea.category.name_de
                 view?.setSelectedCategory(ideaCategory)
                 /*view?.setSelectedCategory(ideaCategory)*/
                 ideaDescription = idea.description
@@ -163,7 +177,10 @@ class NewEditIdeaViewModel(
 
         if (fieldsNotEmpty) {
             // locale check to retrieve position of selected category
-            val categoryId = categoryListIds[if (prefs.isLangEn()) categoryListEN.indexOf(ideaCategory) else categoryListDE.indexOf(ideaCategory) ]
+            val categoryId =
+                categoryListIds[if (prefs.isLangEn()) categoryListEN.indexOf(ideaCategory) else categoryListDE.indexOf(
+                    ideaCategory
+                )]
             val createIdea = CreateIdea(
                 ideaName,
                 categoryId,
@@ -224,7 +241,7 @@ class NewEditIdeaViewModel(
             .onErrorComplete {
                 it is HttpException
             }
-            .andThen (
+            .andThen(
                 updateImage(imagePart, updateImage)
             )
             .observeOn(AndroidSchedulers.mainThread())
@@ -256,7 +273,8 @@ class NewEditIdeaViewModel(
                     ) {
                         view?.showToast(R.string.idea_released_mot_editable_error)
                         Log.d(
-                            "observer_ex", "Not the author of the idea, or idea already released.: $t"
+                            "observer_ex",
+                            "Not the author of the idea, or idea already released.: $t"
                         )
                     } else if (responseMessage.contains(
                             "HTTP 404",
@@ -307,4 +325,34 @@ class NewEditIdeaViewModel(
                 imagePart
             )
             .build()
+
+    fun onBackPressed() {
+        //Log.d("observer_ex", "on back pressed")
+        if ((editIdeaId.isEmpty()) &&
+            (ideaCategory.isNotEmpty() or
+                    ideaDescription.isNotEmpty() or
+                    ideaImageUrl.isNotEmpty() or
+                    ideaCategory.isNotEmpty()
+                    )
+        ) view?.cancelDialog() else view?.navigateBack()
+    }
+
+    fun onCancelWithoutDraft() {
+        prefs.setImageDraft("")
+        prefs.setIdeaNameDraft("")
+        prefs.setIdeaCategoryDraft("")
+        prefs.setIdeaDescriptionDraft("")
+        view?.showToast("Adding idea cancelled without saving")
+        view?.navigateBack()
+    }
+
+    fun onCancelWithDraft() {
+        prefs.setImageDraft(ideaImageUrl)
+        prefs.setIdeaNameDraft(ideaName)
+        prefs.setIdeaCategoryDraft(ideaCategory)
+        prefs.setIdeaDescriptionDraft(ideaDescription)
+        prefs.setIdeaDraftSaved(true)
+        view?.showToast("The entered idea has been saved, but not posted")
+        view?.navigateBack()
+    }
 }
