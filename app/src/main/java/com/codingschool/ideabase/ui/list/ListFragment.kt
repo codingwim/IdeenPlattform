@@ -8,11 +8,14 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavDirections
 import androidx.navigation.Navigation
+import com.codingschool.ideabase.MainActivity
 import com.codingschool.ideabase.R
 import com.codingschool.ideabase.databinding.FragmentListBinding
 import com.codingschool.ideabase.ui.detail.DetailFragmentDirections
 import com.codingschool.ideabase.utils.getResString
 import com.codingschool.ideabase.utils.toast
+import com.google.android.material.badge.BadgeDrawable
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import org.koin.android.ext.android.inject
@@ -26,6 +29,9 @@ class ListFragment : Fragment(), ListView {
     }
 
     private lateinit var binding: FragmentListBinding
+    private lateinit var bottomNav: BottomNavigationView
+    private lateinit var topBadge: BadgeDrawable
+    private lateinit var allBadge: BadgeDrawable
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -45,6 +51,11 @@ class ListFragment : Fragment(), ListView {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        //access botomnav badges
+        bottomNav = (requireActivity() as MainActivity).findViewById<BottomNavigationView>(R.id.nav_view)
+        topBadge = bottomNav.getOrCreateBadge(R.id.navigation_top_ranked)
+        allBadge = bottomNav.getOrCreateBadge(R.id.navigation_all_ideas)
 
         // set fab button
         binding.fab.setOnClickListener {
@@ -197,6 +208,29 @@ class ListFragment : Fragment(), ListView {
                 dialog.dismiss()
             }
             .show()
+    }
+
+    override fun hideTopBadge() {
+        topBadge.isVisible = false
+    }
+
+    override fun setTopBadge() {
+        topBadge.isVisible = true
+    }
+
+    override fun hideAllBadge() {
+        allBadge.isVisible = false
+        allBadge.clearNumber()
+    }
+
+    override fun setAllBadge(numberOfNewItems: Int) {
+        allBadge.isVisible = true
+        allBadge.number = numberOfNewItems
+    }
+
+    override fun setAllBadgeNoNumber() {
+        allBadge.clearNumber()
+        allBadge.isVisible = true
     }
 
     override fun onDestroyView() {

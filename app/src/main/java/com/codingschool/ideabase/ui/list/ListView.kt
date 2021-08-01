@@ -12,4 +12,9 @@ interface ListView {
     fun moveToTopOfRecyclerview()
     fun showSearchDialog(categoryArray: Array<String>, checkedItems: BooleanArray, searchText: String, messageSelecteCategories: String)
     fun showFilterDialog(categoryArray: Array<String>, checkedItems: BooleanArray, searchText: String, messageSelecteCategories: String)
+    fun hideTopBadge()
+    fun setTopBadge()
+    fun hideAllBadge()
+    fun setAllBadge(numberOfNewItems: Int)
+    fun setAllBadgeNoNumber()
 }

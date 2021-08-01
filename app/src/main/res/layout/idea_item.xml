@@ -39,20 +39,58 @@
                         android:id="@+id/ivProfilePicture"
                         android:layout_width="80dp"
                         android:layout_height="80dp"
-                        android:layout_margin="@dimen/margin_large"
+                        android:layout_marginStart="@dimen/margin_large"
+                        android:layout_marginEnd="@dimen/margin_large"
+                        android:layout_marginBottom="@dimen/margin_large"
                         android:scaleType="centerCrop"
                         card_view:layout_constraintBottom_toTopOf="@+id/ivIdea"
                         card_view:layout_constraintEnd_toStartOf="@id/tvIdeaTitle"
                         card_view:layout_constraintStart_toStartOf="parent"
 
-                        card_view:layout_constraintTop_toTopOf="parent"
+                        card_view:layout_constraintTop_toBottomOf="@+id/tvStatus"
                         card_view:shapeAppearanceOverlay="@style/circleImageView"
                         card_view:srcCompat="@drawable/ic_baseline_person_24"
                         card_view:strokeColor="@color/grey"
                         card_view:strokeWidth="1dp"
 
                         />
+                    <ImageView
+                        android:id="@+id/ivTrendUp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/margin_small"
+                        android:layout_marginEnd="@dimen/margin_small"
+                        android:visibility="gone"
+                        android:src="@drawable/ic_baseline_arrow_upward_24"
+                        card_view:layout_constraintTop_toTopOf="parent"
+                        card_view:layout_constraintEnd_toStartOf="@+id/tvStatus"
+                        card_view:tint="@color/green" />
 
+                    <ImageView
+                        android:id="@+id/ivTrendDown"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/margin_small"
+                        android:layout_marginEnd="@dimen/margin_small"
+                        android:visibility="gone"
+                        android:src="@drawable/ic_baseline_arrow_downward_24"
+                        card_view:layout_constraintTop_toTopOf="parent"
+                        card_view:layout_constraintEnd_toStartOf="@+id/tvStatus"
+                        card_view:tint="@color/red"/>
+
+                    <TextView
+                        android:id="@+id/tvStatus"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/margin_small"
+                        android:layout_marginEnd="@dimen/margin_small"
+                        android:textSize="@dimen/text_small14"
+                        android:textColor="@color/yellow"
+                        card_view:layout_constraintTop_toTopOf="parent"
+                        card_view:layout_constraintEnd_toEndOf="parent"
+                        android:textAllCaps="true"
+                        android:text="changeMe"
+                        tools:text="NEW" />
                     <TextView
                         android:id="@+id/tvIdeaTitle"
                         android:layout_width="0dp"
