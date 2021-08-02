@@ -29,7 +29,10 @@ class ListViewModel(
 
     val compositeDisposable = CompositeDisposable()
 
-    private var categoryList: List<Category> = emptyList()
+    private var categoryList = emptyList<String>()
+    private var categoryArrayDE: Array<String> = emptyArray()
+    private var categoryArrayEN: Array<String> = emptyArray()
+
 
     private var listOfSearchCategories: List<String> = emptyList()
     private var searchString = ""
@@ -50,7 +53,7 @@ class ListViewModel(
             view?.navigateToDetailFragment(id)
         }
         adapter.addCommentClickListener { id ->
-              view?.navigateToCommentFragment(id)
+            view?.navigateToCommentFragment(id)
         }
         adapter.addRateClickListener { id ->
             getMyRatingForThisIdeaAndStartDialog(id)
@@ -61,16 +64,24 @@ class ListViewModel(
         adapter.registerAdapterDataObserver(object : AdapterDataObserver() {
             override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
                 super.onItemRangeInserted(positionStart, itemCount)
-                Log.d("observer_ex", "onItemRangeInserted with positionStart: $positionStart and itemCount: $itemCount")
+                Log.d(
+                    "observer_ex",
+                    "onItemRangeInserted with positionStart: $positionStart and itemCount: $itemCount"
+                )
                 view?.moveToPositionInRecyclerview(positionStart)
             }
 
             override fun onItemRangeChanged(positionStart: Int, itemCount: Int) {
                 super.onItemRangeChanged(positionStart, itemCount)
-                Log.d("observer_ex", "onItemRangeChanged with positionStart: $positionStart and itemCount: $itemCount")
+                Log.d(
+                    "observer_ex",
+                    "onItemRangeChanged with positionStart: $positionStart and itemCount: $itemCount"
+                )
                 view?.moveToPositionInRecyclerview(positionStart)
             }
         })
+
+        getCategoryItems()
 
         /**
          * if APP JUST STARTED, on first load of top ranked, we get all ides from api, but only show up-to lastAdapterUpdated??
@@ -80,6 +91,8 @@ class ListViewModel(
          *
          *  Both options start the getPeriodicUpdatesToSetBadges
          */
+
+
 
         if (prefs.appJustStarted()) {
             ideaApi.getAllIdeasNoFilter()
@@ -133,16 +146,7 @@ class ListViewModel(
                     if (topOrAll) {
                         // set prefs top ranked list
                         val rankedList = sortedList.map { it.id }
-                        Log.d(
-                            "observer_ex",
-                            "TopRanked from prefs: ${prefs.getTopRankedIds().size}"
-                        )
                         prefs.setTopRankedIds(rankedList)
-                        Log.d(
-                            "observer_ex",
-                            "toporall: true and set rankedList to prefs: ${rankedList.size} "
-                        )
-
                     }
                     checkApiForUpdatesPeriodicallyToSetBadges()
                     prefs.setAppNotJustStarted()
@@ -323,18 +327,44 @@ class ListViewModel(
         this.view = view
     }
 
-    fun setFilterDialog(
-        categoryArray: Array<String>,
-        checkedItems: BooleanArray,
-        searchText: String,
-        messageSelectedCategories: String
-    ) {
-        view?.showFilterDialog(
-            categoryArray,
-            checkedItems,
-            searchText,
-            messageSelectedCategories
-        )
+    /*    fun setFilterDialog(
+            categoryArray: Array<String>,
+            checkedItems: BooleanArray,
+            searchText: String
+        ) {
+            view?.showFilterDialog(
+                categoryArray,
+                checkedItems,
+                searchText
+            )
+        }*/
+    private fun getCategoryItems() {
+        ideaApi.getAllCategories()
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({ list ->
+                categoryArrayEN = list.map { category ->
+                    category.name_en
+                }.toTypedArray()
+                categoryArrayDE = list.map { category ->
+                    category.name_de
+                }.toTypedArray()
+                categoryList = list.map { category ->
+                    category.id
+                }
+            }, { t ->
+                val responseMessage = t.message
+                if (responseMessage != null) {
+                    if (responseMessage.contains(
+                            "HTTP 401",
+                            ignoreCase = true
+                        )
+                    ) {
+                        Log.d("observer_ex", "401 Authorization not valid")
+                        view?.showToast(R.string.not_authorized)
+                    } else view?.showToast(R.string.network_issue_check_network)
+                }
+                Log.e("observer_ex", "exception getting categories: $t")
+            }).addTo(compositeDisposable)
     }
 
     fun setSearchDialog(
@@ -345,56 +375,25 @@ class ListViewModel(
         // Build the category message text
         val listOfSearchCategories = getlistOfSearchCategories(checkedItems)
         val selectedCategoriesAsString = listOfSearchCategories.joinToString(", ")
-        // TODO how to extract string here ? add view getString with context (as taost...)
-        // add bool to this: hasFilterCatSelection
-        // if true , show R.string.result_filtered_by: + filtertext
-        // esle show R.string.Click to...
-        val newMessageSelectedCategories =
-            if (selectedCategoriesAsString.isEmpty()) "Click FILTER below to filter the result by categories"
-            else "Result will be filtered by: " + selectedCategoriesAsString
+
         view?.showSearchDialog(
             categoryArray,
             checkedItems,
             searchText,
-            newMessageSelectedCategories
+            selectedCategoriesAsString,
+            !selectedCategoriesAsString.isEmpty()
         )
     }
 
     fun setInitialSearchDialog() {
-        //val locale = ConfigurationCompat.getLocales(Resources.getSystem().getConfiguration())
-        var categoryArray: Array<String> = emptyArray()
-        var checkedItems: BooleanArray = booleanArrayOf()
+        val categoryArray = if (prefs.isLangEn()) categoryArrayEN else categoryArrayDE
+        val checkedItems = BooleanArray(categoryArray.size)
 
-        ideaApi.getAllCategories()
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({ list ->
-                categoryList = list
-                for (i in list) {
-                    //TODO local check to be done here
-                    categoryArray += i.name_en
-                    checkedItems += false
-                }
-                view?.showSearchDialog(
-                    categoryArray,
-                    checkedItems,
-                    "",
-                    "You can add categories to filter the result. Just click FILTER below"
-                )
-
-            }, { t ->
-                val responseMessage = t.message
-                if (responseMessage != null) {
-                    if (responseMessage.contains(
-                            "HTTP 401",
-                            ignoreCase = true
-                        )
-                    ) {
-                        Log.d("observer_ex", "401 Authorization not valid")
-                        view?.showToast("You are not autorized to log in")
-                    } else view?.showToast(R.string.network_issue_check_network)
-                }
-                Log.e("observer_ex", "exception getting categories: $t")
-            }).addTo(compositeDisposable)
+        setSearchDialog(
+            categoryArray,
+            checkedItems,
+            ""
+        )
     }
 
     fun filterWithSelectedItemsAndSearchText(
@@ -418,7 +417,6 @@ class ListViewModel(
         // if searchQuery = empty,
         //      we use getAllIdeas to return complete list !! ELSE return list with search keyword
         //      and THAN filter with the categoryList (if not empty)
-        //      TODO add sort with the sorting pref
         //      TODO IF RESULT = EMPTY -> put overlay "no ideas found matching your search and/or filter criteria
         //
 
@@ -475,7 +473,6 @@ class ListViewModel(
                 // search list now filtered with selected categories
                 Log.d("observer_ex", "sorting by $topOrAll and $listOfSearchCategories")
                 val sortedList = when (topOrAll) {
-                    // TODO add average cal or map  sum and count...
                     true -> {
                         listFromSearch.filter { it.numberOfRatings >= MIN_NUM_RATINGS_SHOW_IDEA_ON_TOP_RANKED }
                             .sortedWith(
@@ -505,10 +502,10 @@ class ListViewModel(
             }).addTo(compositeDisposable)
     }
 
-
     private fun getlistOfSearchCategories(checkedItems: BooleanArray): List<String> {
         val listOfSearchCategories = emptyList<String>().toMutableList()
-        for (i in 0..checkedItems.size - 1) if (checkedItems[i]) listOfSearchCategories += categoryList[i].id
+        for (i in 0..checkedItems.size - 1)
+            if (checkedItems[i]) listOfSearchCategories += categoryList[i]
         return listOfSearchCategories
     }
 

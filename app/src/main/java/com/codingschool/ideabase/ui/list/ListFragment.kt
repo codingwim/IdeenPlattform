@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.text.InputType
 import android.view.*
 import android.widget.EditText
+import android.widget.LinearLayout
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavDirections
@@ -35,7 +36,6 @@ class ListFragment : Fragment(), ListView {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        // Inflate the layout for this fragment
         binding = DataBindingUtil.inflate(
             inflater,
             R.layout.fragment_list,
@@ -50,7 +50,8 @@ class ListFragment : Fragment(), ListView {
         super.onViewCreated(view, savedInstanceState)
 
         //access botomnav badges
-        bottomNav = (requireActivity() as MainActivity).findViewById<BottomNavigationView>(R.id.nav_view)
+        bottomNav =
+            (requireActivity() as MainActivity).findViewById<BottomNavigationView>(R.id.nav_view)
         topBadge = bottomNav.getOrCreateBadge(R.id.navigation_top_ranked)
         allBadge = bottomNav.getOrCreateBadge(R.id.navigation_all_ideas)
 
@@ -80,14 +81,15 @@ class ListFragment : Fragment(), ListView {
                 getString(R.string.rating_2),
                 getString(R.string.rating_3),
                 getString(R.string.rating_4),
-                getString(R.string.rating_5))
+                getString(R.string.rating_5)
+            )
         var newCheckedItem = 0
         MaterialAlertDialogBuilder(
             requireActivity(),
             R.style.materialDialog
         )
             .setTitle(getString(R.string.dialog_title_rate))
-            .setSingleChoiceItems(ratingArray,checkedItem) { dialog, which ->
+            .setSingleChoiceItems(ratingArray, checkedItem) { dialog, which ->
                 newCheckedItem = which
 
             }
@@ -133,23 +135,31 @@ class ListFragment : Fragment(), ListView {
         categoryArray: Array<String>,
         checkedItems: BooleanArray,
         searchText: String,
-        messageSelecteCategories: String
+        selectedCategoriesAsString: String,
+        hasFilterSelection: Boolean
     ) {
         val inputEditTextField = EditText(requireActivity())
         if (searchText.isNotEmpty()) inputEditTextField.setText(searchText) else inputEditTextField.setHint(
             getString(R.string.search_for_hint_dialog)
         )
         inputEditTextField.inputType = InputType.TYPE_CLASS_TEXT
-        /*val linearLayoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.WRAP_CONTENT )
-        linearLayoutParams.setMargins(150,0,150,0)
-        inputEditTextField.layoutParams = linearLayoutParams*/
+        val linearLayoutParams = LinearLayout.LayoutParams(
+            LinearLayout.LayoutParams.MATCH_PARENT,
+            LinearLayout.LayoutParams.WRAP_CONTENT
+        )
+        linearLayoutParams.setMargins(150, 0, 150, 0)
+        inputEditTextField.layoutParams = linearLayoutParams
 
+        val message =
+            if (hasFilterSelection) getString(R.string.search_didalog_will_be_filtered) + selectedCategoriesAsString
+            else getString(R.string.search_diealog_addfilter_text)
+        val filterBtnText = if (hasFilterSelection) getString(R.string.change_filter_search_dialog) else getString(R.string.btn_filter_dialog)
         MaterialAlertDialogBuilder(
             requireActivity(),
             R.style.materialDialog
         )
             .setTitle(getString(R.string.title_search_dialog))
-            .setMessage(messageSelecteCategories)
+            .setMessage(message)
             // TODO remove dialog_edit_text.xml if not used
             //.setView(R.layout.dialog_edit_text)
             //.setView(inputEditTextField, 30,0,30,0)
@@ -157,14 +167,13 @@ class ListFragment : Fragment(), ListView {
             .setNeutralButton(getString(R.string.btn_cancel_dialog)) { dialog, _ ->
                 dialog.dismiss()
             }
-            .setNegativeButton(getString(R.string.btn_filter_dialog)) { dialog, _ ->
+            .setNegativeButton(filterBtnText) { dialog, _ ->
                 val newSearchText =
                     if (inputEditTextField.text.isNotEmpty()) inputEditTextField.text.toString() else ""
-                viewModel.setFilterDialog(
+                showFilterDialog(
                     categoryArray,
                     checkedItems,
-                    newSearchText,
-                    messageSelecteCategories
+                    newSearchText
                 )
                 dialog.dismiss()
             }
@@ -177,13 +186,14 @@ class ListFragment : Fragment(), ListView {
             .show()
     }
 
-    override fun showFilterDialog(
+    fun showFilterDialog(
         categoryArray: Array<String>,
         checkedItems: BooleanArray,
-        searchText: String,
-        messageSelecteCategories: String
+        searchText: String
     ) {
 
+        val backBtnText = if (searchText.isEmpty()) getString(R.string.add_serach_text_filter_dialog) else getString(
+                    R.string.change_search_text_filter_dialog)
         MaterialAlertDialogBuilder(
             requireActivity()
         )
@@ -196,7 +206,7 @@ class ListFragment : Fragment(), ListView {
                 checkedItems[whichSelected] = hasSelection
                 //Log.d("observer_ex", "wichSelected $whichSelected , hasSelectio: $hasSelection")
             }
-            .setNegativeButton(getString(R.string.btn_back_dialog)) { dialog, _ ->
+            .setNegativeButton(backBtnText) { dialog, _ ->
                 viewModel.setSearchDialog(categoryArray, checkedItems, searchText)
                 dialog.dismiss()
             }
