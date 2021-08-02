@@ -346,6 +346,9 @@ class ListViewModel(
         val listOfSearchCategories = getlistOfSearchCategories(checkedItems)
         val selectedCategoriesAsString = listOfSearchCategories.joinToString(", ")
         // TODO how to extract string here ? add view getString with context (as taost...)
+        // add bool to this: hasFilterCatSelection
+        // if true , show R.string.result_filtered_by: + filtertext
+        // esle show R.string.Click to...
         val newMessageSelectedCategories =
             if (selectedCategoriesAsString.isEmpty()) "Click FILTER below to filter the result by categories"
             else "Result will be filtered by: " + selectedCategoriesAsString

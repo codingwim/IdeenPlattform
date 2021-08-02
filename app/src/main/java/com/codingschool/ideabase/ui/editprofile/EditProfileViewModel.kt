@@ -91,8 +91,6 @@ class EditProfileViewModel(
             }
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
-                // TODO snacker to say you can leave withour savinf if you only wanted to edit the profile picture
-                view?.showToast("You're profile picture has been updated")
                 Log.d("observer_ex", "Profile image updated")
                 //view?.navigateBack()
             }, { t ->
@@ -190,10 +188,7 @@ class EditProfileViewModel(
         ideaApi.getOwnUser().observeOn(AndroidSchedulers.mainThread())
             //.subscribeOn(Schedulers.io())
             .subscribe({ user ->
-                // todo change to snacker with OK button
                 view?.showInfoDialog()
-                //view?.showToast("Hi ${user.firstname}, if you change your password, you will be redirected to login again!")
-
                 initialProfileImageUrl = user.profilePicture ?: ""
                 profileImageUrl = initialProfileImageUrl
                 if (profileImageUrl.isNotEmpty())

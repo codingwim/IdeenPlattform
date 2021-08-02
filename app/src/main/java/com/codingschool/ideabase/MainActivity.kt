@@ -27,7 +27,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         prefs.setAppJustStarted()
         prefs.setLocale(Locale.getDefault().language)
-        //Log.d("observer_ex", "main activity locale: and prefs: ${prefs.getLocale()}")
+        Log.d("observer_ex", "main activity prefs.locale: ${prefs.getLocale()}")
         // TODO mainactivity binding
         val navView: BottomNavigationView = findViewById(R.id.nav_view)
         val actionBar = this.supportActionBar
