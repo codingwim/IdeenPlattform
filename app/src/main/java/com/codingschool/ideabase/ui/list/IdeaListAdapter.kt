@@ -2,10 +2,10 @@ package com.codingschool.ideabase.ui.list
 
 import android.view.LayoutInflater
 import android.view.View
-import android.view.View.VISIBLE
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import com.codingschool.ideabase.R
 import com.codingschool.ideabase.databinding.IdeaItemBinding
 import com.codingschool.ideabase.model.data.Idea
 import com.codingschool.ideabase.utils.ImageHandler
@@ -38,7 +38,7 @@ class IdeaListAdapter(private val imageHandler: ImageHandler) :
             binding.tvAuthor.text = idea.authorName
             binding.tvIdeaDescription.text = idea.description
             if (topOrAll) {
-                binding.tvStatus.text = idea.avgRating.toString()
+                //binding.tvStatus.text = idea.avgRating.toString()
                 if (idea.trend != null) {
                     if (idea.trend == Trend.UP) {
                         binding.ivTrendUp.visibility = View.VISIBLE
@@ -50,8 +50,11 @@ class IdeaListAdapter(private val imageHandler: ImageHandler) :
                         binding.ivTrendUp.visibility = View.GONE
                         binding.ivTrendDown.visibility = View.GONE
                     }
-                } else binding.tvStatus.text = idea.avgRating.toString() + "null"
+                } //else binding.tvStatus.text = idea.avgRating.toString() + "null"
             } else binding.tvStatus.text = getStatusText(idea)
+            setRatingImage(idea.avgRating)
+
+
 
             imageHandler.getProfilePic(idea.author.profilePicture, binding.ivProfilePicture)
             imageHandler.getIdeaImage(idea.imageUrl, binding.ivIdea)
@@ -67,6 +70,18 @@ class IdeaListAdapter(private val imageHandler: ImageHandler) :
             binding.btRate.setOnClickListener {
                 rateClickListener(idea.id)
             }
+        }
+
+        private fun setRatingImage(avgRating: Double) {
+            val drawIcon =  when (avgRating) {
+                in 0.1..1.5 -> R.drawable.rated_1
+                in 1.5..2.5 -> R.drawable.rated_2
+                in 2.5..3.5 -> R.drawable.rated_3
+                in 3.5..4.5 -> R.drawable.rated_4
+                in 4.5..5.0 -> R.drawable.rated_5
+                else ->  R.drawable.rated_none
+            }
+            binding.btRate.setImageResource(drawIcon)
         }
 
         private fun getStatusText(idea: Idea): String {

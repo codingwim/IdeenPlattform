@@ -89,7 +89,6 @@
                         card_view:layout_constraintTop_toTopOf="parent"
                         card_view:layout_constraintEnd_toEndOf="parent"
                         android:textAllCaps="true"
-                        android:text="changeMe"
                         tools:text="NEW" />
                     <TextView
                         android:id="@+id/tvIdeaTitle"
@@ -162,7 +161,8 @@
                 android:src="@drawable/ic_favorite_filled"
                 card_view:layout_constraintBottom_toBottomOf="@id/btComment"
                 card_view:layout_constraintEnd_toEndOf="parent"
-                card_view:layout_constraintTop_toTopOf="@+id/btComment" />
+                card_view:layout_constraintTop_toTopOf="@+id/btComment"
+                card_view:tint="@color/dark_grey" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </com.google.android.material.card.MaterialCardView>
