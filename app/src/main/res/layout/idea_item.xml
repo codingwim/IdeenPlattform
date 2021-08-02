@@ -83,7 +83,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/margin_small"
-                        android:layout_marginEnd="@dimen/margin_small"
+                        android:layout_marginEnd="@dimen/margin_large"
                         android:textSize="@dimen/text_small14"
                         android:textColor="@color/yellow"
                         card_view:layout_constraintTop_toTopOf="parent"
@@ -128,9 +128,12 @@
                         android:id="@+id/tvIdeaDescription"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_margin="@dimen/margin_standard"
+                        android:layout_margin="@dimen/margin_large"
+
+
                         android:ellipsize="end"
                         android:maxLines="3"
+                        android:textSize="@dimen/text_medium18"
                         card_view:layout_constraintBottom_toBottomOf="parent"
                         card_view:layout_constraintEnd_toEndOf="parent"
                         card_view:layout_constraintStart_toStartOf="parent"

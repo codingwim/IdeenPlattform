@@ -38,7 +38,6 @@ interface IdeaApi {
     @GET("category/{id}")
     fun getCategoryById(@Path ("id") id: String): Single<Category>
 
-    // todo WithCatgories List<CatogryId> as String "catx, catx, catc"
     @GET("idea")
     fun getAllIdeas(@Query ("categoryId") categoryId: String): Single<List<Idea>>
 

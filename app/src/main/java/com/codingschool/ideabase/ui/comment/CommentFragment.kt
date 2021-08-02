@@ -86,9 +86,9 @@ class CommentFragment : Fragment(), CommentView {
         MaterialAlertDialogBuilder(
             requireActivity()
         )
-            .setTitle("Save draft?")
-            .setMessage("It will be available the next time you comment anywhere!")
-            .setNegativeButton("REMOVE") { dialog, _ ->
+            .setTitle(getString(R.string.dialog_save_draft_title))
+            .setMessage(getString(R.string.dialog_comment_draft_message))
+            .setNegativeButton(getString(R.string.remove_draft_dialog)) { dialog, _ ->
                 viewModel.onCancelWithoutDraft()
                 dialog.dismiss()
             }

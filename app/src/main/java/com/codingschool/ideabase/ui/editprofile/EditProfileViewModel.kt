@@ -20,6 +20,7 @@ import okhttp3.MultipartBody
 import retrofit2.HttpException
 
 class EditProfileViewModel(
+    private val loadPictureLoader: Boolean,
     private val ideaApi: IdeaApi,
     private val prefs: Preferences,
     private val contentresolver: ContentResolver
@@ -32,6 +33,7 @@ class EditProfileViewModel(
     fun init() {
         if (prefs.getAuthString().isNotEmpty()) {
             setMyCredentialsFromAPI()
+            if (loadPictureLoader) onGetProfileImageClick()
         } else {
             view?.showToast("You are not authorized to edit this profile")
             //view?.navigateBack()
@@ -74,10 +76,6 @@ class EditProfileViewModel(
         view?.showOverlayChangePicture()
 
         updateProfilePicture()
-    }
-
-    private fun updateMyProfilePicture() {
-        TODO("Not yet implemented")
     }
 
     private fun updateProfilePicture() {
@@ -193,7 +191,8 @@ class EditProfileViewModel(
             //.subscribeOn(Schedulers.io())
             .subscribe({ user ->
                 // todo change to snacker with OK button
-                view?.showToast("Hi ${user.firstname}, if you change your password, you will be redirected to login again!")
+                view?.showInfoDialog()
+                //view?.showToast("Hi ${user.firstname}, if you change your password, you will be redirected to login again!")
 
                 initialProfileImageUrl = user.profilePicture ?: ""
                 profileImageUrl = initialProfileImageUrl
@@ -227,6 +226,10 @@ class EditProfileViewModel(
                 }*/
                 Log.e("observer_ex", "exception getting user info: $t")
             }).addTo(compositeDisposable)
+    }
+
+    fun snackerClicked(tag: Int) {
+
     }
 
     private fun validPassword(password: String): Boolean {

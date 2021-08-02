@@ -168,7 +168,6 @@ class ListViewModel(
         val dateLastUpdate = prefs.getLastAdapterUpdate()
         val countNew = list.count { (it.created.compareTo(dateLastUpdate) > 0) }
         val updated = list.count { (it.lastUpdated.compareTo(dateLastUpdate) > 0) }
-        Log.d("observer_ex", "compare to date = $dateLastUpdate result new: $countNew")
 
         if (prefs.appJustStarted()) {
             if (countNew > 0) view?.setAllBadge(countNew)
@@ -176,7 +175,6 @@ class ListViewModel(
                 val atLEastOneIdeaUpdated = list.firstOrNull { it.lastUpdated > dateLastUpdate }
                 if (atLEastOneIdeaUpdated != null) {
                     view?.setAllBadgeNoNumber()
-                    Log.d("observer_ex", "initial check updatebadge set")
                 }
             }
         }
@@ -185,8 +183,6 @@ class ListViewModel(
     private fun setTrendAndStatusList(list: List<Idea>): List<Idea> {
         val dateLastUpdate = prefs.getLastAdapterUpdate()
         val topRankedIdsLastUpdate = prefs.getTopRankedIds()
-        Log.d("observer_ex", "topRankedLastUpdate.size: ${topRankedIdsLastUpdate.size}")
-
         val rankedlist =
             list.filter { it.numberOfRatings >= MIN_NUM_RATINGS_SHOW_IDEA_ON_TOP_RANKED }
                 .sortedByDescending { it.avgRating }
@@ -205,7 +201,6 @@ class ListViewModel(
 
             if (topRankedIdsLastUpdate.isNotEmpty()) {
                 val positionLastUpdate = (topRankedIdsLastUpdate.indexOfFirst { it == idea.id })
-                //Log.d("observer_ex", "i: $i, title idea: ${idea.title}, id: ${idea.id} , id lastUpdate: ${topRankedIdsLastUpdate[i]}, idFoundLastTimeAt: $positionLastUpdate")
                 if (positionLastUpdate != -1) {
                     if (positionLastUpdate > i) idea.trend = Trend.UP
                     else if (positionLastUpdate < i) idea.trend = Trend.DOWN
@@ -214,17 +209,16 @@ class ListViewModel(
             } else {
                 idea.trend = Trend.NONE
             }
-            Log.d(
+            /*Log.d(
                 "observer_ex",
                 "idea ${idea.title} has status ${idea.status} and trend ${idea.trend} "
-            )
+            )*/
         }
         return if (topOrAll) rankedlist else list
     }
 
 
     private fun checkApiForUpdatesPeriodicallyToSetBadges() {
-        Log.d("observer_ex", "fun checkApiForUpdatesPeriodically called ")
         updateObservable()
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
@@ -241,8 +235,6 @@ class ListViewModel(
     private fun getIdeasSetBadges() {
         val dateLastUpdate = prefs.getLastAdapterUpdate()
         val topRankedIdsLastUpdate = prefs.getTopRankedIds()
-        Log.d("observer_ex", "topRankedIdsLastUpdate.size: ${topRankedIdsLastUpdate.size} ")
-
         ideaApi.getAllIdeasNoFilter()
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({ list ->
@@ -252,7 +244,6 @@ class ListViewModel(
                             compareByDescending { it.avgRating })
                 // check if newer/updated ideas, set All badge
                 val countNew = list.count { it.created > dateLastUpdate }
-                Log.d("observer_ex", "topOrAll: ${topOrAll} and countnew: $countNew ")
                 if (countNew > 0) view?.setAllBadge(countNew)
                 else {
                     val atLEastOneIdeaUpdated = list.firstOrNull { it.lastUpdated > dateLastUpdate }
@@ -531,10 +522,6 @@ class ListViewModel(
                 }
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
-                    Log.d(
-                        "observer_ex",
-                        "rating has been added/updated replaced"
-                    )
                 }, { t ->
                     Log.e("observer_ex", "exception adding/updating rating user: $t")
                 }).addTo(compositeDisposable)

@@ -87,7 +87,6 @@ class NewEditIdeaViewModel(
     private fun getPrefillDraft() {
         ideaImageUrl = prefs.getImageDraft()
         ideaImageUri = ideaImageUrl.toUri()
-        Log.d("observer_ex", "prefilled: $ideaImageUrl")
         ideaName = prefs.getIdeaNameDraft()
         ideaDescription = prefs.getIdeaDescriptionDraft()
         ideaCategory = prefs.getIdeaCategoryDraft()
@@ -221,6 +220,7 @@ class NewEditIdeaViewModel(
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe({ idea ->
                         view?.infoDialog(idea.id)
+                       prefs.clearIdeaDraft()
                     }, { t ->
                         val responseMessage = t.message
                         if (responseMessage != null) {
@@ -240,7 +240,6 @@ class NewEditIdeaViewModel(
     }
 
     private fun updateIdea(createIdea: CreateIdea, imagePart: InputStreamRequestBody) {
-
         val updateImage = !ideaImageUrl.equals(initialImageUrl, false)
         ideaApi.updateIdea(editIdeaId, createIdea)
             .onErrorComplete {
@@ -252,7 +251,6 @@ class NewEditIdeaViewModel(
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
                 view?.showToast(R.string.idea_updated_successflly)
-                Log.d("observer_ex", "Idea updated")
                 view?.navigateBack()
             }, { t ->
                 val responseMessage = t.message
@@ -343,10 +341,7 @@ class NewEditIdeaViewModel(
     }
 
     fun onCancelWithoutDraft() {
-        prefs.setImageDraft("")
-        prefs.setIdeaNameDraft("")
-        prefs.setIdeaCategoryDraft("")
-        prefs.setIdeaDescriptionDraft("")
+        prefs.clearIdeaDraft()
         view?.showToast("Adding idea cancelled without saving")
         view?.navigateBack()
     }

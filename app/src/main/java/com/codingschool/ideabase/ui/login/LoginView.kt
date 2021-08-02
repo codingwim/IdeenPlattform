@@ -8,6 +8,8 @@ interface LoginView {
     fun resetPasswordError()
     fun navigateToRegisterFragment()
     fun navigateToTopRankedFragment()
+    fun showSetProfilePictureDialog()
+    fun navigateToEditProfileFragmentAndLoadPictureSelector()
     //fun navigateOffline(online: Boolean)
 
 }

@@ -102,6 +102,9 @@
         <action
             android:id="@+id/toOffline"
             app:destination="@id/loadingFragment" />
+        <action
+            android:id="@+id/toEditProfile"
+            app:destination="@id/editProfileFragment" />
     </fragment>
     <fragment
         android:id="@+id/registerFragment"
@@ -177,6 +180,10 @@
         <action
             android:id="@+id/toOffline"
             app:destination="@id/loadingFragment" />
+        <argument
+            android:name="loadPictureSelector"
+            app:argType="boolean"
+            android:defaultValue="false" />
     </fragment>
     <fragment
         android:id="@+id/loadingFragment"

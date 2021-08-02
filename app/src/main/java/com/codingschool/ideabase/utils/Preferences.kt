@@ -77,7 +77,13 @@ class Preferences(
     fun setCommentDraft(draft: String) {
         preferences.edit().putString(DRAFT_COMMENT, draft).apply()
     }
-
+    fun clearIdeaDraft() {
+        setImageDraft("")
+        setIdeaNameDraft("")
+        setIdeaDescriptionDraft("")
+        setIdeaCategoryDraft("")
+        setIdeaDraftSaved(false)
+    }
     fun setIdeaDraftSaved(saved: Boolean) {
         preferences.edit().putBoolean(DRAFT_IDEA_SAVED, saved).apply()
     }

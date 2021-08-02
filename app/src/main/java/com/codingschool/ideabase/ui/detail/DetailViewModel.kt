@@ -137,7 +137,6 @@ class DetailViewModel(
         getMyRatingForThisIdeaAndStartDialog(id)
     }
 
-
     fun editIdea() {
         view?.navigateToEditFragment(id)
     }

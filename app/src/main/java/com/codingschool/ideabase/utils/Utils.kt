@@ -9,6 +9,7 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.Toast
 import com.codingschool.ideabase.MyApplication
+import com.google.android.material.snackbar.Snackbar
 import okhttp3.MediaType
 import okhttp3.RequestBody
 import okio.BufferedSink
@@ -76,4 +77,5 @@ fun Context.hideKeyboard(view: View) {
         this.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
     imm.hideSoftInputFromWindow(view.windowToken, 0)
 }
+
 

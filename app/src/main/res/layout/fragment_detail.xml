@@ -87,7 +87,7 @@
                     android:layout_marginEnd="@dimen/margin_large"
                     android:onClick="@{() -> vm.onRateClick()}"
                     android:contentDescription="@string/rate_this_idea_content_description"
-                    android:src="@drawable/ic_favorite_filled"
+                    android:src="@drawable/ic_favorite_unfilled"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@+id/tvIdeaTitle"
                     app:layout_constraintTop_toTopOf="@+id/tvIdeaTitle"
@@ -173,7 +173,6 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintBottom_toTopOf="@id/btComment"
                     app:layout_constraintTop_toBottomOf="@id/tvIdeaDescription"/>
-
 
                 <TextView
                     android:id="@+id/tvCommentTitle"

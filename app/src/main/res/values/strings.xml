@@ -98,5 +98,11 @@
     <string name="try_again_btn_no_internet">TRY AGAIN</string>
     <string name="add_comment_detail">ADD COMMENT</string>
     <string name="be_the_first_to_comment">Be the first:</string>
+    <string name="understood_button">UNDERSTOOD</string>
+    <string name="remove_draft_dialog">REMOVE</string>
+    <string name="dialog_comment_draft_message">It will be available the next time you comment anywhere!</string>
+    <string name="dialog_save_draft_title">Save draft?</string>
+    <string name="dialog_edit_profile_message">You can change your image without making other changes. Just go \'back\' after changing it. If you DO change your password, you will be redirected to the Login screen again!</string>
+    <string name="dialog_edit_profile_title">Edit profile</string>
 
 </resources>

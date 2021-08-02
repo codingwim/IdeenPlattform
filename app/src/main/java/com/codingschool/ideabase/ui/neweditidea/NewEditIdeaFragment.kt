@@ -149,7 +149,7 @@ class NewEditIdeaFragment: Fragment(), NewEditIdeaView {
         )
             .setTitle(getString(R.string.idea_add_dialog_title))
             .setMessage(getString(R.string.idea_add_dialog_message))
-            .setPositiveButton("UNDERSTOOD") { dialog, _ ->
+            .setPositiveButton(getString(R.string.understood_button)) { dialog, _ ->
                 navigateToDetailFragment(id)
                 dialog.dismiss()
             }

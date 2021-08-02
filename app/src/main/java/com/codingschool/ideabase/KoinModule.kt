@@ -143,7 +143,7 @@ val appModule = module {
         ProfileViewModel(id = get(), ideaApi = get(),prefs = get())
     }
     factory<EditProfileViewModel> { parameters ->
-        EditProfileViewModel(ideaApi = get(), prefs = get(), contentresolver = get())
+        EditProfileViewModel(loadPictureLoader = parameters.get(),  ideaApi = get(), prefs = get(), contentresolver = get())
     }
 
 }
