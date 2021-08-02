@@ -45,7 +45,7 @@ class LoginViewModel(
         else if (!validEmail(username)) view?.setInputUsernameError(R.string.error_not_email_adress)
         else if (password.isEmpty()) view?.setInputPasswordError(R.string.error_empty_password)
         else {
-            // fields are valid, letz build the encoded base Auth string, and try to "login" get own user data
+            // fields are valid, lets build the encoded base Auth string, and confirm credentials with "get own" user data
             buildBasicAuthAndStoreInPrefs()
 
             // with getOwnUser we can check credentials, will automatically use auth token from preferences !
@@ -100,16 +100,16 @@ class LoginViewModel(
     }
 
     fun onSetPictureNow() {
-        // navigate to editprofile and open image seelector
+        // navigate to editprofile AND open image selector
         view?.navigateToEditProfileFragmentAndLoadPictureSelector()
 
     }
     fun onUsernameTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-        view?.resetUsernameError()
+        if ((count > 0) && (before==0)) view?.resetUsernameError()
     }
 
     fun onPasswordTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-        if (count in 1..2) view?.resetPasswordError()
+        if ((count > 0) && (before==0)) view?.resetPasswordError()
     }
 
     private fun validEmail(email: String) =

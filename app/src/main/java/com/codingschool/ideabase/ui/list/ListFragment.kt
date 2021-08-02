@@ -22,7 +22,7 @@ import org.koin.core.parameter.parametersOf
 
 class ListFragment : Fragment(), ListView {
 
-    private val viewModel: ListViewModel by inject<ListViewModel> {
+    private val viewModel: ListViewModel by inject {
         parametersOf(arguments?.let { ListFragmentArgs.fromBundle(it).topOrAll })
     }
 
@@ -49,9 +49,9 @@ class ListFragment : Fragment(), ListView {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        //access botomnav badges
+        //access bottom navigation badges
         bottomNav =
-            (requireActivity() as MainActivity).findViewById<BottomNavigationView>(R.id.nav_view)
+            (requireActivity() as MainActivity).findViewById(R.id.nav_view)
         topBadge = bottomNav.getOrCreateBadge(R.id.navigation_top_ranked)
         allBadge = bottomNav.getOrCreateBadge(R.id.navigation_all_ideas)
 
@@ -89,9 +89,8 @@ class ListFragment : Fragment(), ListView {
             R.style.materialDialog
         )
             .setTitle(getString(R.string.dialog_title_rate))
-            .setSingleChoiceItems(ratingArray, checkedItem) { dialog, which ->
+            .setSingleChoiceItems(ratingArray, checkedItem) { _, which ->
                 newCheckedItem = which
-
             }
             .setNegativeButton(getString(R.string.btn_cancel_dialog)) { dialog, _ ->
                 dialog.dismiss()
@@ -139,9 +138,8 @@ class ListFragment : Fragment(), ListView {
         hasFilterSelection: Boolean
     ) {
         val inputEditTextField = EditText(requireActivity())
-        if (searchText.isNotEmpty()) inputEditTextField.setText(searchText) else inputEditTextField.setHint(
+        if (searchText.isNotEmpty()) inputEditTextField.setText(searchText) else inputEditTextField.hint =
             getString(R.string.search_for_hint_dialog)
-        )
         inputEditTextField.inputType = InputType.TYPE_CLASS_TEXT
         val linearLayoutParams = LinearLayout.LayoutParams(
             LinearLayout.LayoutParams.MATCH_PARENT,
@@ -186,7 +184,7 @@ class ListFragment : Fragment(), ListView {
             .show()
     }
 
-    fun showFilterDialog(
+    private fun showFilterDialog(
         categoryArray: Array<String>,
         checkedItems: BooleanArray,
         searchText: String
@@ -202,9 +200,8 @@ class ListFragment : Fragment(), ListView {
             .setMultiChoiceItems(
                 categoryArray,
                 checkedItems
-            ) { dialog, whichSelected, hasSelection ->
+            ) { _, whichSelected, hasSelection ->
                 checkedItems[whichSelected] = hasSelection
-                //Log.d("observer_ex", "wichSelected $whichSelected , hasSelectio: $hasSelection")
             }
             .setNegativeButton(backBtnText) { dialog, _ ->
                 viewModel.setSearchDialog(categoryArray, checkedItems, searchText)

@@ -74,12 +74,12 @@ class EditProfileFragment: Fragment(), EditProfileView {
         requireActivity().toast(any)
     }
 
-    override fun snacker(text: String, actionText: String, tag: Int) {
+/*    override fun snacker(text: String, actionText: String, tag: Int) {
         Snackbar.make(requireView(), text, Snackbar.LENGTH_LONG)
             .setAction(actionText) {
-                viewModel.snackerClicked(tag)
+                //viewModel.snackerClicked(tag)
             }.show()
-    }
+    }*/
 
     override fun showInfoDialog() {
         MaterialAlertDialogBuilder(

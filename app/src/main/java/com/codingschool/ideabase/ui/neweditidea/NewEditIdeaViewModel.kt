@@ -28,7 +28,7 @@ class NewEditIdeaViewModel(
     private val editIdeaId: String,
     private val ideaApi: IdeaApi,
     private val prefs: Preferences,
-    private val contentresolver: ContentResolver
+    private val contentResolver: ContentResolver
 ) : BaseObservable() {
 
     private var view: NewEditIdeaView? = null
@@ -46,7 +46,7 @@ class NewEditIdeaViewModel(
     fun init() {
         // optionally: add progress indicator loading categories / prefill and wait (completable?) disable update button till loaded
         getAndSetCategoryItems()
-        // set edittexts with hint or prefill depending on editIdea (id) or editIdea("") (default)
+        // set edittexts with hint or prefill depending on NEW editIdea("") or EDIT editIdea(id)
         if (editIdeaId.isNotEmpty()) {
             getIdeaAndPrefill()
         } else if (prefs.hasSavedIdeaDraft()) getPrefillDraft()
@@ -107,7 +107,7 @@ class NewEditIdeaViewModel(
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({ idea ->
                 // now set all the bindable details, including image
-                //initialIamgeUrl will stay the same, even if a new image was loaded
+                //initialImageUrl will stay the same, even if a new image was loaded
                 initialImageUrl = idea.imageUrl
                 //ideaImageUrl will change if we choose a new image
                 ideaImageUrl = initialImageUrl
@@ -195,7 +195,7 @@ class NewEditIdeaViewModel(
 
             // build the multi form to send the api call
             val imagePart =
-                InputStreamRequestBody("image/*".toMediaType(), contentresolver, ideaImageUri)
+                InputStreamRequestBody("image/*".toMediaType(), contentResolver, ideaImageUri)
 
             // UPDATE OR NEW ?
             if (editIdeaId.isNotEmpty()) {
@@ -293,10 +293,10 @@ class NewEditIdeaViewModel(
     }
 
     private fun updateImage(imagePart: InputStreamRequestBody, updateImage: Boolean): Completable {
-        if (updateImage) {
+        return if (updateImage) {
             val requestBodyForUpdatedImage = getRequestBodyForUpdatedImage(imagePart)
-            return ideaApi.updateImageIdea(editIdeaId, requestBodyForUpdatedImage)
-        } else return Completable.complete()
+            ideaApi.updateImageIdea(editIdeaId, requestBodyForUpdatedImage)
+        } else Completable.complete()
     }
 
 
@@ -305,11 +305,11 @@ class NewEditIdeaViewModel(
     }
 
     fun onIdeaNameTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-        if (count < 2) view?.resetEmptyIdeaName()
+        if ((count > 0) && (before==0)) view?.resetEmptyIdeaName()
     }
 
     fun onDescriptionTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-        if (count < 2) view?.resetEmptyDescription()
+        if ((count > 0) && (before==0)) view?.resetEmptyDescription()
     }
 
     fun setSelectedImage(uri: Uri) {
@@ -319,7 +319,7 @@ class NewEditIdeaViewModel(
         uploadImageButtonText.set(R.string.change_image_idea_edit)
     }
 
-    fun getRequestBodyForUpdatedImage(imagePart: InputStreamRequestBody) =
+    private fun getRequestBodyForUpdatedImage(imagePart: InputStreamRequestBody) =
         MultipartBody.Builder()
             .setType(MultipartBody.FORM)
             .addFormDataPart(
@@ -335,7 +335,8 @@ class NewEditIdeaViewModel(
             (ideaCategory.isNotEmpty() or
                     ideaDescription.isNotEmpty() or
                     ideaImageUrl.isNotEmpty() or
-                    ideaCategory.isNotEmpty()
+                    ideaCategory.isNotEmpty() or
+                    ideaName.isNotEmpty()
                     )
         ) view?.cancelDialog() else view?.navigateBack()
     }

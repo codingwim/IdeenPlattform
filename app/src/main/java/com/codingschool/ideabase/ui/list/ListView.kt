@@ -11,7 +11,6 @@ interface ListView {
     //fun navigateOffline(online: Boolean)
     fun moveToPositionInRecyclerview(position: Int)
     fun showSearchDialog(categoryArray: Array<String>, checkedItems: BooleanArray, searchText: String, selectedCategoriesAsString: String, hasFilterSelection: Boolean)
-    //fun showFilterDialog(categoryArray: Array<String>, checkedItems: BooleanArray, searchText: String)
     fun hideTopBadge()
     fun setTopBadge()
     fun hideAllBadge()

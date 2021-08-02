@@ -4,7 +4,6 @@ import android.util.Log
 import androidx.databinding.BaseObservable
 import androidx.recyclerview.widget.RecyclerView.AdapterDataObserver
 import com.codingschool.ideabase.R
-import com.codingschool.ideabase.model.data.Category
 import com.codingschool.ideabase.model.data.Idea
 import com.codingschool.ideabase.model.data.PostIdeaRating
 import com.codingschool.ideabase.model.remote.IdeaApi
@@ -171,7 +170,6 @@ class ListViewModel(
     private fun ifHasNewerOrUpdatedIdeasSetAllIdeasBadgeAccordingly(list: List<Idea>) {
         val dateLastUpdate = prefs.getLastAdapterUpdate()
         val countNew = list.count { (it.created.compareTo(dateLastUpdate) > 0) }
-        val updated = list.count { (it.lastUpdated.compareTo(dateLastUpdate) > 0) }
 
         if (prefs.appJustStarted()) {
             if (countNew > 0) view?.setAllBadge(countNew)
@@ -191,8 +189,7 @@ class ListViewModel(
             list.filter { it.numberOfRatings >= MIN_NUM_RATINGS_SHOW_IDEA_ON_TOP_RANKED }
                 .sortedByDescending { it.avgRating }
 
-        for (i in 0..list.size - 1) {
-            val idea = list[i]
+        for (idea in list) {
             if (idea.created > dateLastUpdate) idea.status = Status.NEW
             else if (idea.lastUpdated > dateLastUpdate) {
                 if (idea.released) idea.status = Status.RELEASED
@@ -200,7 +197,7 @@ class ListViewModel(
             } else idea.status = Status.NONE
         }
 
-        for (i in 0..rankedlist.size - 1) {
+        for (i in rankedlist.indices) {
             val idea = rankedlist[i]
 
             if (topRankedIdsLastUpdate.isNotEmpty()) {
@@ -256,9 +253,9 @@ class ListViewModel(
                 // check if sortedList other ranking than lastUpdate
                 var trendChanges = false
                 if (sortedList.size == topRankedIdsLastUpdate.size) {
-                    for (i in 0..sortedList.size - 1) {
+                    for (i in sortedList.indices) {
                         val ideaId = sortedList[i].id
-                        val rankLastUpdateId = topRankedIdsLastUpdate[i] ?: ""
+                        val rankLastUpdateId = topRankedIdsLastUpdate[i]
                         if (ideaId != rankLastUpdateId) {
                             trendChanges = true
                             break
@@ -288,7 +285,7 @@ class ListViewModel(
     }
 
     private fun getMyRatingForThisIdeaAndStartDialog(id: String) {
-        var ratingGiven: Int? = null
+        var ratingGiven: Int?
         ideaApi.getIdeaById(id)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({ idea ->
@@ -381,7 +378,7 @@ class ListViewModel(
             checkedItems,
             searchText,
             selectedCategoriesAsString,
-            !selectedCategoriesAsString.isEmpty()
+            selectedCategoriesAsString.isNotEmpty()
         )
     }
 
@@ -504,7 +501,7 @@ class ListViewModel(
 
     private fun getlistOfSearchCategories(checkedItems: BooleanArray): List<String> {
         val listOfSearchCategories = emptyList<String>().toMutableList()
-        for (i in 0..checkedItems.size - 1)
+        for (i in checkedItems.indices)
             if (checkedItems[i]) listOfSearchCategories += categoryList[i]
         return listOfSearchCategories
     }

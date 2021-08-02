@@ -23,7 +23,7 @@ class EditProfileViewModel(
     private val loadPictureLoader: Boolean,
     private val ideaApi: IdeaApi,
     private val prefs: Preferences,
-    private val contentresolver: ContentResolver
+    private val contentResolver: ContentResolver
 ) : BaseObservable() {
 
 
@@ -62,9 +62,6 @@ class EditProfileViewModel(
     @get:Bindable
     var password2: String = ""
 
-    @get:Bindable
-    var profilepicture: String = ""
-
     fun onGetProfileImageClick() {
         view?.getProfileImageDialog()
     }
@@ -80,7 +77,7 @@ class EditProfileViewModel(
 
     private fun updateProfilePicture() {
         val imagePart =
-            InputStreamRequestBody("image/*".toMediaType(), contentresolver, profileImageUri)
+            InputStreamRequestBody("image/*".toMediaType(), contentResolver, profileImageUri)
         val requestBodyForUpdatedImage = getRequestBodyForUpdatedImage(imagePart)
         ideaApi.updateMyProfilePicture(requestBodyForUpdatedImage)
             .onErrorComplete {
@@ -123,19 +120,21 @@ class EditProfileViewModel(
         // check empty fields
         var fieldsNotEmpty = false
 
-        if (firstname.isEmpty()) view?.setInputFirstnameError("Please enter your first name")
-        else if (lastname.isEmpty()) view?.setInputLastnameError("Please enter your first name")
-        else if (password.isEmpty()) view?.setInputPasswordError("Please enter a password of minimum 8 characters, including at least 1 number")
-        else if (password2.isEmpty()) view?.setInputPasswordRepeatError("Please enter the same password again")
-        else fieldsNotEmpty = true
+        when {
+            firstname.isEmpty() -> view?.setInputFirstnameError(R.string.enter_first_name_error)
+            lastname.isEmpty() -> view?.setInputLastnameError(R.string.error_enter_last_name)
+            password.isEmpty() -> view?.setInputPasswordError(R.string.pwd_min_error)
+            password2.isEmpty() -> view?.setInputPasswordRepeatError(R.string.pwd_same_error)
+            else -> fieldsNotEmpty = true
+        }
 
         // if fields not empty, check validity
-        var validCredentailsToRegister = false
+        var validCredentialsToRegister = false
         if (fieldsNotEmpty) {
             // check valid e-mail
 
             if (!(password.equals(password2))) {
-                view?.setInputPasswordRepeatError("Passwords are not the same")
+                view?.setInputPasswordRepeatError(R.string.pwd_are_ot_same_error)
             } else
             // check pwd valid
                 if (!validPassword(password)) {
@@ -144,14 +143,14 @@ class EditProfileViewModel(
                     notifyPropertyChanged(BR.password)
                     notifyPropertyChanged(BR.password2)
                     view?.setFocusPasswordInput()
-                    view?.setInputPasswordError("Please enter a password of minimum 8 characters, including at least 1 number")
+                    view?.setInputPasswordError(R.string.pwd_min_error)
                 } else {
-                    validCredentailsToRegister = true
+                    validCredentialsToRegister = true
                 }
         }
 
         // if credentials valid, register User via API call
-        if (validCredentailsToRegister) {
+        if (validCredentialsToRegister) {
             val updatedUser = UpdateUser(
                 email,
                 password,
@@ -162,7 +161,7 @@ class EditProfileViewModel(
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
                     Log.d("observer_ex", "user updated over API")
-                    view?.showToast("You're credentials have been updated. Please login again")
+                    view?.showToast(R.string.please_login_again)
                     view?.navigateToLoginRegistered(email)
                 }, { t ->
                     val responseMessage = t.message
@@ -176,7 +175,7 @@ class EditProfileViewModel(
                                 "HTTP 400",
                                 ignoreCase = true
                             )
-                        ) view?.showToast("Some parameter is missing")
+                        ) view?.showToast(R.string.parameter_missing_message)
                         else view?.showToast(R.string.network_issue_check_network)
                     }
                     Log.e("observer_ex", "exception updating user: $t")
@@ -216,15 +215,11 @@ class EditProfileViewModel(
                             "HTTP 401",
                             ignoreCase = true
                         )
-                    ) view?.showToast("You are not autorized to log in")
+                    ) view?.showToast("You are not authorized to log in")
                     else view?.showToast(R.string.network_issue_check_network)
                 }*/
                 Log.e("observer_ex", "exception getting user info: $t")
             }).addTo(compositeDisposable)
-    }
-
-    fun snackerClicked(tag: Int) {
-
     }
 
     private fun validPassword(password: String): Boolean {
@@ -232,21 +227,22 @@ class EditProfileViewModel(
     }
 
     fun onFirstnameTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-        view?.resetFirstnameError()
+        if ((count > 0) && (before==0)) view?.resetFirstnameError()
     }
 
     fun onLastnameTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-        view?.resetLastnameError()
+        if ((count > 0) && (before==0)) view?.resetLastnameError()
     }
 
     fun onPasswordTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-        if (count > 0) view?.resetPasswordError()
+        if ((count > 0) && (before==0)) view?.resetPasswordError()
     }
 
     fun onPassword2TextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-        view?.resetPasswordRepeatError()
+        if ((count > 0) && (before==0)) view?.resetPasswordRepeatError()
     }
-    fun getRequestBodyForUpdatedImage(imagePart: InputStreamRequestBody) =
+
+    private fun getRequestBodyForUpdatedImage(imagePart: InputStreamRequestBody) =
         MultipartBody.Builder()
             .setType(MultipartBody.FORM)
             .addFormDataPart(

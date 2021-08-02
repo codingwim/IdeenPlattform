@@ -17,8 +17,6 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavDirections
 import androidx.navigation.Navigation
-import androidx.navigation.findNavController
-import androidx.navigation.fragment.findNavController
 import com.codingschool.ideabase.MainActivity
 import com.codingschool.ideabase.R
 import com.codingschool.ideabase.databinding.FragmentNewEditIdeaBinding
@@ -33,14 +31,13 @@ import org.koin.core.parameter.parametersOf
 
 class NewEditIdeaFragment: Fragment(), NewEditIdeaView {
 
-    private val viewModel: NewEditIdeaViewModel by inject<NewEditIdeaViewModel> {
+    private val viewModel: NewEditIdeaViewModel by inject {
         parametersOf(arguments?.let { NewEditIdeaFragmentArgs.fromBundle(it).editIdea })
     }
 
     private lateinit var binding: FragmentNewEditIdeaBinding
     private val imageHandler: ImageHandler by inject()
     private lateinit var launcher: ActivityResultLauncher<Intent>
-    private val navcontroller by lazy(::findNavController)
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -94,7 +91,7 @@ class NewEditIdeaFragment: Fragment(), NewEditIdeaView {
     }*/
 
     override fun setActionBarTitle(title: String) {
-        (activity as MainActivity).getSupportActionBar()?.title = title
+        (activity as MainActivity).supportActionBar?.title = title
     }
 
     override fun setCategoryListItems(items: List<String>) {
@@ -161,13 +158,13 @@ class NewEditIdeaFragment: Fragment(), NewEditIdeaView {
         MaterialAlertDialogBuilder(
             requireActivity()
         )
-            .setTitle("Save idea as draft?")
-            .setMessage("It will be available the next time you click the add idea button!")
-            .setNegativeButton("REMOVE") { dialog, _ ->
+            .setTitle(getString(R.string.save_idea_draft_title))
+            .setMessage(getString(R.string.save_idea_draft_message))
+            .setNegativeButton(getString(R.string.save_idea_draft_cancel)) { dialog, _ ->
                 viewModel.onCancelWithoutDraft()
                 dialog.dismiss()
             }
-            .setPositiveButton("SAVE") { dialog, _ ->
+            .setPositiveButton(getString(R.string.save_idea_draft_save)) { dialog, _ ->
                 viewModel.onCancelWithDraft()
                 dialog.dismiss()
             }
@@ -196,7 +193,7 @@ class NewEditIdeaFragment: Fragment(), NewEditIdeaView {
     }
 
     override fun onOptionsItemSelected(menuItem : MenuItem) : Boolean {
-        if (menuItem.getItemId() == android.R.id.home) {
+        if (menuItem.itemId == android.R.id.home) {
             requireActivity().onBackPressed()
             return true // must return true to consume it here
         }

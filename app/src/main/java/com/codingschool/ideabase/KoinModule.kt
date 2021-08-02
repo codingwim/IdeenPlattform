@@ -131,7 +131,7 @@ val appModule = module {
     }
 
     factory<NewEditIdeaViewModel> { parameters ->
-        NewEditIdeaViewModel(editIdeaId = parameters.get(), ideaApi = get(), prefs = get(), contentresolver = get())
+        NewEditIdeaViewModel(editIdeaId = parameters.get(), ideaApi = get(), prefs = get(), contentResolver = get())
     }
 
     factory<CommentViewModel> { parameters ->
@@ -143,7 +143,7 @@ val appModule = module {
         ProfileViewModel(id = get(), ideaApi = get(),prefs = get())
     }
     factory<EditProfileViewModel> { parameters ->
-        EditProfileViewModel(loadPictureLoader = parameters.get(),  ideaApi = get(), prefs = get(), contentresolver = get())
+        EditProfileViewModel(loadPictureLoader = parameters.get(),  ideaApi = get(), prefs = get(), contentResolver = get())
     }
 
 }
