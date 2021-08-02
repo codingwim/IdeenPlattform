@@ -11,16 +11,13 @@ import androidx.navigation.Navigation
 import com.codingschool.ideabase.MainActivity
 import com.codingschool.ideabase.R
 import com.codingschool.ideabase.databinding.FragmentListBinding
-import com.codingschool.ideabase.ui.detail.DetailFragmentDirections
 import com.codingschool.ideabase.utils.getResString
 import com.codingschool.ideabase.utils.toast
 import com.google.android.material.badge.BadgeDrawable
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.google.android.material.floatingactionbutton.FloatingActionButton
 import org.koin.android.ext.android.inject
 import org.koin.core.parameter.parametersOf
-
 
 class ListFragment : Fragment(), ListView {
 
@@ -110,7 +107,7 @@ class ListFragment : Fragment(), ListView {
         Navigation.findNavController(requireView()).navigate(action)
     }
 
-    override fun navigateToCommentFragment(id: String, title: String) {
+    override fun navigateToCommentFragment(id: String) {
         val action: NavDirections =
             ListFragmentDirections.toComment(id)
         Navigation.findNavController(requireView()).navigate(action)
@@ -128,8 +125,8 @@ class ListFragment : Fragment(), ListView {
         Navigation.findNavController(requireView()).navigate(action)
     }
 
-    override fun moveToTopOfRecyclerview() {
-        binding.rvIdeas.smoothScrollToPosition(0)
+    override fun moveToPositionInRecyclerview(position: Int) {
+        binding.rvIdeas.smoothScrollToPosition(position)
     }
 
     override fun showSearchDialog(

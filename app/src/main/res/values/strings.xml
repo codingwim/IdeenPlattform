@@ -46,7 +46,7 @@
     <string name="save">SAVE</string>
     <string name="save_idea_new">UPLOAD</string>
     <string name="save_idea_edit">SAVE</string>
-    <string name="upload_image_idea_new">UPLOAD IMAGE</string>
+    <string name="upload_image_idea_new">ADD IMAGE</string>
     <string name="change_image_idea_edit">CHANGE IMAGE</string>
     <string name="idea_name_hint">Name</string>
     <string name="idea_name_helper">Name</string>
@@ -96,5 +96,7 @@
     <string name="last_name_profile">Last name:</string>
     <string name="role_profile">Role:</string>
     <string name="try_again_btn_no_internet">TRY AGAIN</string>
+    <string name="add_comment_detail">ADD COMMENT</string>
+    <string name="be_the_first_to_comment">Be the first:</string>
 
 </resources>

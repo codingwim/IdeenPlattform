@@ -86,11 +86,14 @@ class NewEditIdeaViewModel(
 
     private fun getPrefillDraft() {
         ideaImageUrl = prefs.getImageDraft()
+        ideaImageUri = ideaImageUrl.toUri()
+        Log.d("observer_ex", "prefilled: $ideaImageUrl")
         ideaName = prefs.getIdeaNameDraft()
         ideaDescription = prefs.getIdeaDescriptionDraft()
         ideaCategory = prefs.getIdeaCategoryDraft()
         view?.setIdeaImage(ideaImageUrl)
         view?.setSelectedCategory(ideaCategory)
+        uploadImageButtonText.set(R.string.change_image_idea_edit)
         notifyPropertyChanged(BR.ideaName)
         notifyPropertyChanged(BR.ideaCategory)
         notifyPropertyChanged(BR.ideaDescription)
@@ -174,6 +177,8 @@ class NewEditIdeaViewModel(
         else if (ideaCategory.isEmpty()) view?.setInputCategoryError(R.string.error_empty_category)
         else if (ideaImageUrl.isEmpty()) view?.showToast(R.string.error_empty_image)
         else fieldsNotEmpty = true
+
+        Log.d("observer_ex", "imageurl: $ideaImageUrl ")
 
         if (fieldsNotEmpty) {
             // locale check to retrieve position of selected category

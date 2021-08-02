@@ -5,11 +5,11 @@ interface ListView {
     fun getString(any: Any): String
     fun showPopupRatingDialog(id: String, checkedItem: Int)
     fun navigateToDetailFragment(id: String)
-    fun navigateToCommentFragment(id: String, title: String)
+    fun navigateToCommentFragment(id: String)
     fun navigateToNewIdeaFragment()
     fun navigateToProfile(id: String)
     //fun navigateOffline(online: Boolean)
-    fun moveToTopOfRecyclerview()
+    fun moveToPositionInRecyclerview(position: Int)
     fun showSearchDialog(categoryArray: Array<String>, checkedItems: BooleanArray, searchText: String, messageSelecteCategories: String)
     fun showFilterDialog(categoryArray: Array<String>, checkedItems: BooleanArray, searchText: String, messageSelecteCategories: String)
     fun hideTopBadge()

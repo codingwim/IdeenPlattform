@@ -1,8 +1,14 @@
 package com.codingschool.ideabase.ui.list
 
+import android.content.res.Resources
+import android.graphics.Color
+import android.graphics.Typeface.*
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.ColorRes
+import androidx.core.content.ContextCompat
+import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.codingschool.ideabase.R
@@ -11,6 +17,7 @@ import com.codingschool.ideabase.model.data.Idea
 import com.codingschool.ideabase.utils.ImageHandler
 import com.codingschool.ideabase.utils.Status
 import com.codingschool.ideabase.utils.Trend
+import kotlinx.coroutines.withContext
 
 class IdeaListAdapter(private val imageHandler: ImageHandler) :
     RecyclerView.Adapter<IdeaListAdapter.IdeaViewHolder>() {
@@ -18,7 +25,7 @@ class IdeaListAdapter(private val imageHandler: ImageHandler) :
     private var list: List<Idea> = emptyList()
     private var topOrAll: Boolean = true
     lateinit var ideaClickListener: (String) -> Unit
-    lateinit var commentClickListener: (String, String) -> Unit
+    lateinit var commentClickListener: (String) -> Unit
     lateinit var rateClickListener: (String) -> Unit
     lateinit var profileClickListener: (String) -> Unit
 
@@ -30,15 +37,17 @@ class IdeaListAdapter(private val imageHandler: ImageHandler) :
             idea: Idea,
             topOrAll: Boolean,
             ideaClickListener: (String) -> Unit,
-            commentClickListener: (String, String) -> Unit,
+            commentClickListener: (String) -> Unit,
             rateClickListener: (String) -> Unit,
             profileClickListener: (String) -> Unit
         ) {
             binding.tvIdeaTitle.text = idea.title //+ " R:" + idea.avgRating.toString()
+            if (idea.released) {
+                binding.tvIdeaTitle.setTypeface(null, BOLD)
+            }
             binding.tvAuthor.text = idea.authorName
             binding.tvIdeaDescription.text = idea.description
             if (topOrAll) {
-                //binding.tvStatus.text = idea.avgRating.toString()
                 if (idea.trend != null) {
                     if (idea.trend == Trend.UP) {
                         binding.ivTrendUp.visibility = View.VISIBLE
@@ -51,11 +60,17 @@ class IdeaListAdapter(private val imageHandler: ImageHandler) :
                         binding.ivTrendDown.visibility = View.GONE
                     }
                 } //else binding.tvStatus.text = idea.avgRating.toString() + "null"
-            } else binding.tvStatus.text = getStatusText(idea)
+            } else {
+                binding.tvStatus.text = getStatusText(idea)
+                if (idea.status != null) {
+                    val yellow = ContextCompat.getColor(this.itemView.getContext(), R.color.yellow)
+                    if (idea.status != Status.NONE) {
+                        binding.cvTop.setStrokeColor(yellow)
+                        binding.cvTop.strokeWidth = 1
+                    }
+                }
+            }
             setRatingImage(idea.avgRating)
-
-
-
             imageHandler.getProfilePic(idea.author.profilePicture, binding.ivProfilePicture)
             imageHandler.getIdeaImage(idea.imageUrl, binding.ivIdea)
             binding.ivProfilePicture.setOnClickListener {
@@ -65,7 +80,7 @@ class IdeaListAdapter(private val imageHandler: ImageHandler) :
                 ideaClickListener(idea.id)
             }
             binding.btComment.setOnClickListener {
-                commentClickListener(idea.id, idea.title)
+                commentClickListener(idea.id)
             }
             binding.btRate.setOnClickListener {
                 rateClickListener(idea.id)
@@ -73,13 +88,13 @@ class IdeaListAdapter(private val imageHandler: ImageHandler) :
         }
 
         private fun setRatingImage(avgRating: Double) {
-            val drawIcon =  when (avgRating) {
+            val drawIcon = when (avgRating) {
                 in 0.1..1.5 -> R.drawable.rated_1
                 in 1.5..2.5 -> R.drawable.rated_2
                 in 2.5..3.5 -> R.drawable.rated_3
                 in 3.5..4.5 -> R.drawable.rated_4
                 in 4.5..5.0 -> R.drawable.rated_5
-                else ->  R.drawable.rated_none
+                else -> R.drawable.rated_none
             }
             binding.btRate.setImageResource(drawIcon)
         }
@@ -94,83 +109,82 @@ class IdeaListAdapter(private val imageHandler: ImageHandler) :
     }
 
 
-
 /*    fun setData(list: List<Idea>) {
         this.list = list
         notifyDataSetChanged()
     }*/
 
-fun setTopOrAll(topOrAll: Boolean) {
-    this.topOrAll = topOrAll
-}
+    fun setTopOrAll(topOrAll: Boolean) {
+        this.topOrAll = topOrAll
+    }
 
-fun updateList(newList: List<Idea>) {
-    val diffResult = DiffUtil.calculateDiff(
-        object : DiffUtil.Callback() {
-            override fun getOldListSize(): Int = list.size
+    fun updateList(newList: List<Idea>) {
+        val diffResult = DiffUtil.calculateDiff(
+            object : DiffUtil.Callback() {
+                override fun getOldListSize(): Int = list.size
 
-            override fun getNewListSize(): Int = newList.size
+                override fun getNewListSize(): Int = newList.size
 
-            override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-                val oldItem = list[oldItemPosition]
-                val newItem = newList[newItemPosition]
-                return (oldItem.id == newItem.id)
+                override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+                    val oldItem = list[oldItemPosition]
+                    val newItem = newList[newItemPosition]
+                    return (oldItem.id == newItem.id)
+                }
+
+                override fun areContentsTheSame(
+                    oldItemPosition: Int,
+                    newItemPosition: Int
+                ): Boolean {
+                    val oldItem = list[oldItemPosition]
+                    val newItem = newList[newItemPosition]
+                    return oldItem.title == newItem.title && oldItem.description == newItem.description && oldItem.category == newItem.category && oldItem.imageUrl == newItem.imageUrl
+                }
+
             }
+        )
 
-            override fun areContentsTheSame(
-                oldItemPosition: Int,
-                newItemPosition: Int
-            ): Boolean {
-                val oldItem = list[oldItemPosition]
-                val newItem = newList[newItemPosition]
-                return oldItem.title == newItem.title && oldItem.description == newItem.description && oldItem.category == newItem.category && oldItem.imageUrl == newItem.imageUrl
-            }
+        list = newList
+        diffResult.dispatchUpdatesTo(this)
+    }
 
-        }
-    )
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): IdeaViewHolder {
+        val binding = IdeaItemBinding.inflate(
+            LayoutInflater.from(parent.context),
+            parent,
+            false
+        )
+        return IdeaViewHolder(binding, imageHandler)
+    }
 
-    list = newList
-    diffResult.dispatchUpdatesTo(this)
-}
+    override fun onBindViewHolder(holder: IdeaViewHolder, position: Int) {
+        val idea = list[position]
+        holder.setBinding(
+            idea,
+            topOrAll,
+            ideaClickListener,
+            commentClickListener,
+            rateClickListener,
+            profileClickListener
+        )
+    }
 
-override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): IdeaViewHolder {
-    val binding = IdeaItemBinding.inflate(
-        LayoutInflater.from(parent.context),
-        parent,
-        false
-    )
-    return IdeaViewHolder(binding, imageHandler)
-}
+    fun addIdeaClickListener(listener: (String) -> Unit) {
+        this.ideaClickListener = listener
+    }
 
-override fun onBindViewHolder(holder: IdeaViewHolder, position: Int) {
-    val idea = list[position]
-    holder.setBinding(
-        idea,
-        topOrAll,
-        ideaClickListener,
-        commentClickListener,
-        rateClickListener,
-        profileClickListener
-    )
-}
+    fun addCommentClickListener(listener: (String) -> Unit) {
+        this.commentClickListener = listener
+    }
 
-fun addIdeaClickListener(listener: (String) -> Unit) {
-    this.ideaClickListener = listener
-}
+    fun addRateClickListener(listener: (String) -> Unit) {
+        this.rateClickListener = listener
+    }
 
-fun addCommentClickListener(listener: (String, String) -> Unit) {
-    this.commentClickListener = listener
-}
+    fun addProfileClickListener(listener: (String) -> Unit) {
+        this.profileClickListener = listener
+    }
 
-fun addRateClickListener(listener: (String) -> Unit) {
-    this.rateClickListener = listener
-}
-
-fun addProfileClickListener(listener: (String) -> Unit) {
-    this.profileClickListener = listener
-}
-
-override fun getItemCount(): Int {
-    return list.size
-}
+    override fun getItemCount(): Int {
+        return list.size
+    }
 }

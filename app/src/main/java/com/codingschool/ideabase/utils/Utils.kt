@@ -28,15 +28,25 @@ fun Context.toast(text: String) {
 fun Context.toast(res: Int) {
     Toast.makeText(
         this,
-        this.getString(res),
+        res,
         Toast.LENGTH_SHORT
     ).show()
 }
 
 fun Context.toast(any: Any) {
     return when (any) {
-        is Int -> this.toast(any)
-        is String -> this.toast(any)
+        is Int ->
+            Toast.makeText(
+                this,
+                any,
+                Toast.LENGTH_SHORT
+            ).show()
+
+        is String ->  Toast.makeText(
+            this,
+            any,
+            Toast.LENGTH_SHORT
+        ).show()
         else -> Unit
     }
 }
