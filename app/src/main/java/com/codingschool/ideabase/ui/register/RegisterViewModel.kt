@@ -3,15 +3,14 @@ package com.codingschool.ideabase.ui.register
 import android.util.Log
 import androidx.databinding.BaseObservable
 import androidx.databinding.Bindable
-import com.codingschool.ideabase.R
 import androidx.databinding.library.baseAdapters.BR
+import com.codingschool.ideabase.R
 import com.codingschool.ideabase.model.data.CreateUser
-import com.codingschool.ideabase.model.data.UpdateUser
 import com.codingschool.ideabase.model.remote.IdeaApi
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.addTo
-import kotlinx.coroutines.withContext
+import java.util.regex.Pattern
 
 class RegisterViewModel(private val ideaApi: IdeaApi) : BaseObservable() {
     private var view: RegisterView? = null
@@ -60,13 +59,13 @@ class RegisterViewModel(private val ideaApi: IdeaApi) : BaseObservable() {
                     view?.setInputPasswordRepeatError("Passwords are not the same")
                 } else
                 // check pwd valid
-                    if (!validPassword(password)) {
+                    if (!PASSWORD_PATTERN.matcher(password).matches()) {
                         password = ""
                         password2 = ""
                         notifyPropertyChanged(BR.password)
                         notifyPropertyChanged(BR.password2)
                         view?.setFocusPasswordInput()
-                        view?.setInputPasswordError("Please enter a password of minimum 8 characters, including at least 1 number")
+                        view?.setInputPasswordError("Please enter a password of minimum 8 characters, including at least 1 number and 1 letter and a special char")
                     } else {
                         validCredentailsToRegister = true
                     }
@@ -137,4 +136,12 @@ class RegisterViewModel(private val ideaApi: IdeaApi) : BaseObservable() {
     fun onPassword2TextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
         view?.resetPasswordRepeatError()
     }
+    private val PASSWORD_PATTERN = Pattern.compile(
+        "^" +  "(?=.*[0-9])" +         //at least 1 digit
+                "(?=.*[a-zA-Z])" +  //at least 1 letter->any letter
+                "(?=.*[@#$%^&+=!?])" +  //at least 1 special character
+                "(?=\\S+$)" +  //no white spaces
+                ".{8,}" +  //at least 8 characters
+                "$"
+    )
 }
