@@ -12,6 +12,7 @@ import com.codingschool.ideabase.R
 import com.codingschool.ideabase.databinding.FragmentDetailBinding
 import com.codingschool.ideabase.ui.list.ListFragmentDirections
 import com.codingschool.ideabase.utils.ImageHandler
+import com.codingschool.ideabase.utils.errorHandler
 import com.codingschool.ideabase.utils.toast
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import org.koin.android.ext.android.inject
@@ -87,14 +88,6 @@ class DetailFragment: Fragment(), DetailView {
         setHasOptionsMenu(false)
     }
 
-    override fun hideCommentTitle() {
-        binding.tvCommentTitle.visibility = View.GONE
-    }
-
-    override fun setCommentTitle(resourceString: Int) {
-        binding.tvCommentTitle.text = getString(resourceString)
-    }
-
     override fun addReleaseMenuItem(isAuthor: Boolean) {
         // user MANGAGER, add release menu item
         menuForManager = true
@@ -167,6 +160,10 @@ class DetailFragment: Fragment(), DetailView {
                 dialog.dismiss()
             }
             .show()
+    }
+
+    override fun handleErrorResponse(errorMessage: String?) {
+        if (!requireActivity().errorHandler(errorMessage)) showToast(R.string.network_issue_check_network)
     }
 
     override fun navigateToCommentFragment(id: String) {

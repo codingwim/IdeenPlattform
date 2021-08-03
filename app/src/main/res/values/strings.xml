@@ -128,5 +128,6 @@
     <string name="message_no_rank_yet">There is no Top Rank to be shown yet. Only ideas that have been rated by several users will get a ranking.</string>
     <string name="no_ideas_yet">No ideas have been posted so far. Do you have a good idea ?</string>
     <string name="cd_no_ideas_yet">No ideas yet</string>
+    <string name="test">test</string>
 
 </resources>

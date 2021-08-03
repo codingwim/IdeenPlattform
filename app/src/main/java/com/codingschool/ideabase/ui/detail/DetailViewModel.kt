@@ -33,7 +33,6 @@ class DetailViewModel(
 
     fun init() {
         //get idea with api, and set the bindables, set menu items, set comment, set comment author click
-        view?.setActionBarTitle("Idea:")
         getIdeaAndShow()
         adapter.addCommentClickListener { id ->
             view?.navigateToProfile(id)
@@ -64,7 +63,7 @@ class DetailViewModel(
                 ideaCategory =
                     if (prefs.isLangEn()) idea.category.name_en else idea.category.name_de
                 ideaDescription = idea.description
-                if (idea.comments.isEmpty()) commentTitle.set(R.string.be_the_first_to_comment)
+                if (idea.comments.isEmpty()) commentTitle.set(R.string.be_the_first_to_comment) else commentTitle.set(R.string.comments_title_detail_idea)
                 notifyPropertyChanged(BR.ideaTitle)
                 notifyPropertyChanged(BR.ideaAuthor)
                 notifyPropertyChanged(BR.ideaCategory)
@@ -72,24 +71,7 @@ class DetailViewModel(
                 // add comment list
                 adapter.updateList(idea.comments.sortedByDescending { it.created })
             }, { t ->
-                val responseMessage = t.message
-                if (responseMessage != null) {
-                    if (responseMessage.contains(
-                            "HTTP 401",
-                            ignoreCase = true
-                        )
-                    ) {
-                        Log.d("observer_ex", "401 Authorization not valid")
-                        view?.showToast(R.string.not_authorized)
-                    } else if (responseMessage.contains(
-                            "HTTP 404",
-                            ignoreCase = true
-                        )
-                    ) {
-                        Log.d("observer_ex", "404 Idea not found")
-                        view?.showToast(R.string.idea_not_found_message)
-                    } else view?.showToast(R.string.network_issue_check_network)
-                }
+                view?.handleErrorResponse(t.message)
                 Log.e("observer_ex", "exception getting idea: $t")
             }).addTo(compositeDisposable)
 

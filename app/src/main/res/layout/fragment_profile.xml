@@ -23,6 +23,11 @@
             app:layout_constraintVertical_chainStyle="spread_inside"
             tools:context=".ui.profile.ProfileFragment">
 
+            <include
+                layout="@layout/layout_no_internet"
+                android:id="@+id/noInternetMessageLayout"
+                android:visibility="invisible"
+                />
             <com.google.android.material.imageview.ShapeableImageView
                 android:id="@+id/ivProfilePicture"
                 android:layout_width="160dp"

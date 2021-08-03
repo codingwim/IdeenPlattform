@@ -3,12 +3,10 @@ package com.codingschool.ideabase.ui.list
 import android.util.Log
 import androidx.databinding.BaseObservable
 import androidx.recyclerview.widget.RecyclerView.AdapterDataObserver
-import com.codingschool.ideabase.R
 import com.codingschool.ideabase.model.data.Idea
 import com.codingschool.ideabase.model.data.PostIdeaRating
 import com.codingschool.ideabase.model.remote.IdeaApi
 import com.codingschool.ideabase.utils.*
-import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable

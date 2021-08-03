@@ -12,11 +12,10 @@ interface DetailView {
     fun setRatingIcon(drawIcon: Int)
     fun showMenu()
     fun hideMenu()
-    fun hideCommentTitle()
-    fun setCommentTitle(resourceString: Int)
     fun addReleaseMenuItem(isAuthor: Boolean)
     fun setActionBarTitle(title: String)
     fun navigateToProfile(id: String)
     fun releaseDialog()
     fun deleteDialog()
+    fun handleErrorResponse(errorMessage: String?)
 }
