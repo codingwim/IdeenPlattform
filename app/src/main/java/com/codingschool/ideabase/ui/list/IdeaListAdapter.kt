@@ -43,7 +43,9 @@ class IdeaListAdapter(private val imageHandler: ImageHandler) :
         ) {
             binding.tvIdeaTitle.text = idea.title //+ " R:" + idea.avgRating.toString()
             if (idea.released) {
-                binding.tvIdeaTitle.setTypeface(null, BOLD)
+                val yellow = ContextCompat.getColor(this.itemView.getContext(), R.color.yellow)
+                binding.cvTop.setStrokeColor(yellow)
+                binding.cvTop.strokeWidth = 2
             }
             binding.tvAuthor.text = idea.authorName
             binding.tvIdeaDescription.text = idea.description
@@ -63,10 +65,10 @@ class IdeaListAdapter(private val imageHandler: ImageHandler) :
             } else {
                 binding.tvStatus.text = getStatusText(idea)
                 if (idea.status != null) {
-                    val yellow = ContextCompat.getColor(this.itemView.getContext(), R.color.yellow)
+                    val black = ContextCompat.getColor(this.itemView.getContext(), R.color.black)
                     if (idea.status != Status.NONE) {
-                        binding.cvTop.setStrokeColor(yellow)
-                        binding.cvTop.strokeWidth = 1
+                        binding.cvTop.setStrokeColor(black)
+                        binding.cvTop.strokeWidth = 2
                     }
                 }
             }

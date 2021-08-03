@@ -234,8 +234,8 @@ class ListFragment : Fragment(), ListView {
     }
 
     override fun setAllBadgeNoNumber() {
-        allBadge.clearNumber()
         allBadge.isVisible = true
+        allBadge.clearNumber()
     }
 
     override fun handleErrorResponse(errorMessage: String?) {

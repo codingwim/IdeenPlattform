@@ -168,6 +168,7 @@ class ListViewModel(
             else {
                 val atLEastOneIdeaUpdated = list.firstOrNull { it.lastUpdated > dateLastUpdate }
                 if (atLEastOneIdeaUpdated != null) {
+
                     view?.setAllBadgeNoNumber()
                 }
             }
