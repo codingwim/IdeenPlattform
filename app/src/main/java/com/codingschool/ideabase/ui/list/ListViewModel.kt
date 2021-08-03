@@ -8,6 +8,7 @@ import com.codingschool.ideabase.model.data.Idea
 import com.codingschool.ideabase.model.data.PostIdeaRating
 import com.codingschool.ideabase.model.remote.IdeaApi
 import com.codingschool.ideabase.utils.*
+import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -54,8 +55,8 @@ class ListViewModel(
         adapter.addCommentClickListener { id ->
             view?.navigateToCommentFragment(id)
         }
-        adapter.addRateClickListener { id ->
-            getMyRatingForThisIdeaAndStartDialog(id)
+        adapter.addRateClickListener { id, position ->
+            getMyRatingForThisIdeaAndStartDialog(id, position)
         }
         adapter.addProfileClickListener { id ->
             view?.navigateToProfile(id)
@@ -90,7 +91,6 @@ class ListViewModel(
          *
          *  Both options start the getPeriodicUpdatesToSetBadges
          */
-
 
 
         if (prefs.appJustStarted()) {
@@ -284,7 +284,7 @@ class ListViewModel(
             }).addTo(compositeDisposable)
     }
 
-    private fun getMyRatingForThisIdeaAndStartDialog(id: String) {
+    private fun getMyRatingForThisIdeaAndStartDialog(id: String, position: Int) {
         var ratingGiven: Int?
         ideaApi.getIdeaById(id)
             .observeOn(AndroidSchedulers.mainThread())
@@ -295,7 +295,7 @@ class ListViewModel(
                     it?.rating
                 }
                 val ratingItem = ratingGiven ?: -1
-                view?.showPopupRatingDialog(id, ratingItem - 1)
+                view?.showPopupRatingDialog(id, ratingItem - 1, position)
             }, { t ->
                 val responseMessage = t.message
                 if (responseMessage != null) {
@@ -506,10 +506,11 @@ class ListViewModel(
         return listOfSearchCategories
     }
 
-    fun setRating(id: String, oldCheckedItem: Int, newCheckedItem: Int) {
+    fun setRating(id: String, oldCheckedItem: Int, newCheckedItem: Int, position: Int) {
         Log.d("observer_ex", "rating $newCheckedItem, before was $oldCheckedItem")
         // careful add +1 to rating checked item, they go 0..4
         if (oldCheckedItem != newCheckedItem) {
+            var updatedIdea: Idea
             val postIdeaRating = PostIdeaRating(
                 newCheckedItem + 1
             )
@@ -519,10 +520,27 @@ class ListViewModel(
                 }
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
+                    //refresh rv position
+                    getUpdatedIdeaAndUpdateRVItemAtPosition(id, position)
                 }, { t ->
                     Log.e("observer_ex", "exception adding/updating rating user: $t")
                 }).addTo(compositeDisposable)
         }
+    }
+
+    private fun getUpdatedIdeaAndUpdateRVItemAtPosition(id: String, position: Int) {
+        ideaApi.getIdeaById(id)
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({ idea ->
+                if (topOrAll) {
+                    adapter.updateRating(position, idea)
+                    //check if ranking
+                    getIdeasSetBadges()
+                }
+                else adapter.updateRating(position, idea)
+            }, { t ->
+                // handle error
+            }).addTo(compositeDisposable)
     }
 
     fun addIdeaClicked() {

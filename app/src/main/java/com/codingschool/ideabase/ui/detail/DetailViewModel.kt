@@ -249,8 +249,9 @@ class DetailViewModel(
         Log.d("observer_ex", "rating $newCheckedItem, before was $oldCheckedItem")
         // careful add +1 to rating checked item, they go 0..4
         if (oldCheckedItem != newCheckedItem) {
+            val newRating = newCheckedItem + 1
             val postIdeaRating = PostIdeaRating(
-                newCheckedItem + 1
+                newRating
             )
             ideaApi.rateIdea(id, postIdeaRating)
                 .onErrorComplete {
@@ -258,6 +259,7 @@ class DetailViewModel(
                 }
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
+                    setRatingImage(newRating.toDouble())
                     Log.d(
                         "observer_ex",
                         "rating has been added/updated replaced"

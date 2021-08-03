@@ -74,7 +74,7 @@ class ListFragment : Fragment(), ListView {
     override fun getString(any: Any) =
         requireActivity().getResString(any)
 
-    override fun showPopupRatingDialog(id: String, checkedItem: Int) {
+    override fun showPopupRatingDialog(id: String, checkedItem: Int, position: Int) {
         val ratingArray =
             arrayOf(
                 getString(R.string.rating_1),
@@ -96,7 +96,7 @@ class ListFragment : Fragment(), ListView {
                 dialog.dismiss()
             }
             .setPositiveButton(getString(R.string.btn_rate)) { dialog, _ ->
-                viewModel.setRating(id, checkedItem, newCheckedItem)
+                viewModel.setRating(id, checkedItem, newCheckedItem, position)
                 dialog.dismiss()
             }
             .show()

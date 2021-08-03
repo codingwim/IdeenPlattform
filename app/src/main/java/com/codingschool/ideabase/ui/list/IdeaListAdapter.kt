@@ -26,7 +26,7 @@ class IdeaListAdapter(private val imageHandler: ImageHandler) :
     private var topOrAll: Boolean = true
     lateinit var ideaClickListener: (String) -> Unit
     lateinit var commentClickListener: (String) -> Unit
-    lateinit var rateClickListener: (String) -> Unit
+    lateinit var rateClickListener: (String, Int) -> Unit
     lateinit var profileClickListener: (String) -> Unit
 
     class IdeaViewHolder(
@@ -38,7 +38,7 @@ class IdeaListAdapter(private val imageHandler: ImageHandler) :
             topOrAll: Boolean,
             ideaClickListener: (String) -> Unit,
             commentClickListener: (String) -> Unit,
-            rateClickListener: (String) -> Unit,
+            rateClickListener: (String, Int) -> Unit,
             profileClickListener: (String) -> Unit
         ) {
             binding.tvIdeaTitle.text = idea.title //+ " R:" + idea.avgRating.toString()
@@ -83,7 +83,7 @@ class IdeaListAdapter(private val imageHandler: ImageHandler) :
                 commentClickListener(idea.id)
             }
             binding.btRate.setOnClickListener {
-                rateClickListener(idea.id)
+                rateClickListener(idea.id, this.bindingAdapterPosition)
             }
         }
 
@@ -137,12 +137,11 @@ class IdeaListAdapter(private val imageHandler: ImageHandler) :
                 ): Boolean {
                     val oldItem = list[oldItemPosition]
                     val newItem = newList[newItemPosition]
-                    return oldItem.title == newItem.title && oldItem.description == newItem.description && oldItem.category == newItem.category && oldItem.imageUrl == newItem.imageUrl
+                    return oldItem.title == newItem.title && oldItem.description == newItem.description && oldItem.category == newItem.category && oldItem.imageUrl == newItem.imageUrl && oldItem.avgRating == newItem.avgRating
                 }
 
             }
         )
-
         list = newList
         diffResult.dispatchUpdatesTo(this)
     }
@@ -176,7 +175,7 @@ class IdeaListAdapter(private val imageHandler: ImageHandler) :
         this.commentClickListener = listener
     }
 
-    fun addRateClickListener(listener: (String) -> Unit) {
+    fun addRateClickListener(listener: (String, Int) -> Unit) {
         this.rateClickListener = listener
     }
 
@@ -186,5 +185,12 @@ class IdeaListAdapter(private val imageHandler: ImageHandler) :
 
     override fun getItemCount(): Int {
         return list.size
+    }
+
+    fun updateRating(position: Int, idea: Idea) {
+        val updatesList = list.toMutableList()
+            updatesList[position] = idea
+        list=updatesList
+        notifyItemChanged(position)
     }
 }

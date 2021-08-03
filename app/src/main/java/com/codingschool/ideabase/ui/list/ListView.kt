@@ -3,7 +3,7 @@ package com.codingschool.ideabase.ui.list
 interface ListView {
     fun showToast(any: Any)
     fun getString(any: Any): String
-    fun showPopupRatingDialog(id: String, checkedItem: Int)
+    fun showPopupRatingDialog(id: String, checkedItem: Int, position: Int)
     fun navigateToDetailFragment(id: String)
     fun navigateToCommentFragment(id: String)
     fun navigateToNewIdeaFragment()
