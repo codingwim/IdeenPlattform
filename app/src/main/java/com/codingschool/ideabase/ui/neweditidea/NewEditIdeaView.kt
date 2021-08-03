@@ -3,7 +3,7 @@ package com.codingschool.ideabase.ui.neweditidea
 interface NewEditIdeaView {
 
     fun showToast(any: Any)
-    fun setActionBarTitle(title: String)
+    fun setActionBarTitleEdit()
     fun setCategoryListItems(items: List<String>)
     fun setIdeaImage(url: String)
     fun setSelectedCategory(category: String)
@@ -18,5 +18,5 @@ interface NewEditIdeaView {
     fun navigateToDetailFragment(id: String)
     fun navigateToAllIdeas()
     fun cancelDialog()
-    //fun navigateOffline(online: Boolean)
+    fun handleErrorResponse(errorMessage: String?)
 }

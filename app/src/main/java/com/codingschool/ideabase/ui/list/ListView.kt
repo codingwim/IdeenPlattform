@@ -8,7 +8,6 @@ interface ListView {
     fun navigateToCommentFragment(id: String)
     fun navigateToNewIdeaFragment()
     fun navigateToProfile(id: String)
-    //fun navigateOffline(online: Boolean)
     fun moveToPositionInRecyclerview(position: Int)
     fun showSearchDialog(categoryArray: Array<String>, checkedItems: BooleanArray, searchText: String, selectedCategoriesAsString: String, hasFilterSelection: Boolean)
     fun hideTopBadge()

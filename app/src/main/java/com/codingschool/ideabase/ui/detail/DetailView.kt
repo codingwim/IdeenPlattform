@@ -3,9 +3,8 @@ package com.codingschool.ideabase.ui.detail
 interface DetailView {
     fun showToast(any: Any)
     fun setIdeaImage(url: String)
-    fun setTitleReleasedItalic()
+    fun showIdeaReleased()
     fun navigateBack()
-    //fun navigateOffline(online: Boolean)
     fun showPopupRatingDialog(id: String, checkedItem: Int)
     fun navigateToCommentFragment(id: String)
     fun navigateToEditFragment(id: String)

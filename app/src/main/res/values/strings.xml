@@ -129,5 +129,20 @@
     <string name="no_ideas_yet">No ideas have been posted so far. Do you have a good idea ?</string>
     <string name="cd_no_ideas_yet">No ideas yet</string>
     <string name="test">test</string>
+    <string name="released_status">Released</string>
+    <string name="updated_status">Updated</string>
+    <string name="new_status">New</string>
+    <string name="oops_offline_try_again_loading">Oops, there seems to be a connectivity Issue. Please check your internet connection and try again…</string>
+    <string name="checking_credentials_again_loading">Checking credentials again…</string>
+    <string name="chacking_credentials_loading">Checking credentials…</string>
+    <string name="cd_raika_logo">Raika Logo</string>
+    <string name="cd_no_internet_image">No internet image</string>
+    <string name="set_profile_pic">Set your profile picture</string>
+    <string name="porfile_message">Other users will recognise your ideas and comments easier if you set a profile picture! You can to this later in the menu of the profile screen</string>
+    <string name="btn_prof_set_not">SET PROFILE PICTURE NOW</string>
+    <string name="btn_later">LATER</string>
+    <string name="edit_idea_title">Edit idea</string>
+    <string name="adding_cancelled_without_draft">Adding idea cancelled without saving</string>
+    <string name="idea_saved">The entered idea has been saved, but not posted</string>
 
 </resources>

@@ -47,7 +47,6 @@ class ListViewModel(
         adapter.setTopOrAll(topOrAll)
 
         adapter.addIdeaClickListener { id ->
-            Log.d("observer_ex", "Idea clicked")
             view?.navigateToDetailFragment(id)
         }
         adapter.addCommentClickListener { id ->
@@ -195,9 +194,11 @@ class ListViewModel(
             if (topRankedIdsLastUpdate.isNotEmpty()) {
                 val positionLastUpdate = (topRankedIdsLastUpdate.indexOfFirst { it == idea.id })
                 if (positionLastUpdate != -1) {
-                    if (positionLastUpdate > i) idea.trend = Trend.UP
-                    else if (positionLastUpdate < i) idea.trend = Trend.DOWN
-                    else idea.trend = Trend.NONE
+                    when {
+                        positionLastUpdate > i -> idea.trend = Trend.UP
+                        positionLastUpdate < i -> idea.trend = Trend.DOWN
+                        else -> idea.trend = Trend.NONE
+                    }
                 } else idea.trend = Trend.UP
             } else {
                 idea.trend = Trend.NONE
@@ -239,7 +240,7 @@ class ListViewModel(
                 }
                 // check if sortedList other ranking than lastUpdate
                 var trendChanges = false
-                if (sortedList.size > 0) {
+                if (sortedList.isNotEmpty()) {
                     if (sortedList.size == topRankedIdsLastUpdate.size) {
                         for (i in sortedList.indices) {
                             val ideaId = sortedList[i].id
@@ -308,7 +309,7 @@ class ListViewModel(
         searchText: String
     ) {
         // Build the category message text
-        val listOfSearchCategories = getlistOfSearchCategories(checkedItems)
+        val listOfSearchCategories = getListOfSearchCategories(checkedItems)
         val selectedCategoriesAsString = listOfSearchCategories.joinToString(", ")
         view?.showSearchDialog(
             categoryArray,
@@ -334,7 +335,7 @@ class ListViewModel(
         searchTextFromDialog: String
     ) {
         // Build the category search List for the filtering
-        listOfSearchCategories = getlistOfSearchCategories(checkedItems)
+        listOfSearchCategories = getListOfSearchCategories(checkedItems)
         searchString = searchTextFromDialog
         //Log.d("observer_ex", "selectedItems: $searchCategoryString ")
         getIdeasToAdapter(
@@ -409,7 +410,7 @@ class ListViewModel(
             }).addTo(compositeDisposable)
     }
 
-    private fun getlistOfSearchCategories(checkedItems: BooleanArray): List<String> {
+    private fun getListOfSearchCategories(checkedItems: BooleanArray): List<String> {
         val listOfSearchCategories = emptyList<String>().toMutableList()
         for (i in checkedItems.indices)
             if (checkedItems[i]) listOfSearchCategories += categoryList[i]
@@ -417,9 +418,7 @@ class ListViewModel(
     }
 
     fun setRating(id: String, oldCheckedItem: Int, newCheckedItem: Int, position: Int) {
-        // careful add +1 to rating checked item, they go 0..4
         if (oldCheckedItem != newCheckedItem) {
-            var updatedIdea: Idea
             val postIdeaRating = PostIdeaRating(
                 newCheckedItem + 1
             )

@@ -43,7 +43,6 @@ class ListFragment : Fragment(), ListView {
             container,
             false
         )
-
         return binding.root
     }
 
@@ -159,9 +158,6 @@ class ListFragment : Fragment(), ListView {
         )
             .setTitle(getString(R.string.title_search_dialog))
             .setMessage(message)
-            // TODO remove dialog_edit_text.xml if not used
-            //.setView(R.layout.dialog_edit_text)
-            //.setView(inputEditTextField, 30,0,30,0)
             .setView(inputEditTextField)
             .setNeutralButton(getString(R.string.btn_cancel_dialog)) { dialog, _ ->
                 dialog.dismiss()
@@ -197,7 +193,6 @@ class ListFragment : Fragment(), ListView {
             requireActivity()
         )
             .setTitle(getString(R.string.title_filter_dialog))
-            //.setMessage("If no categories are selected, the result includes all possible categories.")
             .setMultiChoiceItems(
                 categoryArray,
                 checkedItems
@@ -256,10 +251,11 @@ class ListFragment : Fragment(), ListView {
         binding.noIdeasToShowMessageLayout.root.visibility = View.VISIBLE
     }
 
-    fun showNoInternet() {
+    private fun showNoInternet() {
         binding.rvIdeas.visibility = View.INVISIBLE
         binding.fab.visibility = View.INVISIBLE
         binding.noInternetMessageLayout.root.visibility = View.VISIBLE
+        setHasOptionsMenu(false)
     }
 
     override fun onDestroyView() {
@@ -277,7 +273,6 @@ class ListFragment : Fragment(), ListView {
                 viewModel.setInitialSearchDialog()
             }
         }
-
         return super.onOptionsItemSelected(item)
     }
 }

@@ -29,7 +29,6 @@ import org.koin.core.parameter.parametersOf
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        // Inflate the layout for this fragment
         binding = DataBindingUtil.inflate(
             inflater,
             R.layout.fragment_profile,

@@ -1,14 +1,9 @@
 package com.codingschool.ideabase.ui.list
 
-import android.content.res.Resources
-import android.graphics.Color
-import android.graphics.Typeface.*
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.annotation.ColorRes
 import androidx.core.content.ContextCompat
-import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.codingschool.ideabase.R
@@ -17,17 +12,16 @@ import com.codingschool.ideabase.model.data.Idea
 import com.codingschool.ideabase.utils.ImageHandler
 import com.codingschool.ideabase.utils.Status
 import com.codingschool.ideabase.utils.Trend
-import kotlinx.coroutines.withContext
 
 class IdeaListAdapter(private val imageHandler: ImageHandler) :
     RecyclerView.Adapter<IdeaListAdapter.IdeaViewHolder>() {
 
     private var list: List<Idea> = emptyList()
     private var topOrAll: Boolean = true
-    lateinit var ideaClickListener: (String) -> Unit
-    lateinit var commentClickListener: (String) -> Unit
-    lateinit var rateClickListener: (String, Int) -> Unit
-    lateinit var profileClickListener: (String) -> Unit
+    private lateinit var ideaClickListener: (String) -> Unit
+    private lateinit var commentClickListener: (String) -> Unit
+    private lateinit var rateClickListener: (String, Int) -> Unit
+    private lateinit var profileClickListener: (String) -> Unit
 
     class IdeaViewHolder(
         private val binding: IdeaItemBinding,
@@ -43,31 +37,35 @@ class IdeaListAdapter(private val imageHandler: ImageHandler) :
         ) {
             binding.tvIdeaTitle.text = idea.title //+ " R:" + idea.avgRating.toString()
             if (idea.released) {
-                val yellow = ContextCompat.getColor(this.itemView.getContext(), R.color.yellow)
-                binding.cvTop.setStrokeColor(yellow)
+                val yellow = ContextCompat.getColor(this.itemView.context, R.color.yellow)
+                binding.cvTop.strokeColor = yellow
                 binding.cvTop.strokeWidth = 2
             }
             binding.tvAuthor.text = idea.authorName
             binding.tvIdeaDescription.text = idea.description
             if (topOrAll) {
                 if (idea.trend != null) {
-                    if (idea.trend == Trend.UP) {
-                        binding.ivTrendUp.visibility = View.VISIBLE
-                        binding.ivTrendDown.visibility = View.GONE
-                    } else if (idea.trend == Trend.DOWN) {
-                        binding.ivTrendDown.visibility = View.VISIBLE
-                        binding.ivTrendUp.visibility = View.GONE
-                    } else {
-                        binding.ivTrendUp.visibility = View.GONE
-                        binding.ivTrendDown.visibility = View.GONE
+                    when (idea.trend) {
+                        Trend.UP -> {
+                            binding.ivTrendUp.visibility = View.VISIBLE
+                            binding.ivTrendDown.visibility = View.GONE
+                        }
+                        Trend.DOWN -> {
+                            binding.ivTrendDown.visibility = View.VISIBLE
+                            binding.ivTrendUp.visibility = View.GONE
+                        }
+                        else -> {
+                            binding.ivTrendUp.visibility = View.GONE
+                            binding.ivTrendDown.visibility = View.GONE
+                        }
                     }
-                } //else binding.tvStatus.text = idea.avgRating.toString() + "null"
+                }
             } else {
                 binding.tvStatus.text = getStatusText(idea)
                 if (idea.status != null) {
-                    val black = ContextCompat.getColor(this.itemView.getContext(), R.color.black)
+                    val black = ContextCompat.getColor(this.itemView.context, R.color.black)
                     if (idea.status != Status.NONE) {
-                        binding.cvTop.setStrokeColor(black)
+                        binding.cvTop.strokeColor = black
                         binding.cvTop.strokeWidth = 2
                     }
                 }
@@ -102,19 +100,14 @@ class IdeaListAdapter(private val imageHandler: ImageHandler) :
         }
 
         private fun getStatusText(idea: Idea): String {
-            return if (idea.status == Status.RELEASED) "Released"
-            else if (idea.status == Status.UPDATED) "Updated"
-            else if (idea.status == Status.NEW) "New"
-            else ""
+            return when (idea.status) {
+                Status.RELEASED -> this.itemView.context.getString(R.string.released_status)
+                Status.UPDATED -> this.itemView.context.getString(R.string.updated_status)
+                Status.NEW -> this.itemView.context.getString(R.string.new_status)
+                else -> ""
+            }
         }
-
     }
-
-
-/*    fun setData(list: List<Idea>) {
-        this.list = list
-        notifyDataSetChanged()
-    }*/
 
     fun setTopOrAll(topOrAll: Boolean) {
         this.topOrAll = topOrAll
@@ -141,7 +134,6 @@ class IdeaListAdapter(private val imageHandler: ImageHandler) :
                     val newItem = newList[newItemPosition]
                     return oldItem.title == newItem.title && oldItem.description == newItem.description && oldItem.category == newItem.category && oldItem.imageUrl == newItem.imageUrl && oldItem.avgRating == newItem.avgRating
                 }
-
             }
         )
         list = newList

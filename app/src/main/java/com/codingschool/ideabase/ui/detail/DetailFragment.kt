@@ -1,6 +1,6 @@
 package com.codingschool.ideabase.ui.detail
 
-import android.graphics.Typeface
+import android.graphics.Color
 import android.os.Bundle
 import android.view.*
 import androidx.databinding.DataBindingUtil
@@ -10,7 +10,6 @@ import androidx.navigation.Navigation
 import com.codingschool.ideabase.MainActivity
 import com.codingschool.ideabase.R
 import com.codingschool.ideabase.databinding.FragmentDetailBinding
-import com.codingschool.ideabase.ui.list.ListFragmentDirections
 import com.codingschool.ideabase.utils.ImageHandler
 import com.codingschool.ideabase.utils.errorHandler
 import com.codingschool.ideabase.utils.toast
@@ -20,7 +19,7 @@ import org.koin.core.parameter.parametersOf
 
 class DetailFragment: Fragment(), DetailView {
 
-    private val viewModel: DetailViewModel by inject<DetailViewModel> {
+    private val viewModel: DetailViewModel by inject {
         parametersOf(arguments?.let { DetailFragmentArgs.fromBundle(it).id })
     }
 
@@ -35,7 +34,6 @@ class DetailFragment: Fragment(), DetailView {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        // Inflate the layout for this fragment
         binding = DataBindingUtil.inflate(
             inflater,
             R.layout.fragment_detail,
@@ -47,7 +45,6 @@ class DetailFragment: Fragment(), DetailView {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         binding.vm = viewModel
         binding.rvComments.adapter = viewModel.adapter
         viewModel.attachView(this)
@@ -62,8 +59,8 @@ class DetailFragment: Fragment(), DetailView {
         imageHandler.getIdeaImage(url, binding.ivIdea)
     }
 
-    override fun setTitleReleasedItalic() {
-        binding.tvIdeaTitle.setTypeface(null, Typeface.BOLD)
+    override fun showIdeaReleased() {
+        binding.vwLine2.setBackgroundColor(Color.YELLOW)
     }
 
     override fun navigateBack() {
@@ -89,14 +86,14 @@ class DetailFragment: Fragment(), DetailView {
     }
 
     override fun addReleaseMenuItem(isAuthor: Boolean) {
-        // user MANGAGER, add release menu item
+        // user MANAGER, add release menu item, and if also author, edit/delete in onprepare options menu
         menuForManager = true
         managerIsAuthor = isAuthor
         requireActivity().invalidateOptionsMenu()
     }
 
     override fun setActionBarTitle(title: String) {
-        (activity as MainActivity).getSupportActionBar()?.title = title
+        (activity as MainActivity).supportActionBar?.title = title
     }
 
     override fun releaseDialog() {
@@ -148,9 +145,8 @@ class DetailFragment: Fragment(), DetailView {
             R.style.materialDialog
         )
             .setTitle(getString(R.string.dialog_title_rate))
-            .setSingleChoiceItems(ratingArray,checkedItem) { dialog, which ->
+            .setSingleChoiceItems(ratingArray,checkedItem) { _, which ->
                 newCheckedItem = which
-
             }
             .setNegativeButton(getString(R.string.btn_cancel_dialog)) { dialog, _ ->
                 dialog.dismiss()
@@ -190,9 +186,9 @@ class DetailFragment: Fragment(), DetailView {
     override fun onPrepareOptionsMenu(menu: Menu) {
         super.onPrepareOptionsMenu(menu)
         // if  admin, add release menu item
-        menu.findItem(R.id.release)?.setEnabled(menuForManager)
-        menu.findItem(R.id.delete)?.setEnabled((!menuForManager) or (menuForManager && managerIsAuthor))
-        menu.findItem(R.id.edit)?.setEnabled((!menuForManager) or (menuForManager && managerIsAuthor))
+        menu.findItem(R.id.release)?.isEnabled = menuForManager
+        menu.findItem(R.id.delete)?.isEnabled = (!menuForManager) or (menuForManager && managerIsAuthor)
+        menu.findItem(R.id.edit)?.isEnabled = (!menuForManager) or (menuForManager && managerIsAuthor)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

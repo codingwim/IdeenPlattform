@@ -1,17 +1,14 @@
 package com.codingschool.ideabase.ui.profile
 
-import android.net.Uri
 import android.util.Log
-import androidx.core.net.toUri
 import androidx.databinding.BaseObservable
 import androidx.databinding.Bindable
-import com.codingschool.ideabase.R
+import androidx.databinding.library.baseAdapters.BR
 import com.codingschool.ideabase.model.remote.IdeaApi
 import com.codingschool.ideabase.utils.Preferences
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.addTo
-import androidx.databinding.library.baseAdapters.BR
 
 class ProfileViewModel(
     private val id: String,
@@ -30,8 +27,7 @@ class ProfileViewModel(
     fun init() {
         getUserProfileAndShow()
     }
-
-    //private var profilePictureUri: Uri = "".toUri()
+    
     private var profilePictureUrl: String = ""
 
     @get:Bindable

@@ -10,6 +10,4 @@ interface LoginView {
     fun navigateToTopRankedFragment()
     fun showSetProfilePictureDialog()
     fun navigateToEditProfileFragmentAndLoadPictureSelector()
-    //fun navigateOffline(online: Boolean)
-
 }
