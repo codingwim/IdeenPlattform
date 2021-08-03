@@ -120,5 +120,13 @@
     <string name="pwd_same_error">Please enter the same password again</string>
     <string name="pwd_are_ot_same_error">Passwords are not the same</string>
     <string name="please_login_again">You\'re credentials have been updated. Please login again</string>
+    <string name="oops_check_internet_connection">Oops, there seems to be a connectivity Issue. Please check your internet connection…</string>
+    <string name="search_no_matching_results">Your search did not find any matching results</string>
+    <string name="cd_search_result_not_found">Search result not found</string>
+    <string name="cd_no_internet">No internet</string>
+    <string name="cd_no_top_ranked_ideas_yet">No top ranked ideas yet</string>
+    <string name="message_no_rank_yet">There is no Top Rank to be shown yet. Only ideas that have been rated by several users will get a ranking.</string>
+    <string name="no_ideas_yet">No ideas have been posted so far. Do you have a good idea ?</string>
+    <string name="cd_no_ideas_yet">No ideas yet</string>
 
 </resources>

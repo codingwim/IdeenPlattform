@@ -12,6 +12,7 @@ import androidx.navigation.Navigation
 import com.codingschool.ideabase.MainActivity
 import com.codingschool.ideabase.R
 import com.codingschool.ideabase.databinding.FragmentListBinding
+import com.codingschool.ideabase.utils.errorHandler
 import com.codingschool.ideabase.utils.getResString
 import com.codingschool.ideabase.utils.toast
 import com.google.android.material.badge.BadgeDrawable
@@ -235,6 +236,30 @@ class ListFragment : Fragment(), ListView {
     override fun setAllBadgeNoNumber() {
         allBadge.clearNumber()
         allBadge.isVisible = true
+    }
+
+    override fun handleErrorResponse(errorMessage: String?) {
+        if (!requireActivity().errorHandler(errorMessage)) showNoInternet()
+    }
+
+    override fun showNoResultsFound() {
+        binding.rvIdeas.visibility = View.INVISIBLE
+        binding.noSearchResultToShowMessageLayout.root.visibility = View.VISIBLE
+    }
+    override fun showNoTopRankedIdeasYet() {
+        binding.rvIdeas.visibility = View.INVISIBLE
+        binding.noTopRankedMessageLayout.root.visibility = View.VISIBLE
+    }
+
+    override fun showNoIdeasYet() {
+        binding.rvIdeas.visibility = View.INVISIBLE
+        binding.noIdeasToShowMessageLayout.root.visibility = View.VISIBLE
+    }
+
+    fun showNoInternet() {
+        binding.rvIdeas.visibility = View.INVISIBLE
+        binding.fab.visibility = View.INVISIBLE
+        binding.noInternetMessageLayout.root.visibility = View.VISIBLE
     }
 
     override fun onDestroyView() {

@@ -62,13 +62,13 @@ class ListViewModel(
             view?.navigateToProfile(id)
         }
         adapter.registerAdapterDataObserver(object : AdapterDataObserver() {
-            override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
+            /*override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
                 super.onItemRangeInserted(positionStart, itemCount)
                 Log.d(
                     "observer_ex",
                     "onItemRangeInserted with positionStart: $positionStart and itemCount: $itemCount"
                 )
-                view?.moveToPositionInRecyclerview(positionStart)
+              *//*  if (positionStart>0) view?.moveToPositionInRecyclerview(positionStart)*//*
             }
 
             override fun onItemRangeChanged(positionStart: Int, itemCount: Int) {
@@ -79,6 +79,15 @@ class ListViewModel(
                 )
                 view?.moveToPositionInRecyclerview(positionStart)
             }
+
+            override fun onItemRangeMoved(fromPosition: Int, toPosition: Int, itemCount: Int) {
+                Log.d(
+                    "observer_ex",
+                    "onItemRangeMoved with fromPosition: $fromPosition toPosition: $toPosition  and itemCount: $itemCount"
+                )
+                super.onItemRangeMoved(fromPosition, toPosition, itemCount)
+            }*/
+
         })
 
         getCategoryItems()
@@ -92,31 +101,23 @@ class ListViewModel(
          *  Both options start the getPeriodicUpdatesToSetBadges
          */
 
-
         if (prefs.appJustStarted()) {
             ideaApi.getAllIdeasNoFilter()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ list ->
                     val trendList = setTrendAndStatusList(list)
                     // returned trendlist is already sorted by ranking
-                    adapter.updateList(trendList)
-                    // set prefs top ranked list
-                    prefs.setTopRankedIds(trendList.map { it.id })
+                    if (trendList.isEmpty()) view?.showNoTopRankedIdeasYet()
+                    else {
+                        adapter.updateList(trendList)
+                        // set prefs top ranked list
+                        prefs.setTopRankedIds(trendList.map { it.id })
+                    }
                     ifHasNewerOrUpdatedIdeasSetAllIdeasBadgeAccordingly(list)
                     checkApiForUpdatesPeriodicallyToSetBadges()
                     prefs.setAppNotJustStarted()
                 }, { t ->
-                    val responseMessage = t.message
-                    if (responseMessage != null) {
-                        if (responseMessage.contains(
-                                "HTTP 401",
-                                ignoreCase = true
-                            )
-                        ) {
-                            Log.d("observer_ex", "401 Authorization not valid")
-                            view?.showToast("You are not autorized ")
-                        } else view?.showToast(R.string.network_issue_check_network)
-                    }
+                    view?.handleErrorResponse(t.message)
                     Log.e("observer_ex", "exception getting ideas: $t")
 
                 }).addTo(compositeDisposable)
@@ -138,7 +139,10 @@ class ListViewModel(
                         }
                     }
                     val trendList = setTrendAndStatusList(sortedList)
-                    adapter.updateList(trendList)
+                    if (trendList.isNotEmpty()) adapter.updateList(trendList) else {
+                        if (topOrAll) view?.showNoTopRankedIdeasYet() else view?.showNoIdeasYet()
+                    }
+
                     prefs.setLastAdapterUpdateNow()
                     view?.hideTopBadge()
                     view?.hideAllBadge()
@@ -150,17 +154,7 @@ class ListViewModel(
                     checkApiForUpdatesPeriodicallyToSetBadges()
                     prefs.setAppNotJustStarted()
                 }, { t ->
-                    val responseMessage = t.message
-                    if (responseMessage != null) {
-                        if (responseMessage.contains(
-                                "HTTP 401",
-                                ignoreCase = true
-                            )
-                        ) {
-                            Log.d("observer_ex", "401 Authorization not valid")
-                            view?.showToast("You are not autorized ")
-                        } else view?.showToast(R.string.network_issue_check_network)
-                    }
+                    view?.handleErrorResponse(t.message)
                     Log.e("observer_ex", "exception getting ideas to adapter: $t")
 
                 }).addTo(compositeDisposable)
@@ -199,7 +193,6 @@ class ListViewModel(
 
         for (i in rankedlist.indices) {
             val idea = rankedlist[i]
-
             if (topRankedIdsLastUpdate.isNotEmpty()) {
                 val positionLastUpdate = (topRankedIdsLastUpdate.indexOfFirst { it == idea.id })
                 if (positionLastUpdate != -1) {
@@ -210,14 +203,9 @@ class ListViewModel(
             } else {
                 idea.trend = Trend.NONE
             }
-            /*Log.d(
-                "observer_ex",
-                "idea ${idea.title} has status ${idea.status} and trend ${idea.trend} "
-            )*/
         }
         return if (topOrAll) rankedlist else list
     }
-
 
     private fun checkApiForUpdatesPeriodicallyToSetBadges() {
         updateObservable()
@@ -252,33 +240,23 @@ class ListViewModel(
                 }
                 // check if sortedList other ranking than lastUpdate
                 var trendChanges = false
-                if (sortedList.size == topRankedIdsLastUpdate.size) {
-                    for (i in sortedList.indices) {
-                        val ideaId = sortedList[i].id
-                        val rankLastUpdateId = topRankedIdsLastUpdate[i]
-                        if (ideaId != rankLastUpdateId) {
-                            trendChanges = true
-                            break
+                if (sortedList.size > 0) {
+                    if (sortedList.size == topRankedIdsLastUpdate.size) {
+                        for (i in sortedList.indices) {
+                            val ideaId = sortedList[i].id
+                            val rankLastUpdateId = topRankedIdsLastUpdate[i]
+                            if (ideaId != rankLastUpdateId) {
+                                trendChanges = true
+                                break
+                            }
                         }
-                    }
-                } else trendChanges = true
+                    } else trendChanges = true
+                }
                 if (trendChanges) {
                     view?.setTopBadge()
                 } else view?.hideTopBadge()
-
-
             }, { t ->
-                val responseMessage = t.message
-                if (responseMessage != null) {
-                    if (responseMessage.contains(
-                            "HTTP 401",
-                            ignoreCase = true
-                        )
-                    ) {
-                        Log.d("observer_ex", "401 Authorization not valid")
-                        view?.showToast(R.string.not_authorized)
-                    } else view?.showToast(R.string.network_issue_check_network)
-                }
+                view?.handleErrorResponse(t.message)
                 Log.e("observer_ex", "exception getting ideas to adapter: $t")
 
             }).addTo(compositeDisposable)
@@ -297,25 +275,7 @@ class ListViewModel(
                 val ratingItem = ratingGiven ?: -1
                 view?.showPopupRatingDialog(id, ratingItem - 1, position)
             }, { t ->
-                val responseMessage = t.message
-                if (responseMessage != null) {
-                    if (responseMessage.contains(
-                            "HTTP 401",
-                            ignoreCase = true
-                        )
-                    ) {
-                        Log.d("observer_ex", "401 Authorization not valid")
-                        view?.showToast(R.string.not_authorized)
-                    } else if (responseMessage.contains(
-                            "HTTP 404",
-                            ignoreCase = true
-                        )
-                    ) {
-                        Log.d("observer_ex", "404 Idea not found")
-                        view?.showToast(R.string.idea_not_found_message)
-
-                    } else view?.showToast(R.string.network_issue_check_network)
-                }
+                view?.handleErrorResponse(t.message)
                 Log.e("observer_ex", "exception getting idea: $t")
             }).addTo(compositeDisposable)
     }
@@ -324,17 +284,6 @@ class ListViewModel(
         this.view = view
     }
 
-    /*    fun setFilterDialog(
-            categoryArray: Array<String>,
-            checkedItems: BooleanArray,
-            searchText: String
-        ) {
-            view?.showFilterDialog(
-                categoryArray,
-                checkedItems,
-                searchText
-            )
-        }*/
     private fun getCategoryItems() {
         ideaApi.getAllCategories()
             .observeOn(AndroidSchedulers.mainThread())
@@ -349,17 +298,7 @@ class ListViewModel(
                     category.id
                 }
             }, { t ->
-                val responseMessage = t.message
-                if (responseMessage != null) {
-                    if (responseMessage.contains(
-                            "HTTP 401",
-                            ignoreCase = true
-                        )
-                    ) {
-                        Log.d("observer_ex", "401 Authorization not valid")
-                        view?.showToast(R.string.not_authorized)
-                    } else view?.showToast(R.string.network_issue_check_network)
-                }
+                view?.handleErrorResponse(t.message)
                 Log.e("observer_ex", "exception getting categories: $t")
             }).addTo(compositeDisposable)
     }
@@ -372,7 +311,6 @@ class ListViewModel(
         // Build the category message text
         val listOfSearchCategories = getlistOfSearchCategories(checkedItems)
         val selectedCategoriesAsString = listOfSearchCategories.joinToString(", ")
-
         view?.showSearchDialog(
             categoryArray,
             checkedItems,
@@ -385,7 +323,6 @@ class ListViewModel(
     fun setInitialSearchDialog() {
         val categoryArray = if (prefs.isLangEn()) categoryArrayEN else categoryArrayDE
         val checkedItems = BooleanArray(categoryArray.size)
-
         setSearchDialog(
             categoryArray,
             checkedItems,
@@ -427,7 +364,6 @@ class ListViewModel(
                             it.category.id in listOfSearchCategories
                         } else list
                 // search list now filtered with selected categories
-                Log.d("observer_ex", "sorting by $topOrAll and $searchQuery")
                 val sortedList = when (topOrAll) {
                     true -> {
                         listFromSearch.filter { it.numberOfRatings >= MIN_NUM_RATINGS_SHOW_IDEA_ON_TOP_RANKED }
@@ -438,23 +374,10 @@ class ListViewModel(
                         listFromSearch.sortedWith(compareByDescending { it.lastUpdated })
                     }
                 }
-                adapter.updateList(sortedList)
-
-
+                if (sortedList.isNotEmpty()) adapter.updateList(sortedList) else view?.showNoResultsFound()
             }, { t ->
-                val responseMessage = t.message
-                if (responseMessage != null) {
-                    if (responseMessage.contains(
-                            "HTTP 401",
-                            ignoreCase = true
-                        )
-                    ) {
-                        Log.d("observer_ex", "401 Authorization not valid")
-                        view?.showToast("You are not autorized to search")
-                    } else view?.showToast(R.string.network_issue_check_network)
-                }
+                view?.handleErrorResponse(t.message)
                 Log.e("observer_ex", "exception getting searched ideas: $t")
-
             }).addTo(compositeDisposable)
     }
 
@@ -467,8 +390,6 @@ class ListViewModel(
                         list.filter {
                             it.category.id in listOfSearchCategories
                         } else list
-                // search list now filtered with selected categories
-                Log.d("observer_ex", "sorting by $topOrAll and $listOfSearchCategories")
                 val sortedList = when (topOrAll) {
                     true -> {
                         listFromSearch.filter { it.numberOfRatings >= MIN_NUM_RATINGS_SHOW_IDEA_ON_TOP_RANKED }
@@ -478,23 +399,13 @@ class ListViewModel(
                     false -> {
                         listFromSearch.sortedWith(compareByDescending { it.lastUpdated })
                     }
-
                 }
-                adapter.updateList(sortedList)
-
+                if (sortedList.isNotEmpty()) adapter.updateList(sortedList) else {
+                    if (topOrAll) view?.showNoTopRankedIdeasYet() else view?.showNoIdeasYet()
+                }
             }, { t ->
-                val responseMessage = t.message
-                if (responseMessage != null) {
-                    if (responseMessage.contains(
-                            "HTTP 401",
-                            ignoreCase = true
-                        )
-                    ) {
-                        Log.d("observer_ex", "401 Authorization not valid")
-                        view?.showToast("You are not autorized to search")
-                    } else view?.showToast(R.string.network_issue_check_network)
-                }
-                Log.e("observer_ex", "exception getting searched ideas: $t")
+                view?.handleErrorResponse(t.message)
+                Log.e("observer_ex", "exception getting all ideas: $t")
 
             }).addTo(compositeDisposable)
     }
@@ -507,7 +418,6 @@ class ListViewModel(
     }
 
     fun setRating(id: String, oldCheckedItem: Int, newCheckedItem: Int, position: Int) {
-        Log.d("observer_ex", "rating $newCheckedItem, before was $oldCheckedItem")
         // careful add +1 to rating checked item, they go 0..4
         if (oldCheckedItem != newCheckedItem) {
             var updatedIdea: Idea
@@ -536,10 +446,10 @@ class ListViewModel(
                     adapter.updateRating(position, idea)
                     //check if ranking
                     getIdeasSetBadges()
-                }
-                else adapter.updateRating(position, idea)
+                } else adapter.updateRating(position, idea)
             }, { t ->
                 // handle error
+                view?.handleErrorResponse(t.message)
             }).addTo(compositeDisposable)
     }
 
