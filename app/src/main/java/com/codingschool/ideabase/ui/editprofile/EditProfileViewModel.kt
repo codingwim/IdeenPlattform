@@ -242,7 +242,6 @@ class EditProfileViewModel(
     fun onPassword2TextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
         if ((count > 0) && (before==0)) view?.resetPasswordRepeatError()
     }
-
     private val PASSWORD_PATTERN = Pattern.compile(
         "^" +  "(?=.*[0-9])" +         //at least 1 digit
                 "(?=.*[a-zA-Z])" +  //at least 1 letter->any letter
@@ -251,7 +250,7 @@ class EditProfileViewModel(
                 ".{8,}" +  //at least 8 characters
                 "$"
     )
-    private fun getRequestBodyForUpdatedImage(imagePart: InputStreamRequestBody) =
+    fun getRequestBodyForUpdatedImage(imagePart: InputStreamRequestBody) =
         MultipartBody.Builder()
             .setType(MultipartBody.FORM)
             .addFormDataPart(
