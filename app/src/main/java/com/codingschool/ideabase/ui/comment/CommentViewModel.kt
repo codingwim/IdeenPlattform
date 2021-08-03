@@ -45,6 +45,7 @@ class CommentViewModel (
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
                     view?.showToast(R.string.thank_you_comment)
+                    prefs.setCommentDraft("")
                     view?.navigateBack()
                 }, { t ->
                     val responseMessage = t.message

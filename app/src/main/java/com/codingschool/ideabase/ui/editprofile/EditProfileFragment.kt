@@ -19,11 +19,16 @@ import com.codingschool.ideabase.utils.ImageHandler
 import com.codingschool.ideabase.utils.getResString
 import com.codingschool.ideabase.utils.toast
 import com.github.drjacky.imagepicker.ImagePicker
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.snackbar.Snackbar
 import org.koin.android.ext.android.inject
+import org.koin.core.parameter.parametersOf
 
 class EditProfileFragment: Fragment(), EditProfileView {
 
-    private val viewModel: EditProfileViewModel by inject()
+    private val viewModel: EditProfileViewModel by inject<EditProfileViewModel> {
+        parametersOf(arguments?.let { EditProfileFragmentArgs.fromBundle(it).loadPictureSelector })
+    }
     private lateinit var binding: FragmentEditProfileBinding
 
     private val imageHandler: ImageHandler by inject()
@@ -68,6 +73,27 @@ class EditProfileFragment: Fragment(), EditProfileView {
     override fun showToast(any: Any) {
         requireActivity().toast(any)
     }
+
+/*    override fun snacker(text: String, actionText: String, tag: Int) {
+        Snackbar.make(requireView(), text, Snackbar.LENGTH_LONG)
+            .setAction(actionText) {
+                //viewModel.snackerClicked(tag)
+            }.show()
+    }*/
+
+    override fun showInfoDialog() {
+        MaterialAlertDialogBuilder(
+            requireActivity(),
+            R.style.materialDialog
+        )
+            .setTitle(getString(R.string.dialog_edit_profile_title))
+            .setMessage(getString(R.string.dialog_edit_profile_message))
+            .setPositiveButton(getString(R.string.understood_button)) { dialog, _ ->
+                dialog.dismiss()
+            }
+            .show()
+    }
+
 
     override fun setProfilePicture(url: String?) {
         imageHandler.getProfilePic(url, binding.ivProfilePicture)

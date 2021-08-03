@@ -118,23 +118,23 @@ class RegisterViewModel(private val ideaApi: IdeaApi) : BaseObservable() {
     }
 
     fun onFirstnameTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-        view?.resetFirstnameError()
+        if ((count > 0) && (before==0)) view?.resetFirstnameError()
     }
 
     fun onLastnameTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-        view?.resetLastnameError()
+        if ((count > 0) && (before==0)) view?.resetLastnameError()
     }
 
     fun onEmailTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-        view?.resetEmailError()
+        if ((count > 0) && (before==0)) view?.resetEmailError()
     }
 
     fun onPasswordTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-        if (count > 0) view?.resetPasswordError()
+        if ((count > 0) && (before==0)) view?.resetPasswordError()
     }
 
     fun onPassword2TextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-        view?.resetPasswordRepeatError()
+        if ((count > 0) && (before==0)) view?.resetPasswordRepeatError()
     }
     private val PASSWORD_PATTERN = Pattern.compile(
         "^" +  "(?=.*[0-9])" +         //at least 1 digit

@@ -47,7 +47,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/shape_profile_picture_transp_60"
-            android:text="change"
+            android:text="@string/change_prodile_picture_overlay"
             android:visibility="invisible"
             android:gravity="center"
             android:textColor="@color/white"

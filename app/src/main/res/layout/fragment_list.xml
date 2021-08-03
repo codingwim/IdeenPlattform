@@ -13,6 +13,26 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".ui.list.ListFragment">
+        <include
+            layout="@layout/layout_no_internet"
+            android:id="@+id/noInternetMessageLayout"
+            android:visibility="invisible"
+            />
+        <include
+            layout="@layout/layout_no_top_ranked"
+            android:id="@+id/noTopRankedMessageLayout"
+            android:visibility="invisible"
+            />
+        <include
+            layout="@layout/layout_no_search_result"
+            android:id="@+id/noSearchResultToShowMessageLayout"
+            android:visibility="invisible"
+            />
+        <include
+            layout="@layout/layout_no_ideas_yet"
+            android:id="@+id/noIdeasToShowMessageLayout"
+            android:visibility="invisible"
+            />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvIdeas"

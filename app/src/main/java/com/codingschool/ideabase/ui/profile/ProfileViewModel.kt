@@ -72,24 +72,7 @@ class ProfileViewModel(
 
 
             }, { t ->
-                val responseMessage = t.message
-                if (responseMessage != null) {
-                    if (responseMessage.contains(
-                            "HTTP 401",
-                            ignoreCase = true
-                        )
-                    ) {
-                        Log.d("observer_ex", "401 Authorization not valid")
-                        view?.showToast("You are not autorized")
-                    } else if (responseMessage.contains(
-                            "HTTP 404",
-                            ignoreCase = true
-                        )
-                    ) {
-                        Log.d("observer_ex", "404 User not found")
-                        view?.showToast("User not found")
-                    } else view?.showToast(R.string.network_issue_check_network)
-                }
+                view?.handleErrorResponse(t.message)
                 Log.e("observer_ex", "exception getting user profile $t")
 
             }).addTo(compositeDisposable)

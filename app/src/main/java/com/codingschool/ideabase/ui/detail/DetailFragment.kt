@@ -1,5 +1,6 @@
 package com.codingschool.ideabase.ui.detail
 
+import android.graphics.Typeface
 import android.os.Bundle
 import android.view.*
 import androidx.databinding.DataBindingUtil
@@ -9,7 +10,9 @@ import androidx.navigation.Navigation
 import com.codingschool.ideabase.MainActivity
 import com.codingschool.ideabase.R
 import com.codingschool.ideabase.databinding.FragmentDetailBinding
+import com.codingschool.ideabase.ui.list.ListFragmentDirections
 import com.codingschool.ideabase.utils.ImageHandler
+import com.codingschool.ideabase.utils.errorHandler
 import com.codingschool.ideabase.utils.toast
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import org.koin.android.ext.android.inject
@@ -25,6 +28,7 @@ class DetailFragment: Fragment(), DetailView {
 
     private val imageHandler: ImageHandler by inject()
     private var menuForManager = false
+    private var managerIsAuthor = false
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -48,8 +52,6 @@ class DetailFragment: Fragment(), DetailView {
         binding.rvComments.adapter = viewModel.adapter
         viewModel.attachView(this)
         viewModel.init()
-
-
     }
 
     override fun showToast(any: Any) {
@@ -58,6 +60,10 @@ class DetailFragment: Fragment(), DetailView {
 
     override fun setIdeaImage(url: String) {
         imageHandler.getIdeaImage(url, binding.ivIdea)
+    }
+
+    override fun setTitleReleasedItalic() {
+        binding.tvIdeaTitle.setTypeface(null, Typeface.BOLD)
     }
 
     override fun navigateBack() {
@@ -70,6 +76,10 @@ class DetailFragment: Fragment(), DetailView {
             Navigation.findNavController(requireView()).navigate(action)
     }
 
+    override fun setRatingIcon(drawIcon: Int) {
+        binding.btRate.setImageResource(drawIcon)
+    }
+
     override fun showMenu() {
         setHasOptionsMenu(true)
     }
@@ -78,13 +88,10 @@ class DetailFragment: Fragment(), DetailView {
         setHasOptionsMenu(false)
     }
 
-    override fun hideCommentTitle() {
-        binding.tvCommentTitle.visibility = View.GONE
-    }
-
-    override fun addReleaseMenuItem() {
+    override fun addReleaseMenuItem(isAuthor: Boolean) {
         // user MANGAGER, add release menu item
         menuForManager = true
+        managerIsAuthor = isAuthor
         requireActivity().invalidateOptionsMenu()
     }
 
@@ -127,6 +134,44 @@ class DetailFragment: Fragment(), DetailView {
             .show()
     }
 
+    override fun showPopupRatingDialog(id: String, checkedItem: Int) {
+        val ratingArray =
+            arrayOf(
+                getString(R.string.rating_1),
+                getString(R.string.rating_2),
+                getString(R.string.rating_3),
+                getString(R.string.rating_4),
+                getString(R.string.rating_5))
+        var newCheckedItem = 0
+        MaterialAlertDialogBuilder(
+            requireActivity(),
+            R.style.materialDialog
+        )
+            .setTitle(getString(R.string.dialog_title_rate))
+            .setSingleChoiceItems(ratingArray,checkedItem) { dialog, which ->
+                newCheckedItem = which
+
+            }
+            .setNegativeButton(getString(R.string.btn_cancel_dialog)) { dialog, _ ->
+                dialog.dismiss()
+            }
+            .setPositiveButton(getString(R.string.btn_rate)) { dialog, _ ->
+                viewModel.setRating(id, checkedItem, newCheckedItem)
+                dialog.dismiss()
+            }
+            .show()
+    }
+
+    override fun handleErrorResponse(errorMessage: String?) {
+        if (!requireActivity().errorHandler(errorMessage)) showToast(R.string.network_issue_check_network)
+    }
+
+    override fun navigateToCommentFragment(id: String) {
+        val action: NavDirections =
+            DetailFragmentDirections.toComment(id)
+        Navigation.findNavController(requireView()).navigate(action)
+    }
+
     override fun navigateToProfile(id: String) {
         val action: NavDirections =
             DetailFragmentDirections.toProfile(id)
@@ -146,6 +191,8 @@ class DetailFragment: Fragment(), DetailView {
         super.onPrepareOptionsMenu(menu)
         // if  admin, add release menu item
         menu.findItem(R.id.release)?.setEnabled(menuForManager)
+        menu.findItem(R.id.delete)?.setEnabled((!menuForManager) or (menuForManager && managerIsAuthor))
+        menu.findItem(R.id.edit)?.setEnabled((!menuForManager) or (menuForManager && managerIsAuthor))
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

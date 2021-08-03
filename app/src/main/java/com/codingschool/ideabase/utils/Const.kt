@@ -1,21 +1,15 @@
 package com.codingschool.ideabase.utils
 
-import java.util.*
-
 const val baseUrl = "https://ideenmanagement.tailored-apps.com/api/"
 
-// TODO remove test values below before production build
-const val testusername = "wim@mail.com"
-const val testpwd = "wim12345678"
-const val testAuthWim = "Basic d2ltQG1haWwuY29tOndpbTEyMzQ1Njc4"
+/*enum class Trend(val text: String) { NONE(""), UP("Up"), DOWN("Down") }
+enum class Status(val text: String) { NONE(""), RELEASED("Released"), UPDATED("Updated"), NEW("new")}*/
+enum class Trend { NONE, UP, DOWN }
+enum class Status { NONE, RELEASED, UPDATED, NEW}
 
-const val NO_SEARCH_QUERY =""
+// for automatic update api calls, Timeunit.SECONDS
+const val INITIAL_DELAY = 2L
+const val UPDATE_INTERVAL = 15L
 
-const val NEW_IDEA = true
-const val EDIT_IDEA = false
-
-const val TOP_RANKED = true
-const val ALL_IDEAS = false
-
-// here we can set the minimum amoutn of ratings an idea needs, to be included on the top ranked screen
-const val MIN_NUM_RATINGS_SHOW_IDEA_ON_TOP_RANKED = 1
+// here we can set the minimum amount of ratings an idea needs, to be included on the top ranked screen Min 2 recommended
+const val MIN_NUM_RATINGS_SHOW_IDEA_ON_TOP_RANKED = 2

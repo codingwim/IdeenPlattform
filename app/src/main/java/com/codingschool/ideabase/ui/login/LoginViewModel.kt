@@ -24,20 +24,13 @@ class LoginViewModel(
 
     fun init() {
         if (prefs.getAuthString().isNotEmpty()) {
-            // on loading viewmodel, check if we have valid credentials in shared prefs, do chek login auto login and navigate to next screen
-            // TODO
-            // while "checking" in, rotate progressbar with info text!!
-            // nice welcome screen like the beer screen, with progress indicator while also loading idealists!!!!
-
             checkCredentialsWithAPI()
-            //Log.d("observer_ex", "prefs not empty")
         } else Log.d("observer_ex", "prefs empty")
         Log.d("observer_ex", "logon prefs: ${prefs.getLocale()}")
     }
 
     fun attachView(view: LoginView) {
         this.view = view
-
     }
 
     @get:Bindable
@@ -52,7 +45,7 @@ class LoginViewModel(
         else if (!validEmail(username)) view?.setInputUsernameError(R.string.error_not_email_adress)
         else if (password.isEmpty()) view?.setInputPasswordError(R.string.error_empty_password)
         else {
-            // fields are valid, letz build the encoded base Auth string, and try to "login" get own user data
+            // fields are valid, lets build the encoded base Auth string, and confirm credentials with "get own" user data
             buildBasicAuthAndStoreInPrefs()
 
             // with getOwnUser we can check credentials, will automatically use auth token from preferences !
@@ -67,8 +60,11 @@ class LoginViewModel(
                 // we could put the users firstname, etc in sharedprefs if we need to...
                 prefs.setCredentialID(user.id)
                 prefs.setIsManager(user.isManager)
-                user.profilePicture?.let { prefs.setProfileImage(it) }
-                view?.navigateToTopRankedFragment()
+                if (user.profilePicture != null) {
+                    prefs.setProfileImage(user.profilePicture)
+                    view?.navigateToTopRankedFragment()
+                } else view?.showSetProfilePictureDialog()
+
                 //Log.d("observer_ex", "Current logged in user: ${user.firstname}")
             }, { t ->
                 val responseMessage = t.message
@@ -88,15 +84,14 @@ class LoginViewModel(
                     ) {
                         prefs.setCommentDraft("")
                         view?.showToast(R.string.error_pwd_user_not_valid)
-                    }
-                    else view?.showToast(R.string.network_issue_check_network)
+                    } else view?.showToast(R.string.network_issue_check_network)
                 }
                 Log.e("observer_ex", "exception adding new user: $t")
             }).addTo(compositeDisposable)
     }
 
     private fun buildBasicAuthAndStoreInPrefs() {
-        val authString : String = Credentials.basic(username, password)
+        val authString: String = Credentials.basic(username, password)
         prefs.setAuthString(authString)
     }
 
@@ -104,12 +99,17 @@ class LoginViewModel(
         view?.navigateToRegisterFragment()
     }
 
+    fun onSetPictureNow() {
+        // navigate to editprofile AND open image selector
+        view?.navigateToEditProfileFragmentAndLoadPictureSelector()
+
+    }
     fun onUsernameTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-        view?.resetUsernameError()
+        if ((count > 0) && (before==0)) view?.resetUsernameError()
     }
 
     fun onPasswordTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-        if (count in 1..2) view?.resetPasswordError()
+        if ((count > 0) && (before==0)) view?.resetPasswordError()
     }
 
     private fun validEmail(email: String) =

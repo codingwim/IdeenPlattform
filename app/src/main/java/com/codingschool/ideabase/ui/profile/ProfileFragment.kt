@@ -11,6 +11,7 @@ import com.codingschool.ideabase.databinding.FragmentProfileBinding
 import com.codingschool.ideabase.ui.detail.DetailFragmentArgs
 import com.codingschool.ideabase.ui.register.RegisterFragmentDirections
 import com.codingschool.ideabase.utils.ImageHandler
+import com.codingschool.ideabase.utils.errorHandler
 import com.codingschool.ideabase.utils.toast
 import org.koin.android.ext.android.inject
 import org.koin.core.parameter.parametersOf
@@ -73,6 +74,22 @@ import org.koin.core.parameter.parametersOf
          imageHandler.getProfilePic(url, binding.ivProfilePicture)
      }
 
+
+     override fun handleErrorResponse(errorMessage: String?) {
+         if (!requireActivity().errorHandler(errorMessage))  {
+             showNoInternet()
+             hideMenu()
+         }
+     }
+
+
+     fun showNoInternet() {
+         binding.ivProfilePicture.visibility = View.INVISIBLE
+         binding.vwTitleAndMail.visibility = View.INVISIBLE
+         binding.vwDetails.visibility = View.INVISIBLE
+         binding.noInternetMessageLayout.root.visibility = View.VISIBLE
+     }
+
      override fun hideMenu() {
          setHasOptionsMenu(false)
      }
@@ -86,7 +103,6 @@ import org.koin.core.parameter.parametersOf
             ProfileFragmentDirections.toEditProfile()
         Navigation.findNavController(requireView()).navigate(action)
     }
-
 
     override fun navigateToLoginFragment(username: String) {
         val action: NavDirections =

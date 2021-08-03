@@ -12,6 +12,7 @@ import com.codingschool.ideabase.R
 import com.codingschool.ideabase.databinding.FragmentLoginBinding
 import com.codingschool.ideabase.utils.getResString
 import com.codingschool.ideabase.utils.toast
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import org.koin.android.ext.android.inject
 import org.koin.core.parameter.parametersOf
 
@@ -53,6 +54,29 @@ class LoginFragment : Fragment(), LoginView {
 
     override fun setInputUsernameError(any: Any) {
         binding.tilUsername.error = requireActivity().getResString(any)
+    }
+
+    override fun showSetProfilePictureDialog() {
+        MaterialAlertDialogBuilder(
+            requireActivity()
+        )
+            .setTitle("Set your profile picture")
+            .setMessage("Other users will recognise your ideas and comments easier if you set a profile picture! You can to this later in the menu of the profile screen")
+            .setNegativeButton("SET PROFILE PICTURE NOW") { dialog, _ ->
+                viewModel.onSetPictureNow()
+                dialog.dismiss()
+            }
+            .setPositiveButton("LATER") { dialog, _ ->
+                navigateToTopRankedFragment()
+                dialog.dismiss()
+            }
+            .show()
+    }
+
+    override fun navigateToEditProfileFragmentAndLoadPictureSelector() {
+        val action: NavDirections =
+            LoginFragmentDirections.toEditProfile(loadPictureSelector = true)
+        Navigation.findNavController(requireView()).navigate(action)
     }
 
     override fun navigateToRegisterFragment() {

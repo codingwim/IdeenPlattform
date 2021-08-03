@@ -2,15 +2,18 @@ package com.codingschool.ideabase.ui.list
 
 import android.util.Log
 import androidx.databinding.BaseObservable
-import com.codingschool.ideabase.R
-import com.codingschool.ideabase.model.data.Category
+import androidx.recyclerview.widget.RecyclerView.AdapterDataObserver
+import com.codingschool.ideabase.model.data.Idea
 import com.codingschool.ideabase.model.data.PostIdeaRating
 import com.codingschool.ideabase.model.remote.IdeaApi
 import com.codingschool.ideabase.utils.*
+import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.addTo
+import io.reactivex.schedulers.Schedulers
 import retrofit2.HttpException
+import java.util.concurrent.TimeUnit
 
 class ListViewModel(
     private val topOrAll: Boolean,
@@ -24,29 +27,241 @@ class ListViewModel(
 
     val compositeDisposable = CompositeDisposable()
 
-    private var categoryList: List<Category> = emptyList()
+    private var categoryList = emptyList<String>()
+    private var categoryArrayDE: Array<String> = emptyArray()
+    private var categoryArrayEN: Array<String> = emptyArray()
+
+
+    private var listOfSearchCategories: List<String> = emptyList()
+    private var searchString = ""
+
+    private fun updateObservable(): Observable<Long> {
+        return Observable.interval(INITIAL_DELAY, UPDATE_INTERVAL, TimeUnit.SECONDS)
+    }
 
     fun init() {
-        // set initial adapter list here
-        getIdeasToAdapter(emptyList(), NO_SEARCH_QUERY)
+
+        view?.hideAllBadge()
+        view?.hideTopBadge()
+
+        adapter.setTopOrAll(topOrAll)
+
         adapter.addIdeaClickListener { id ->
             Log.d("observer_ex", "Idea clicked")
             view?.navigateToDetailFragment(id)
         }
-        adapter.addCommentClickListener { id, title ->
-            Log.d("observer_ex", "comment clicked id: $id & title: $title")
-            view?.navigateToCommentFragment(id, title)
+        adapter.addCommentClickListener { id ->
+            view?.navigateToCommentFragment(id)
         }
-        adapter.addRateClickListener { id ->
-            getMyRatingForThisIdeaAndStartDialog(id)
+        adapter.addRateClickListener { id, position ->
+            getMyRatingForThisIdeaAndStartDialog(id, position)
         }
         adapter.addProfileClickListener { id ->
             view?.navigateToProfile(id)
         }
+        adapter.registerAdapterDataObserver(object : AdapterDataObserver() {
+            /*override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
+                super.onItemRangeInserted(positionStart, itemCount)
+                Log.d(
+                    "observer_ex",
+                    "onItemRangeInserted with positionStart: $positionStart and itemCount: $itemCount"
+                )
+              *//*  if (positionStart>0) view?.moveToPositionInRecyclerview(positionStart)*//*
+            }
+
+            override fun onItemRangeChanged(positionStart: Int, itemCount: Int) {
+                super.onItemRangeChanged(positionStart, itemCount)
+                Log.d(
+                    "observer_ex",
+                    "onItemRangeChanged with positionStart: $positionStart and itemCount: $itemCount"
+                )
+                view?.moveToPositionInRecyclerview(positionStart)
+            }
+
+            override fun onItemRangeMoved(fromPosition: Int, toPosition: Int, itemCount: Int) {
+                Log.d(
+                    "observer_ex",
+                    "onItemRangeMoved with fromPosition: $fromPosition toPosition: $toPosition  and itemCount: $itemCount"
+                )
+                super.onItemRangeMoved(fromPosition, toPosition, itemCount)
+            }*/
+
+        })
+
+        getCategoryItems()
+
+        /**
+         * if APP JUST STARTED, on first load of top ranked, we get all ides from api, but only show up-to lastAdapterUpdated??
+         *      + we set the badges to inform if newer available, (not for ranking status??)
+         *      = the showed top rank list is the status of last time, user needs to click again (OR REFRESH ?) to show trend updates
+         *  ELSE , we just CLICKED "top ranked" or "All" so we want to clear badges, and show all with trend info (if top ranked clicked) or status info (if all clicked)
+         *
+         *  Both options start the getPeriodicUpdatesToSetBadges
+         */
+
+        if (prefs.appJustStarted()) {
+            ideaApi.getAllIdeasNoFilter()
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({ list ->
+                    val trendList = setTrendAndStatusList(list)
+                    // returned trendlist is already sorted by ranking
+                    if (trendList.isEmpty()) view?.showNoTopRankedIdeasYet()
+                    else {
+                        adapter.updateList(trendList)
+                        // set prefs top ranked list
+                        prefs.setTopRankedIds(trendList.map { it.id })
+                    }
+                    ifHasNewerOrUpdatedIdeasSetAllIdeasBadgeAccordingly(list)
+                    checkApiForUpdatesPeriodicallyToSetBadges()
+                    prefs.setAppNotJustStarted()
+                }, { t ->
+                    view?.handleErrorResponse(t.message)
+                    Log.e("observer_ex", "exception getting ideas: $t")
+
+                }).addTo(compositeDisposable)
+
+        } else {
+            ideaApi.getAllIdeasNoFilter()
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({ list ->
+                    val sortedList = when (topOrAll) {
+                        true -> {
+                            view?.hideTopBadge()
+                            list.filter { it.numberOfRatings >= MIN_NUM_RATINGS_SHOW_IDEA_ON_TOP_RANKED }
+                                .sortedWith(
+                                    compareByDescending { it.avgRating })
+                        }
+                        false -> {
+                            view?.hideAllBadge()
+                            list.sortedWith(compareByDescending { it.lastUpdated })
+                        }
+                    }
+                    val trendList = setTrendAndStatusList(sortedList)
+                    if (trendList.isNotEmpty()) adapter.updateList(trendList) else {
+                        if (topOrAll) view?.showNoTopRankedIdeasYet() else view?.showNoIdeasYet()
+                    }
+
+                    prefs.setLastAdapterUpdateNow()
+                    view?.hideTopBadge()
+                    view?.hideAllBadge()
+                    if (topOrAll) {
+                        // set prefs top ranked list
+                        val rankedList = sortedList.map { it.id }
+                        prefs.setTopRankedIds(rankedList)
+                    }
+                    checkApiForUpdatesPeriodicallyToSetBadges()
+                    prefs.setAppNotJustStarted()
+                }, { t ->
+                    view?.handleErrorResponse(t.message)
+                    Log.e("observer_ex", "exception getting ideas to adapter: $t")
+
+                }).addTo(compositeDisposable)
+        }
     }
 
-    private fun getMyRatingForThisIdeaAndStartDialog(id: String) {
-        var ratingGiven: Int? = null
+    private fun ifHasNewerOrUpdatedIdeasSetAllIdeasBadgeAccordingly(list: List<Idea>) {
+        val dateLastUpdate = prefs.getLastAdapterUpdate()
+        val countNew = list.count { (it.created.compareTo(dateLastUpdate) > 0) }
+
+        if (prefs.appJustStarted()) {
+            if (countNew > 0) view?.setAllBadge(countNew)
+            else {
+                val atLEastOneIdeaUpdated = list.firstOrNull { it.lastUpdated > dateLastUpdate }
+                if (atLEastOneIdeaUpdated != null) {
+                    view?.setAllBadgeNoNumber()
+                }
+            }
+        }
+    }
+
+    private fun setTrendAndStatusList(list: List<Idea>): List<Idea> {
+        val dateLastUpdate = prefs.getLastAdapterUpdate()
+        val topRankedIdsLastUpdate = prefs.getTopRankedIds()
+        val rankedlist =
+            list.filter { it.numberOfRatings >= MIN_NUM_RATINGS_SHOW_IDEA_ON_TOP_RANKED }
+                .sortedByDescending { it.avgRating }
+
+        for (idea in list) {
+            if (idea.created > dateLastUpdate) idea.status = Status.NEW
+            else if (idea.lastUpdated > dateLastUpdate) {
+                if (idea.released) idea.status = Status.RELEASED
+                else idea.status = Status.UPDATED
+            } else idea.status = Status.NONE
+        }
+
+        for (i in rankedlist.indices) {
+            val idea = rankedlist[i]
+            if (topRankedIdsLastUpdate.isNotEmpty()) {
+                val positionLastUpdate = (topRankedIdsLastUpdate.indexOfFirst { it == idea.id })
+                if (positionLastUpdate != -1) {
+                    if (positionLastUpdate > i) idea.trend = Trend.UP
+                    else if (positionLastUpdate < i) idea.trend = Trend.DOWN
+                    else idea.trend = Trend.NONE
+                } else idea.trend = Trend.UP
+            } else {
+                idea.trend = Trend.NONE
+            }
+        }
+        return if (topOrAll) rankedlist else list
+    }
+
+    private fun checkApiForUpdatesPeriodicallyToSetBadges() {
+        updateObservable()
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({
+                //Log.d("observer_ex", "checking for updates now")
+                getIdeasSetBadges()
+            },
+                { t ->
+                    Log.e("observer_ex", "exception with periodic update: $t")
+                }).addTo(compositeDisposable)
+
+    }
+
+    private fun getIdeasSetBadges() {
+        val dateLastUpdate = prefs.getLastAdapterUpdate()
+        val topRankedIdsLastUpdate = prefs.getTopRankedIds()
+        ideaApi.getAllIdeasNoFilter()
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({ list ->
+                val sortedList =
+                    list.filter { it.numberOfRatings >= MIN_NUM_RATINGS_SHOW_IDEA_ON_TOP_RANKED }
+                        .sortedWith(
+                            compareByDescending { it.avgRating })
+                // check if newer/updated ideas, set All badge
+                val countNew = list.count { it.created > dateLastUpdate }
+                if (countNew > 0) view?.setAllBadge(countNew)
+                else {
+                    val atLEastOneIdeaUpdated = list.firstOrNull { it.lastUpdated > dateLastUpdate }
+                    if (atLEastOneIdeaUpdated != null) view?.setAllBadgeNoNumber() else view?.hideAllBadge()
+                }
+                // check if sortedList other ranking than lastUpdate
+                var trendChanges = false
+                if (sortedList.size > 0) {
+                    if (sortedList.size == topRankedIdsLastUpdate.size) {
+                        for (i in sortedList.indices) {
+                            val ideaId = sortedList[i].id
+                            val rankLastUpdateId = topRankedIdsLastUpdate[i]
+                            if (ideaId != rankLastUpdateId) {
+                                trendChanges = true
+                                break
+                            }
+                        }
+                    } else trendChanges = true
+                }
+                if (trendChanges) {
+                    view?.setTopBadge()
+                } else view?.hideTopBadge()
+            }, { t ->
+                view?.handleErrorResponse(t.message)
+                Log.e("observer_ex", "exception getting ideas to adapter: $t")
+
+            }).addTo(compositeDisposable)
+    }
+
+    private fun getMyRatingForThisIdeaAndStartDialog(id: String, position: Int) {
+        var ratingGiven: Int?
         ideaApi.getIdeaById(id)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({ idea ->
@@ -55,29 +270,10 @@ class ListViewModel(
                 }.let {
                     it?.rating
                 }
-                Log.d("observer_ex", "ratingGiven : $ratingGiven")
                 val ratingItem = ratingGiven ?: -1
-                Log.d("observer_ex", "ratingItem : $ratingItem")
-                view?.showPopupRatingDialog(id, ratingItem-1)
+                view?.showPopupRatingDialog(id, ratingItem - 1, position)
             }, { t ->
-                val responseMessage = t.message
-                if (responseMessage != null) {
-                    if (responseMessage.contains(
-                            "HTTP 401",
-                            ignoreCase = true
-                        )
-                    ) {
-                        Log.d("observer_ex", "401 Authorization not valid")
-                        view?.showToast("You are not autorized to log in")
-                    } else if (responseMessage.contains(
-                            "HTTP 404",
-                            ignoreCase = true
-                        )
-                    ) {
-                        Log.d("observer_ex", "404 Idea not found")
-                        view?.showToast("Idea not found")
-                    } else view?.showToast(R.string.network_issue_check_network)
-                }
+                view?.handleErrorResponse(t.message)
                 Log.e("observer_ex", "exception getting idea: $t")
             }).addTo(compositeDisposable)
     }
@@ -86,18 +282,23 @@ class ListViewModel(
         this.view = view
     }
 
-    fun setFilterDialog(
-        categoryArray: Array<String>,
-        checkedItems: BooleanArray,
-        searchText: String,
-        messageSelectedCategories: String
-    ) {
-        view?.showFilterDialog(
-            categoryArray,
-            checkedItems,
-            searchText,
-            messageSelectedCategories
-        )
+    private fun getCategoryItems() {
+        ideaApi.getAllCategories()
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({ list ->
+                categoryArrayEN = list.map { category ->
+                    category.name_en
+                }.toTypedArray()
+                categoryArrayDE = list.map { category ->
+                    category.name_de
+                }.toTypedArray()
+                categoryList = list.map { category ->
+                    category.id
+                }
+            }, { t ->
+                view?.handleErrorResponse(t.message)
+                Log.e("observer_ex", "exception getting categories: $t")
+            }).addTo(compositeDisposable)
     }
 
     fun setSearchDialog(
@@ -108,62 +309,36 @@ class ListViewModel(
         // Build the category message text
         val listOfSearchCategories = getlistOfSearchCategories(checkedItems)
         val selectedCategoriesAsString = listOfSearchCategories.joinToString(", ")
-        // TODO how to extract string here ? add view getString with context (as taost...)
-        val newMessageSelectedCategories =
-            if (selectedCategoriesAsString.isEmpty()) "You can add categories to filter the result. Just click FILTER below"
-            else "Filter by: " + selectedCategoriesAsString
         view?.showSearchDialog(
             categoryArray,
             checkedItems,
             searchText,
-            newMessageSelectedCategories
+            selectedCategoriesAsString,
+            selectedCategoriesAsString.isNotEmpty()
         )
     }
 
     fun setInitialSearchDialog() {
-        //val locale = ConfigurationCompat.getLocales(Resources.getSystem().getConfiguration())
-        var categoryArray: Array<String> = emptyArray()
-        var checkedItems: BooleanArray = booleanArrayOf()
-
-        ideaApi.getAllCategories()
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({ list ->
-                categoryList = list
-                for (i in list) {
-                    //TODO local check to be done here
-                    categoryArray += i.name_en
-                    checkedItems += false
-                }
-                view?.showSearchDialog(
-                    categoryArray,
-                    checkedItems,
-                    "",
-                    "You can add categories to filter the result. Just click FILTER below"
-                )
-
-            }, { t ->
-                val responseMessage = t.message
-                if (responseMessage != null) {
-                    if (responseMessage.contains(
-                            "HTTP 401",
-                            ignoreCase = true
-                        )
-                    ) {
-                        Log.d("observer_ex", "401 Authorization not valid")
-                        view?.showToast("You are not autorized to log in")
-                    } else view?.showToast(R.string.network_issue_check_network)
-                }
-                Log.e("observer_ex", "exception getting categories: $t")
-            }).addTo(compositeDisposable)
+        val categoryArray = if (prefs.isLangEn()) categoryArrayEN else categoryArrayDE
+        val checkedItems = BooleanArray(categoryArray.size)
+        setSearchDialog(
+            categoryArray,
+            checkedItems,
+            ""
+        )
     }
 
-    fun filterWithSelectedItemsAndSearchText(checkedItems: BooleanArray, searchText: String) {
+    fun filterWithSelectedItemsAndSearchText(
+        checkedItems: BooleanArray,
+        searchTextFromDialog: String
+    ) {
         // Build the category search List for the filtering
-        val listOfSearchCategories = getlistOfSearchCategories(checkedItems)
+        listOfSearchCategories = getlistOfSearchCategories(checkedItems)
+        searchString = searchTextFromDialog
         //Log.d("observer_ex", "selectedItems: $searchCategoryString ")
         getIdeasToAdapter(
             listOfSearchCategories,
-            searchText
+            searchString
         )
     }
 
@@ -174,49 +349,35 @@ class ListViewModel(
         // if searchQuery = empty,
         //      we use getAllIdeas to return complete list !! ELSE return list with search keyword
         //      and THAN filter with the categoryList (if not empty)
-        //      TODO add sort with the sorting pref
         //      TODO IF RESULT = EMPTY -> put overlay "no ideas found matching your search and/or filter criteria
         //
 
         if (searchQuery.isEmpty()) getAllIdeas(listOfSearchCategories)
         else ideaApi.searchIdeas(searchQuery)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({ list ->
-                    val listFromSearch =
-                        if (listOfSearchCategories.isNotEmpty())
-                            list.filter {
-                                it.category.id in listOfSearchCategories
-                            } else list
-                    // search list now filtered with selected categories
-                    Log.d("observer_ex", "sorting by $topOrAll ")
-                    val sortedList = when(topOrAll) {
-                        true -> {
-                            listFromSearch.filter {it.numberOfRatings >= MIN_NUM_RATINGS_SHOW_IDEA_ON_TOP_RANKED }.sortedWith(
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({ list ->
+                val listFromSearch =
+                    if (listOfSearchCategories.isNotEmpty())
+                        list.filter {
+                            it.category.id in listOfSearchCategories
+                        } else list
+                // search list now filtered with selected categories
+                val sortedList = when (topOrAll) {
+                    true -> {
+                        listFromSearch.filter { it.numberOfRatings >= MIN_NUM_RATINGS_SHOW_IDEA_ON_TOP_RANKED }
+                            .sortedWith(
                                 compareByDescending { it.avgRating })
-                        }
-                        false -> {
-                            listFromSearch.sortedWith(compareByDescending { it.created })
-                        }
-
                     }
-                    adapter.updateList(sortedList)
-
-                }, { t ->
-                    val responseMessage = t.message
-                    if (responseMessage != null) {
-                        if (responseMessage.contains(
-                                "HTTP 401",
-                                ignoreCase = true
-                            )
-                        ) {
-                            Log.d("observer_ex", "401 Authorization not valid")
-                            view?.showToast("You are not autorized to search")
-                        } else view?.showToast(R.string.network_issue_check_network)
+                    false -> {
+                        listFromSearch.sortedWith(compareByDescending { it.lastUpdated })
                     }
-                    Log.e("observer_ex", "exception getting searched ideas: $t")
-
-                }).addTo(compositeDisposable)
-        }
+                }
+                if (sortedList.isNotEmpty()) adapter.updateList(sortedList) else view?.showNoResultsFound()
+            }, { t ->
+                view?.handleErrorResponse(t.message)
+                Log.e("observer_ex", "exception getting searched ideas: $t")
+            }).addTo(compositeDisposable)
+    }
 
     private fun getAllIdeas(listOfSearchCategories: List<String>) {
         ideaApi.getAllIdeasNoFilter()
@@ -227,49 +388,37 @@ class ListViewModel(
                         list.filter {
                             it.category.id in listOfSearchCategories
                         } else list
-                // search list now filtered with selected categories
-                Log.d("observer_ex", "sorting by $topOrAll ")
-                val sortedList = when(topOrAll) {
-                    // TODO add average cal or map  sum and count...
+                val sortedList = when (topOrAll) {
                     true -> {
-                        listFromSearch.filter {it.numberOfRatings >= MIN_NUM_RATINGS_SHOW_IDEA_ON_TOP_RANKED }.sortedWith(
-                            compareByDescending { it.avgRating })
+                        listFromSearch.filter { it.numberOfRatings >= MIN_NUM_RATINGS_SHOW_IDEA_ON_TOP_RANKED }
+                            .sortedWith(
+                                compareByDescending { it.avgRating })
                     }
                     false -> {
-                        listFromSearch.sortedWith(compareByDescending { it.created })
+                        listFromSearch.sortedWith(compareByDescending { it.lastUpdated })
                     }
-
                 }
-                adapter.updateList(sortedList)
-
+                if (sortedList.isNotEmpty()) adapter.updateList(sortedList) else {
+                    if (topOrAll) view?.showNoTopRankedIdeasYet() else view?.showNoIdeasYet()
+                }
             }, { t ->
-                val responseMessage = t.message
-                if (responseMessage != null) {
-                    if (responseMessage.contains(
-                            "HTTP 401",
-                            ignoreCase = true
-                        )
-                    ) {
-                        Log.d("observer_ex", "401 Authorization not valid")
-                        view?.showToast("You are not autorized to search")
-                    } else view?.showToast(R.string.network_issue_check_network)
-                }
-                Log.e("observer_ex", "exception getting searched ideas: $t")
+                view?.handleErrorResponse(t.message)
+                Log.e("observer_ex", "exception getting all ideas: $t")
 
             }).addTo(compositeDisposable)
     }
 
-
     private fun getlistOfSearchCategories(checkedItems: BooleanArray): List<String> {
         val listOfSearchCategories = emptyList<String>().toMutableList()
-        for (i in 0..checkedItems.size - 1) if (checkedItems[i]) listOfSearchCategories += categoryList[i].id
+        for (i in checkedItems.indices)
+            if (checkedItems[i]) listOfSearchCategories += categoryList[i]
         return listOfSearchCategories
     }
 
-    fun setRating(id: String, oldCheckedItem: Int, newCheckedItem: Int) {
-        Log.d("observer_ex", "rating $newCheckedItem, before was $oldCheckedItem")
+    fun setRating(id: String, oldCheckedItem: Int, newCheckedItem: Int, position: Int) {
         // careful add +1 to rating checked item, they go 0..4
         if (oldCheckedItem != newCheckedItem) {
+            var updatedIdea: Idea
             val postIdeaRating = PostIdeaRating(
                 newCheckedItem + 1
             )
@@ -279,15 +428,27 @@ class ListViewModel(
                 }
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
-                    Log.d(
-                        "observer_ex",
-                        "rating has been added/updated replaced"
-                    )
+                    //refresh rv position
+                    getUpdatedIdeaAndUpdateRVItemAtPosition(id, position)
                 }, { t ->
                     Log.e("observer_ex", "exception adding/updating rating user: $t")
                 }).addTo(compositeDisposable)
         }
+    }
 
+    private fun getUpdatedIdeaAndUpdateRVItemAtPosition(id: String, position: Int) {
+        ideaApi.getIdeaById(id)
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({ idea ->
+                if (topOrAll) {
+                    adapter.updateRating(position, idea)
+                    //check if ranking
+                    getIdeasSetBadges()
+                } else adapter.updateRating(position, idea)
+            }, { t ->
+                // handle error
+                view?.handleErrorResponse(t.message)
+            }).addTo(compositeDisposable)
     }
 
     fun addIdeaClicked() {

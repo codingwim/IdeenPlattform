@@ -28,7 +28,7 @@ class NewEditIdeaViewModel(
     private val editIdeaId: String,
     private val ideaApi: IdeaApi,
     private val prefs: Preferences,
-    private val contentresolver: ContentResolver
+    private val contentResolver: ContentResolver
 ) : BaseObservable() {
 
     private var view: NewEditIdeaView? = null
@@ -46,11 +46,12 @@ class NewEditIdeaViewModel(
     fun init() {
         // optionally: add progress indicator loading categories / prefill and wait (completable?) disable update button till loaded
         getAndSetCategoryItems()
-        // set edittexts with hint or prefill depending on editIdea (id) or editIdea("") (default)
+        // set edittexts with hint or prefill depending on NEW editIdea("") or EDIT editIdea(id)
         if (editIdeaId.isNotEmpty()) {
             getIdeaAndPrefill()
-        }
+        } else if (prefs.hasSavedIdeaDraft()) getPrefillDraft()
     }
+
 
     private fun getAndSetCategoryItems() {
         ideaApi.getAllCategories()
@@ -83,6 +84,20 @@ class NewEditIdeaViewModel(
             }).addTo(compositeDisposable)
     }
 
+    private fun getPrefillDraft() {
+        ideaImageUrl = prefs.getImageDraft()
+        ideaImageUri = ideaImageUrl.toUri()
+        ideaName = prefs.getIdeaNameDraft()
+        ideaDescription = prefs.getIdeaDescriptionDraft()
+        ideaCategory = prefs.getIdeaCategoryDraft()
+        view?.setIdeaImage(ideaImageUrl)
+        view?.setSelectedCategory(ideaCategory)
+        uploadImageButtonText.set(R.string.change_image_idea_edit)
+        notifyPropertyChanged(BR.ideaName)
+        notifyPropertyChanged(BR.ideaCategory)
+        notifyPropertyChanged(BR.ideaDescription)
+    }
+
     private fun getIdeaAndPrefill() {
         saveButtonText.set(R.string.save_idea_edit)
         uploadImageButtonText.set(R.string.change_image_idea_edit)
@@ -92,14 +107,15 @@ class NewEditIdeaViewModel(
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({ idea ->
                 // now set all the bindable details, including image
-                //initialIamgeUrl will stay the same, even if a new image was loaded
+                //initialImageUrl will stay the same, even if a new image was loaded
                 initialImageUrl = idea.imageUrl
                 //ideaImageUrl will change if we choose a new image
                 ideaImageUrl = initialImageUrl
                 view?.setIdeaImage(ideaImageUrl)
                 ideaName = idea.title
                 // locale check to get correct language category
-                ideaCategory = if (prefs.isLangEn()) idea.category.name_en else idea.category.name_de
+                ideaCategory =
+                    if (prefs.isLangEn()) idea.category.name_en else idea.category.name_de
                 view?.setSelectedCategory(ideaCategory)
                 /*view?.setSelectedCategory(ideaCategory)*/
                 ideaDescription = idea.description
@@ -161,9 +177,14 @@ class NewEditIdeaViewModel(
         else if (ideaImageUrl.isEmpty()) view?.showToast(R.string.error_empty_image)
         else fieldsNotEmpty = true
 
+        Log.d("observer_ex", "imageurl: $ideaImageUrl ")
+
         if (fieldsNotEmpty) {
             // locale check to retrieve position of selected category
-            val categoryId = categoryListIds[if (prefs.isLangEn()) categoryListEN.indexOf(ideaCategory) else categoryListDE.indexOf(ideaCategory) ]
+            val categoryId =
+                categoryListIds[if (prefs.isLangEn()) categoryListEN.indexOf(ideaCategory) else categoryListDE.indexOf(
+                    ideaCategory
+                )]
             val createIdea = CreateIdea(
                 ideaName,
                 categoryId,
@@ -174,7 +195,7 @@ class NewEditIdeaViewModel(
 
             // build the multi form to send the api call
             val imagePart =
-                InputStreamRequestBody("image/*".toMediaType(), contentresolver, ideaImageUri)
+                InputStreamRequestBody("image/*".toMediaType(), contentResolver, ideaImageUri)
 
             // UPDATE OR NEW ?
             if (editIdeaId.isNotEmpty()) {
@@ -199,6 +220,7 @@ class NewEditIdeaViewModel(
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe({ idea ->
                         view?.infoDialog(idea.id)
+                       prefs.clearIdeaDraft()
                     }, { t ->
                         val responseMessage = t.message
                         if (responseMessage != null) {
@@ -218,19 +240,17 @@ class NewEditIdeaViewModel(
     }
 
     private fun updateIdea(createIdea: CreateIdea, imagePart: InputStreamRequestBody) {
-
         val updateImage = !ideaImageUrl.equals(initialImageUrl, false)
         ideaApi.updateIdea(editIdeaId, createIdea)
             .onErrorComplete {
                 it is HttpException
             }
-            .andThen (
+            .andThen(
                 updateImage(imagePart, updateImage)
             )
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
                 view?.showToast(R.string.idea_updated_successflly)
-                Log.d("observer_ex", "Idea updated")
                 view?.navigateBack()
             }, { t ->
                 val responseMessage = t.message
@@ -256,7 +276,8 @@ class NewEditIdeaViewModel(
                     ) {
                         view?.showToast(R.string.idea_released_mot_editable_error)
                         Log.d(
-                            "observer_ex", "Not the author of the idea, or idea already released.: $t"
+                            "observer_ex",
+                            "Not the author of the idea, or idea already released.: $t"
                         )
                     } else if (responseMessage.contains(
                             "HTTP 404",
@@ -272,10 +293,10 @@ class NewEditIdeaViewModel(
     }
 
     private fun updateImage(imagePart: InputStreamRequestBody, updateImage: Boolean): Completable {
-        if (updateImage) {
+        return if (updateImage) {
             val requestBodyForUpdatedImage = getRequestBodyForUpdatedImage(imagePart)
-            return ideaApi.updateImageIdea(editIdeaId, requestBodyForUpdatedImage)
-        } else return Completable.complete()
+            ideaApi.updateImageIdea(editIdeaId, requestBodyForUpdatedImage)
+        } else Completable.complete()
     }
 
 
@@ -284,11 +305,11 @@ class NewEditIdeaViewModel(
     }
 
     fun onIdeaNameTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-        if (count < 2) view?.resetEmptyIdeaName()
+        if ((count > 0) && (before==0)) view?.resetEmptyIdeaName()
     }
 
     fun onDescriptionTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-        if (count < 2) view?.resetEmptyDescription()
+        if ((count > 0) && (before==0)) view?.resetEmptyDescription()
     }
 
     fun setSelectedImage(uri: Uri) {
@@ -298,7 +319,7 @@ class NewEditIdeaViewModel(
         uploadImageButtonText.set(R.string.change_image_idea_edit)
     }
 
-    fun getRequestBodyForUpdatedImage(imagePart: InputStreamRequestBody) =
+    private fun getRequestBodyForUpdatedImage(imagePart: InputStreamRequestBody) =
         MultipartBody.Builder()
             .setType(MultipartBody.FORM)
             .addFormDataPart(
@@ -307,4 +328,33 @@ class NewEditIdeaViewModel(
                 imagePart
             )
             .build()
+
+    fun onBackPressed() {
+        //Log.d("observer_ex", "on back pressed")
+        if ((editIdeaId.isEmpty()) &&
+            (ideaCategory.isNotEmpty() or
+                    ideaDescription.isNotEmpty() or
+                    ideaImageUrl.isNotEmpty() or
+                    ideaCategory.isNotEmpty() or
+                    ideaName.isNotEmpty()
+                    )
+        ) view?.cancelDialog() else view?.navigateBack()
+    }
+
+    fun onCancelWithoutDraft() {
+        prefs.clearIdeaDraft()
+        view?.showToast("Adding idea cancelled without saving")
+        view?.navigateBack()
+    }
+
+    fun onCancelWithDraft() {
+        prefs.setImageDraft(ideaImageUrl)
+        prefs.setIdeaNameDraft(ideaName)
+        prefs.setIdeaCategoryDraft(ideaCategory)
+        prefs.setIdeaDescriptionDraft(ideaDescription)
+        prefs.setIdeaDraftSaved(true)
+        view?.showToast("The entered idea has been saved, but not posted")
+        view?.navigateBack()
+    }
+
 }

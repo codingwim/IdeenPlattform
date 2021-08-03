@@ -5,10 +5,12 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
+import androidx.activity.addCallback
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.databinding.DataBindingUtil
@@ -20,6 +22,7 @@ import com.codingschool.ideabase.R
 import com.codingschool.ideabase.databinding.FragmentNewEditIdeaBinding
 import com.codingschool.ideabase.utils.ImageHandler
 import com.codingschool.ideabase.utils.getResString
+import com.codingschool.ideabase.utils.hideKeyboard
 import com.codingschool.ideabase.utils.toast
 import com.github.drjacky.imagepicker.ImagePicker
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -28,7 +31,7 @@ import org.koin.core.parameter.parametersOf
 
 class NewEditIdeaFragment: Fragment(), NewEditIdeaView {
 
-    private val viewModel: NewEditIdeaViewModel by inject<NewEditIdeaViewModel> {
+    private val viewModel: NewEditIdeaViewModel by inject {
         parametersOf(arguments?.let { NewEditIdeaFragmentArgs.fromBundle(it).editIdea })
     }
 
@@ -45,6 +48,17 @@ class NewEditIdeaFragment: Fragment(), NewEditIdeaView {
                 viewModel.setSelectedImage(uri)
             }
         }
+
+        // we need menu to catch back arrow in action bar
+        setHasOptionsMenu(true)
+
+        // below catches android back button
+        requireActivity()
+            .onBackPressedDispatcher
+            .addCallback(this) {
+                viewModel.onBackPressed()
+            }
+
     }
 
     override fun onCreateView(
@@ -68,6 +82,8 @@ class NewEditIdeaFragment: Fragment(), NewEditIdeaView {
         binding.vm = viewModel
         viewModel.attachView(this)
         viewModel.init()
+
+
     }
 
 /*    override fun getStringResource(res: Int) {
@@ -75,7 +91,7 @@ class NewEditIdeaFragment: Fragment(), NewEditIdeaView {
     }*/
 
     override fun setActionBarTitle(title: String) {
-        (activity as MainActivity).getSupportActionBar()?.title = title
+        (activity as MainActivity).supportActionBar?.title = title
     }
 
     override fun setCategoryListItems(items: List<String>) {
@@ -130,8 +146,26 @@ class NewEditIdeaFragment: Fragment(), NewEditIdeaView {
         )
             .setTitle(getString(R.string.idea_add_dialog_title))
             .setMessage(getString(R.string.idea_add_dialog_message))
-            .setPositiveButton("UNDERSTOOD") { dialog, _ ->
+            .setPositiveButton(getString(R.string.understood_button)) { dialog, _ ->
                 navigateToDetailFragment(id)
+                dialog.dismiss()
+            }
+            .show()
+    }
+
+    override fun cancelDialog() {
+        view?.let { requireActivity().hideKeyboard(it) }
+        MaterialAlertDialogBuilder(
+            requireActivity()
+        )
+            .setTitle(getString(R.string.save_idea_draft_title))
+            .setMessage(getString(R.string.save_idea_draft_message))
+            .setNegativeButton(getString(R.string.save_idea_draft_cancel)) { dialog, _ ->
+                viewModel.onCancelWithoutDraft()
+                dialog.dismiss()
+            }
+            .setPositiveButton(getString(R.string.save_idea_draft_save)) { dialog, _ ->
+                viewModel.onCancelWithDraft()
                 dialog.dismiss()
             }
             .show()
@@ -157,4 +191,14 @@ class NewEditIdeaFragment: Fragment(), NewEditIdeaView {
         super.onDestroy()
         viewModel.compositeDisposable.clear()
     }
+
+    override fun onOptionsItemSelected(menuItem : MenuItem) : Boolean {
+        if (menuItem.itemId == android.R.id.home) {
+            requireActivity().onBackPressed()
+            return true // must return true to consume it here
+        }
+        return super.onOptionsItemSelected(menuItem)
+    }
+
+
 }
