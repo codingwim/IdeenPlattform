@@ -20,7 +20,7 @@ class IdeaListAdapter(private val imageHandler: ImageHandler) :
     private var topOrAll: Boolean = true
     private lateinit var ideaClickListener: (String) -> Unit
     private lateinit var commentClickListener: (String) -> Unit
-    private lateinit var rateClickListener: (String, Int) -> Unit
+    lateinit var rateClickListener: (String, Int) -> Unit
     private lateinit var profileClickListener: (String) -> Unit
 
     class IdeaViewHolder(
@@ -61,8 +61,8 @@ class IdeaListAdapter(private val imageHandler: ImageHandler) :
                     }
                 }
             } else {
-                binding.tvStatus.text = getStatusText(idea)
                 if (idea.status != null) {
+                    binding.tvStatus.text = getStatusText(idea)
                     val black = ContextCompat.getColor(this.itemView.context, R.color.black)
                     if (idea.status != Status.NONE) {
                         binding.cvTop.strokeColor = black
@@ -107,6 +107,7 @@ class IdeaListAdapter(private val imageHandler: ImageHandler) :
                 else -> ""
             }
         }
+        
     }
 
     fun setTopOrAll(topOrAll: Boolean) {

@@ -1,7 +1,5 @@
 package com.codingschool.ideabase.ui.profile
 
-import com.codingschool.ideabase.ui.neweditidea.NewEditIdeaViewModel
-
 interface ProfileView {
     fun showToast(any: Any)
     fun setProfilePicture(url: String?)
@@ -11,5 +9,4 @@ interface ProfileView {
     fun hideMenu()
     fun showMenu()
     fun handleErrorResponse(errorMessage: String?)
-    //fun navigateOffline(online: Boolean)
 }

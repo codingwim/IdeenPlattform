@@ -5,38 +5,40 @@ import android.util.Log
 import com.codingschool.ideabase.R
 
 fun Context.errorHandler(errorMessage: String?): Boolean {
-    var errorHandled = false
-    errorMessage?.let {
-        if (errorMessage.contains(
-                "HTTP 400",
-                ignoreCase = true
-            )
-        ) {
-            this.toast(R.string.parameter_missing_message)
-            errorHandled = true
+    var errorHandled = true
+
+    if (errorMessage != null) {
+        val toastMessage = with(errorMessage) {
+            when {
+                contains(
+                    "HTTP 400",
+                    ignoreCase = true
+                ) -> R.string.parameter_missing_message
+                contains(
+                    "HTTP 401",
+                    ignoreCase = true
+                ) -> R.string.not_authorized
+                contains(
+                    "HTTP 403",
+                    ignoreCase = true
+                ) -> R.string.idea_released_mot_editable_error
+                contains(
+                    "HTTP 404",
+                    ignoreCase = true
+                ) -> R.string.idea_not_found_message
+                contains(
+                    "HTTP 409",
+                    ignoreCase = true
+                ) -> R.string.email_already_inuse_input_error
+                contains(
+                    "2 exceptions occurred",
+                    ignoreCase = true
+                ) -> R.string.idea_released_mot_editable_error
+                else -> "An unexpected error occurred."
+            }
         }
-        else if (errorMessage.contains(
-                "HTTP 401",
-                ignoreCase = true
-            )
-        ) {
-            this.toast(R.string.not_authorized)
-            errorHandled = true
-        } else if (errorMessage.contains(
-                "HTTP 403",
-                ignoreCase = true
-            )
-        ) {
-            this.toast((R.string.idea_released_mot_editable_error))
-            errorHandled = true
-        } else if (errorMessage.contains(
-                "HTTP 404",
-                ignoreCase = true
-            )
-        ) {
-            toast(R.string.idea_not_found_message)
-            errorHandled = true
-        }
-    }
+        toast(toastMessage)
+    } else errorHandled = false
     return errorHandled
 }
+

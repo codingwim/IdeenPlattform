@@ -36,7 +36,6 @@ val appModule = module {
     single<Preferences> {
         Preferences(androidContext())
     }
-
     single<AppDataBase> {
         (
                 Room
@@ -63,19 +62,6 @@ val appModule = module {
                         .build()
                 )
             }
-            /*.addNetworkInterceptor { chain ->
-                val cacheControl = CacheControl.Builder()
-                    .maxAge(100, java.util.concurrent.TimeUnit.DAYS)
-                    .build()
-                chain.proceed(
-                    chain.request().newBuilder()
-                        .header(
-                            "Cache-Control",
-                            cacheControl.toString()
-                        )
-                        .build()
-                )
-            }*/
             .addInterceptor(
                 GanderInterceptor(androidApplication())
                     .showNotification(true)

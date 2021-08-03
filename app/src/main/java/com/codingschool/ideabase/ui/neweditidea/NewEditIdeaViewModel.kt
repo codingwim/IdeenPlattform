@@ -70,7 +70,7 @@ class NewEditIdeaViewModel(
                 view?.setCategoryListItems(if (prefs.isLangEn()) categoryListEN else categoryListDE)
             }, { t ->
                 view?.handleErrorResponse(t.message)
-                Log.e("observer_ex", "exception getting categories: $t")
+                Log.e("IdeaBase_log", "exception getting categories: $t")
             }).addTo(compositeDisposable)
     }
 
@@ -114,7 +114,7 @@ class NewEditIdeaViewModel(
 
             }, { t ->
                 view?.handleErrorResponse(t.message)
-                Log.e("observer_ex", "exception getting idea: $t")
+                Log.e("IdeaBase_log", "exception getting idea: $t")
             }).addTo(compositeDisposable)
 
     }
@@ -189,10 +189,10 @@ class NewEditIdeaViewModel(
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe({ idea ->
                         view?.infoDialog(idea.id)
-                       prefs.clearIdeaDraft()
+                        prefs.clearIdeaDraft()
                     }, { t ->
                         view?.handleErrorResponse(t.message)
-                        Log.e("observer_ex", "exception adding idea: $t")
+                        Log.e("IdeaBase_log", "exception adding idea: $t")
                     }).addTo(compositeDisposable)
             }
         }
@@ -201,8 +201,8 @@ class NewEditIdeaViewModel(
     private fun updateIdea(createIdea: CreateIdea, imagePart: InputStreamRequestBody) {
         val updateImage = !ideaImageUrl.equals(initialImageUrl, false)
         ideaApi.updateIdea(editIdeaId, createIdea)
-            .onErrorComplete {
-                it is HttpException
+            .doOnError { t ->
+                view?.handleErrorResponse(t.message)
             }
             .andThen(
                 updateImage(imagePart, updateImage)
@@ -213,7 +213,8 @@ class NewEditIdeaViewModel(
                 view?.navigateBack()
             }, { t ->
                 view?.handleErrorResponse(t.message)
-                Log.e("observer_ex", "exception updating idea: $t")
+                Log.e("IdeaBase_log", "exception updating idea: $t")
+                view?.navigateBack()
             }).addTo(compositeDisposable)
     }
 
@@ -229,11 +230,11 @@ class NewEditIdeaViewModel(
     }
 
     fun onIdeaNameTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-        if ((count > 0) && (before==0)) view?.resetEmptyIdeaName()
+        if ((count > 0) && (before == 0)) view?.resetEmptyIdeaName()
     }
 
     fun onDescriptionTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-        if ((count > 0) && (before==0)) view?.resetEmptyDescription()
+        if ((count > 0) && (before == 0)) view?.resetEmptyDescription()
     }
 
     fun setSelectedImage(uri: Uri) {

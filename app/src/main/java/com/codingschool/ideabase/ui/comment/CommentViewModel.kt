@@ -49,7 +49,7 @@ class CommentViewModel (
                     view?.navigateBack()
                 }, { t ->
                     view?.handleErrorResponse(t.message)
-                    Log.e("observer_ex", "exception adding comment: $t")
+                    Log.e("IdeaBase_log", "exception adding comment: $t")
                 }).addTo(compositeDisposable)
 
         }

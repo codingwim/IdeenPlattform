@@ -3,7 +3,9 @@ package com.codingschool.ideabase.ui.profile
 import android.util.Log
 import androidx.databinding.BaseObservable
 import androidx.databinding.Bindable
+import androidx.databinding.ObservableInt
 import androidx.databinding.library.baseAdapters.BR
+import com.codingschool.ideabase.R
 import com.codingschool.ideabase.model.remote.IdeaApi
 import com.codingschool.ideabase.utils.Preferences
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -27,8 +29,6 @@ class ProfileViewModel(
     fun init() {
         getUserProfileAndShow()
     }
-    
-    private var profilePictureUrl: String = ""
 
     @get:Bindable
     var email: String =""
@@ -43,7 +43,7 @@ class ProfileViewModel(
     var lastname: String = ""
 
     @get:Bindable
-    var role: String = ""
+    var role = ObservableInt(R.string.user_not_idea_manager)
 
    private fun getUserProfileAndShow() {
         val getId = if (isMyProfile()) prefs.getMyId() else id
@@ -55,26 +55,19 @@ class ProfileViewModel(
                 email = if (isMyProfile()) user.email else ""
                 firstname = user.firstname
                 lastname = user.lastname
-                role = if (user.isManager) "Idea manager" else "User"
-
+                if (user.isManager)  role.set(R.string.idea_manager)
                 notifyPropertyChanged(BR.email)
                 notifyPropertyChanged(BR.name)
-
                 notifyPropertyChanged(BR.firstname)
                 notifyPropertyChanged(BR.lastname)
-                notifyPropertyChanged(BR.role)
 
                 if (isMyProfile()) view?.showMenu()
-
-
             }, { t ->
                 view?.handleErrorResponse(t.message)
-                Log.e("observer_ex", "exception getting user profile $t")
+                Log.e("IdeaBase_log", "exception getting user profile $t")
 
             }).addTo(compositeDisposable)
-
     }
-
 
     fun editProfile() {
         view?.navigateToEditProfileFragment()

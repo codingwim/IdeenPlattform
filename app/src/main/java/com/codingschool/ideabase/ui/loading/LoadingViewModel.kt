@@ -101,7 +101,7 @@ class LoadingViewModel(
                         }
                     }
                 }
-                Log.e("observer_ex", "exception checking user credentials: $t")
+                Log.e("IdeaBase_log", "exception checking user credentials: $t")
             }).addTo(compositeDisposable)
     }
 

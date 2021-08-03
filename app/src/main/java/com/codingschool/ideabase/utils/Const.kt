@@ -2,8 +2,6 @@ package com.codingschool.ideabase.utils
 
 const val baseUrl = "https://ideenmanagement.tailored-apps.com/api/"
 
-/*enum class Trend(val text: String) { NONE(""), UP("Up"), DOWN("Down") }
-enum class Status(val text: String) { NONE(""), RELEASED("Released"), UPDATED("Updated"), NEW("new")}*/
 enum class Trend { NONE, UP, DOWN }
 enum class Status { NONE, RELEASED, UPDATED, NEW}
 

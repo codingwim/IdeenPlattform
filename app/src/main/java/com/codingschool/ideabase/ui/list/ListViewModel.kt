@@ -62,7 +62,7 @@ class ListViewModel(
             /*override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
                 super.onItemRangeInserted(positionStart, itemCount)
                 Log.d(
-                    "observer_ex",
+                    "IdeaBase_log",
                     "onItemRangeInserted with positionStart: $positionStart and itemCount: $itemCount"
                 )
               *//*  if (positionStart>0) view?.moveToPositionInRecyclerview(positionStart)*//*
@@ -71,7 +71,7 @@ class ListViewModel(
             override fun onItemRangeChanged(positionStart: Int, itemCount: Int) {
                 super.onItemRangeChanged(positionStart, itemCount)
                 Log.d(
-                    "observer_ex",
+                    "IdeaBase_log",
                     "onItemRangeChanged with positionStart: $positionStart and itemCount: $itemCount"
                 )
                 view?.moveToPositionInRecyclerview(positionStart)
@@ -79,7 +79,7 @@ class ListViewModel(
 
             override fun onItemRangeMoved(fromPosition: Int, toPosition: Int, itemCount: Int) {
                 Log.d(
-                    "observer_ex",
+                    "IdeaBase_log",
                     "onItemRangeMoved with fromPosition: $fromPosition toPosition: $toPosition  and itemCount: $itemCount"
                 )
                 super.onItemRangeMoved(fromPosition, toPosition, itemCount)
@@ -115,7 +115,7 @@ class ListViewModel(
                     prefs.setAppNotJustStarted()
                 }, { t ->
                     view?.handleErrorResponse(t.message)
-                    Log.e("observer_ex", "exception getting ideas: $t")
+                    Log.e("IdeaBase_log", "exception getting ideas: $t")
 
                 }).addTo(compositeDisposable)
 
@@ -152,7 +152,7 @@ class ListViewModel(
                     prefs.setAppNotJustStarted()
                 }, { t ->
                     view?.handleErrorResponse(t.message)
-                    Log.e("observer_ex", "exception getting ideas to adapter: $t")
+                    Log.e("IdeaBase_log", "exception getting ideas to adapter: $t")
 
                 }).addTo(compositeDisposable)
         }
@@ -212,11 +212,11 @@ class ListViewModel(
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
-                //Log.d("observer_ex", "checking for updates now")
+                //Log.d("IdeaBase_log", "checking for updates now")
                 getIdeasSetBadges()
             },
                 { t ->
-                    Log.e("observer_ex", "exception with periodic update: $t")
+                    Log.e("IdeaBase_log", "exception with periodic update: $t")
                 }).addTo(compositeDisposable)
 
     }
@@ -257,12 +257,13 @@ class ListViewModel(
                 } else view?.hideTopBadge()
             }, { t ->
                 view?.handleErrorResponse(t.message)
-                Log.e("observer_ex", "exception getting ideas to adapter: $t")
+                Log.e("IdeaBase_log", "exception getting ideas to adapter: $t")
 
             }).addTo(compositeDisposable)
     }
 
     private fun getMyRatingForThisIdeaAndStartDialog(id: String, position: Int) {
+        Log.d("IdeaBase_log", "getmyratingprep, id: $id & position: $position ")
         var ratingGiven: Int?
         ideaApi.getIdeaById(id)
             .observeOn(AndroidSchedulers.mainThread())
@@ -276,7 +277,7 @@ class ListViewModel(
                 view?.showPopupRatingDialog(id, ratingItem - 1, position)
             }, { t ->
                 view?.handleErrorResponse(t.message)
-                Log.e("observer_ex", "exception getting idea: $t")
+                Log.e("IdeaBase_log", "exception getting idea: $t")
             }).addTo(compositeDisposable)
     }
 
@@ -299,7 +300,7 @@ class ListViewModel(
                 }
             }, { t ->
                 view?.handleErrorResponse(t.message)
-                Log.e("observer_ex", "exception getting categories: $t")
+                Log.e("IdeaBase_log", "exception getting categories: $t")
             }).addTo(compositeDisposable)
     }
 
@@ -337,7 +338,7 @@ class ListViewModel(
         // Build the category search List for the filtering
         listOfSearchCategories = getListOfSearchCategories(checkedItems)
         searchString = searchTextFromDialog
-        //Log.d("observer_ex", "selectedItems: $searchCategoryString ")
+        //Log.d("IdeaBase_log", "selectedItems: $searchCategoryString ")
         getIdeasToAdapter(
             listOfSearchCategories,
             searchString
@@ -377,7 +378,7 @@ class ListViewModel(
                 if (sortedList.isNotEmpty()) adapter.updateList(sortedList) else view?.showNoResultsFound()
             }, { t ->
                 view?.handleErrorResponse(t.message)
-                Log.e("observer_ex", "exception getting searched ideas: $t")
+                Log.e("IdeaBase_log", "exception getting searched ideas: $t")
             }).addTo(compositeDisposable)
     }
 
@@ -405,7 +406,7 @@ class ListViewModel(
                 }
             }, { t ->
                 view?.handleErrorResponse(t.message)
-                Log.e("observer_ex", "exception getting all ideas: $t")
+                Log.e("IdeaBase_log", "exception getting all ideas: $t")
 
             }).addTo(compositeDisposable)
     }
@@ -431,7 +432,7 @@ class ListViewModel(
                     //refresh rv position
                     getUpdatedIdeaAndUpdateRVItemAtPosition(id, position)
                 }, { t ->
-                    Log.e("observer_ex", "exception adding/updating rating user: $t")
+                    Log.e("IdeaBase_log", "exception adding/updating rating user: $t")
                 }).addTo(compositeDisposable)
         }
     }
@@ -442,9 +443,13 @@ class ListViewModel(
             .subscribe({ idea ->
                 if (topOrAll) {
                     adapter.updateRating(position, idea)
+                    Log.d("IdeaBase_log", "update rating done: $id & position: $position ")
                     //check if ranking
                     getIdeasSetBadges()
-                } else adapter.updateRating(position, idea)
+                } else {
+                    adapter.updateRating(position, idea)
+                    Log.d("IdeaBase_log", "update rating done: $id & position: $position ")
+                }
             }, { t ->
                 // handle error
                 view?.handleErrorResponse(t.message)

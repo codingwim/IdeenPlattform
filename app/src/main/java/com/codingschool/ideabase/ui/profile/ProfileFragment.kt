@@ -8,17 +8,15 @@ import androidx.navigation.NavDirections
 import androidx.navigation.Navigation
 import com.codingschool.ideabase.R
 import com.codingschool.ideabase.databinding.FragmentProfileBinding
-import com.codingschool.ideabase.ui.detail.DetailFragmentArgs
-import com.codingschool.ideabase.ui.register.RegisterFragmentDirections
 import com.codingschool.ideabase.utils.ImageHandler
 import com.codingschool.ideabase.utils.errorHandler
 import com.codingschool.ideabase.utils.toast
 import org.koin.android.ext.android.inject
 import org.koin.core.parameter.parametersOf
 
- class ProfileFragment : Fragment(), ProfileView {
+class ProfileFragment : Fragment(), ProfileView {
 
-    private val viewModel: ProfileViewModel by inject<ProfileViewModel> {
+    private val viewModel: ProfileViewModel by inject {
         parametersOf(arguments?.let { ProfileFragmentArgs.fromBundle(it).id })
     }
     private lateinit var binding: FragmentProfileBinding
@@ -35,20 +33,20 @@ import org.koin.core.parameter.parametersOf
             container,
             false
         )
-
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         binding.vm = viewModel
         viewModel.attachView(this)
         viewModel.init()
     }
+
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.menu_profile, menu)
     }
+
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.editProfile -> {
@@ -73,7 +71,6 @@ import org.koin.core.parameter.parametersOf
          imageHandler.getProfilePic(url, binding.ivProfilePicture)
      }
 
-
      override fun handleErrorResponse(errorMessage: String?) {
          if (!requireActivity().errorHandler(errorMessage))  {
              showNoInternet()
@@ -81,8 +78,7 @@ import org.koin.core.parameter.parametersOf
          }
      }
 
-
-     fun showNoInternet() {
+     private fun showNoInternet() {
          binding.ivProfilePicture.visibility = View.INVISIBLE
          binding.vwTitleAndMail.visibility = View.INVISIBLE
          binding.vwDetails.visibility = View.INVISIBLE

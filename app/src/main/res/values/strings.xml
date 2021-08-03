@@ -55,7 +55,7 @@
     <string name="hint_choose_category_new">Choose category</string>
     <string name="idea_updated_successflly">Idea updated successfully</string>
     <string name="not_authorized">You are not authorized</string>
-    <string name="idea_released_mot_editable_error">The idea has been released by an admin and can\'t be edited anymore.</string>
+    <string name="idea_released_mot_editable_error">The idea has been released by an idea manager and can\'t be edited or deleted</string>
     <string name="idea_not_found_message">The idea was not found, it might have been deleted…</string>
     <string name="parameter_missing_message">Parameter missing</string>
     <string name="idea_added">Idea successfully added</string>
@@ -144,5 +144,13 @@
     <string name="edit_idea_title">Edit idea</string>
     <string name="adding_cancelled_without_draft">Adding idea cancelled without saving</string>
     <string name="idea_saved">The entered idea has been saved, but not posted</string>
+    <string name="idea_manager">Idea manager</string>
+    <string name="user_not_idea_manager">User</string>
+    <string name="empty">""</string>
+    <string name="password_rule">Password must contain a minimum of 8 characters, including at least 1 number/1 letter and a special char</string>
+    <string name="enter_valid_email">Please enter a valid e-mail address</string>
+    <string name="please_choose_pwd">Please choose a password with minimum 8 characters, including at least 1 number, 1 letter and 1 special char</string>
+    <string name="registered_succes">You are registered! You can now login with your e-mail and password</string>
+
 
 </resources>

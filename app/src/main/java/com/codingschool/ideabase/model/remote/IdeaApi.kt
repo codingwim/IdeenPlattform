@@ -6,6 +6,7 @@ import io.reactivex.Single
 import okhttp3.RequestBody
 import org.w3c.dom.Comment
 import retrofit2.Response
+import retrofit2.adapter.rxjava2.Result
 import retrofit2.http.*
 
 interface IdeaApi {
@@ -71,14 +72,8 @@ interface IdeaApi {
     @GET("idea/{id}/comment")
     fun getIdeaComments(@Path ("id") id: String): Single<List<Comment>>
 
-    @DELETE("idea/{id}/comment/{commentId}")
-    fun deleteCommentByIdWithIdeaId(@Path ("id") id: String, @Path ("commentI") commentId: String): Completable
-
     @POST("idea/{id}/rating")
     fun rateIdea(@Path ("id") id: String, @Body postIdeaRating:  PostIdeaRating): Completable
-
-    @DELETE("idea/{id}/rating")
-    fun deleteOwnRatingForIdeaById(@Path ("id") id: String): Completable
 
     @POST("idea/{id}/image")
     fun updateImageIdea(@Path ("id") id: String, @Body multiPartImageBody:  RequestBody): Completable

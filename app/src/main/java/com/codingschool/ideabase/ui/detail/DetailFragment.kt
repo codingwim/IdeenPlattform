@@ -160,6 +160,7 @@ class DetailFragment: Fragment(), DetailView {
 
     override fun handleErrorResponse(errorMessage: String?) {
         if (!requireActivity().errorHandler(errorMessage)) showToast(R.string.network_issue_check_network)
+        navigateBack()
     }
 
     override fun navigateToCommentFragment(id: String) {

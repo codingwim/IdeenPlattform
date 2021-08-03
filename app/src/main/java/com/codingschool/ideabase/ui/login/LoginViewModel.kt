@@ -83,7 +83,7 @@ class LoginViewModel(
                         else -> view?.showToast(R.string.network_issue_check_network)
                     }
                 }
-                Log.e("observer_ex", "exception adding new user: $t")
+                Log.e("IdeaBase_log", "exception adding new user: $t")
             }).addTo(compositeDisposable)
     }
 

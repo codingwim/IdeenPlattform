@@ -70,7 +70,7 @@ class DetailViewModel(
                 adapter.updateList(idea.comments.sortedByDescending { it.created })
             }, { t ->
                 view?.handleErrorResponse(t.message)
-                Log.e("observer_ex", "exception getting idea: $t")
+                Log.e("IdeaBase_log", "exception getting idea: $t")
             }).addTo(compositeDisposable)
 
     }
@@ -94,7 +94,7 @@ class DetailViewModel(
                 view?.navigateBack()
             }, { t ->
                 view?.handleErrorResponse(t.message)
-                Log.e("observer_ex", "exception deleting idea: $t")
+                Log.e("IdeaBase_log", "exception deleting idea: $t")
             }).addTo(compositeDisposable)
     }
 
@@ -120,7 +120,7 @@ class DetailViewModel(
                 view?.hideMenu()
             }, { t ->
                 view?.handleErrorResponse(t.message)
-                Log.e("observer_ex", "exception releasing idea: $t")
+                Log.e("IdeaBase_log", "exception releasing idea: $t")
             }).addTo(compositeDisposable)
     }
 
@@ -138,7 +138,7 @@ class DetailViewModel(
                 view?.showPopupRatingDialog(id, ratingItem - 1)
             }, { t ->
                 view?.handleErrorResponse(t.message)
-                Log.e("observer_ex", "exception getting idea: $t")
+                Log.e("IdeaBase_log", "exception getting idea: $t")
             }).addTo(compositeDisposable)
     }
 
@@ -191,7 +191,7 @@ class DetailViewModel(
                 .subscribe({
                     setRatingImage(newRating.toDouble())
                 }, { t ->
-                    Log.e("observer_ex", "exception adding/updating rating user: $t")
+                    Log.e("IdeaBase_log", "exception adding/updating rating user: $t")
                 }).addTo(compositeDisposable)
         }
     }

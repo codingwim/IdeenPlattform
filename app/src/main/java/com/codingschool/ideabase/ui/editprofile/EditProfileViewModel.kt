@@ -81,15 +81,15 @@ class EditProfileViewModel(
             InputStreamRequestBody("image/*".toMediaType(), contentResolver, profileImageUri)
         val requestBodyForUpdatedImage = getRequestBodyForUpdatedImage(imagePart)
         ideaApi.updateMyProfilePicture(requestBodyForUpdatedImage)
-            .onErrorComplete {
-                it is HttpException
+            .doOnError {
+
             }
             .andThen {
                 initialProfileImageUrl = profileImageUrl
             }
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
-                Log.d("observer_ex", "Profile image updated")
+                Log.d("IdeaBase_log", "Profile image updated")
                 //view?.navigateBack()
             }, { t ->
                 val responseMessage = t.message
@@ -100,17 +100,17 @@ class EditProfileViewModel(
                         )
                     ) {
                         view?.showToast(R.string.parameter_missing_message)
-                        Log.d("observer_ex", "Parameter missing: $t")
+                        Log.d("IdeaBase_log", "Parameter missing: $t")
                     } else if (responseMessage.contains(
                             "HTTP 401",
                             ignoreCase = true
                         )
                     ) {
                         view?.showToast(R.string.not_authorized)
-                        Log.d("observer_ex", "Not authorized: $t")
+                        Log.d("IdeaBase_log", "Not authorized: $t")
                     } else view?.showToast(R.string.network_issue_check_network)
                 }
-                Log.e("observer_ex", "exception updating idea: $t")
+                Log.e("IdeaBase_log", "exception updating idea: $t")
             }).addTo(compositeDisposable)
 
 
@@ -124,7 +124,7 @@ class EditProfileViewModel(
         when {
             firstname.isEmpty() -> view?.setInputFirstnameError(R.string.enter_first_name_error)
             lastname.isEmpty() -> view?.setInputLastnameError(R.string.error_enter_last_name)
-            password.isEmpty() -> view?.setInputPasswordError(R.string.pwd_min_error)
+            password.isEmpty() -> view?.setInputPasswordError(R.string.please_choose_pwd)
             password2.isEmpty() -> view?.setInputPasswordRepeatError(R.string.pwd_same_error)
             else -> fieldsNotEmpty = true
         }
@@ -144,7 +144,7 @@ class EditProfileViewModel(
                     notifyPropertyChanged(BR.password)
                     notifyPropertyChanged(BR.password2)
                     view?.setFocusPasswordInput()
-                    view?.setInputPasswordError("Password must contain a minimum of 8 characters, including at least 1 number/1 letter and a special char")
+                    view?.setInputPasswordError(R.string.password_rule)
                 } else {
                     validCredentialsToRegister = true
                 }
@@ -161,7 +161,7 @@ class EditProfileViewModel(
             ideaApi.updateUser(updatedUser)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
-                    Log.d("observer_ex", "user updated over API")
+                    Log.d("IdeaBase_log", "user updated over API")
                     view?.showToast(R.string.please_login_again)
                     view?.navigateToLoginRegistered(email)
                 }, { t ->
@@ -179,7 +179,7 @@ class EditProfileViewModel(
                         ) view?.showToast(R.string.parameter_missing_message)
                         else view?.showToast(R.string.network_issue_check_network)
                     }
-                    Log.e("observer_ex", "exception updating user: $t")
+                    Log.e("IdeaBase_log", "exception updating user: $t")
                 }).addTo(compositeDisposable)
         }
 
@@ -219,7 +219,7 @@ class EditProfileViewModel(
                     ) view?.showToast("You are not authorized to log in")
                     else view?.showToast(R.string.network_issue_check_network)
                 }*/
-                Log.e("observer_ex", "exception getting user info: $t")
+                Log.e("IdeaBase_log", "exception getting user info: $t")
             }).addTo(compositeDisposable)
     }
 
