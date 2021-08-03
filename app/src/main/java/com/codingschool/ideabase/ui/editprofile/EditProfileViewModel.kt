@@ -18,6 +18,7 @@ import io.reactivex.rxkotlin.addTo
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MultipartBody
 import retrofit2.HttpException
+import java.util.regex.Pattern
 
 class EditProfileViewModel(
     private val ideaApi: IdeaApi,
@@ -142,13 +143,13 @@ class EditProfileViewModel(
                 view?.setInputPasswordRepeatError("Passwords are not the same")
             } else
             // check pwd valid
-                if (!validPassword(password)) {
+                if (!PASSWORD_PATTERN.matcher(password).matches()) {
                     password = ""
                     password2 = ""
                     notifyPropertyChanged(BR.password)
                     notifyPropertyChanged(BR.password2)
                     view?.setFocusPasswordInput()
-                    view?.setInputPasswordError("Please enter a password of minimum 8 characters, including at least 1 number")
+                    view?.setInputPasswordError("Password must contain a minimum of 8 characters, including at least 1 number/1 letter and a special char")
                 } else {
                     validCredentailsToRegister = true
                 }
@@ -248,6 +249,14 @@ class EditProfileViewModel(
     fun onPassword2TextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
         view?.resetPasswordRepeatError()
     }
+    private val PASSWORD_PATTERN = Pattern.compile(
+        "^" +  "(?=.*[0-9])" +         //at least 1 digit
+                "(?=.*[a-zA-Z])" +  //at least 1 letter->any letter
+                "(?=.*[@#$%^&+=!?])" +  //at least 1 special character
+                "(?=\\S+$)" +  //no white spaces
+                ".{8,}" +  //at least 8 characters
+                "$"
+    )
     fun getRequestBodyForUpdatedImage(imagePart: InputStreamRequestBody) =
         MultipartBody.Builder()
             .setType(MultipartBody.FORM)
