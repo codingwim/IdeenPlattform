@@ -61,7 +61,7 @@
                         android:layout_marginTop="@dimen/margin_small"
                         android:layout_marginEnd="@dimen/margin_small"
                         android:visibility="gone"
-                        android:src="@drawable/ic_baseline_arrow_upward_24"
+                        android:src="@drawable/ic_baseline_trending_up_24"
                         card_view:layout_constraintTop_toTopOf="parent"
                         card_view:layout_constraintEnd_toStartOf="@+id/tvStatus"
                         card_view:tint="@color/green" />
@@ -73,7 +73,7 @@
                         android:layout_marginTop="@dimen/margin_small"
                         android:layout_marginEnd="@dimen/margin_small"
                         android:visibility="gone"
-                        android:src="@drawable/ic_baseline_arrow_downward_24"
+                        android:src="@drawable/ic_baseline_trending_down_24"
                         card_view:layout_constraintTop_toTopOf="parent"
                         card_view:layout_constraintEnd_toStartOf="@+id/tvStatus"
                         card_view:tint="@color/red"/>
@@ -86,11 +86,12 @@
                         android:layout_marginEnd="@dimen/margin_large"
                         android:textSize="@dimen/text_standard16"
                         android:textStyle="bold"
+                        android:letterSpacing="0.2"
                         android:textColor="@color/yellow"
                         card_view:layout_constraintTop_toTopOf="parent"
                         card_view:layout_constraintEnd_toEndOf="parent"
                         android:textAllCaps="true"
-                        tools:text="NEW" />
+                        tools:text="RELEASED" />
                     <TextView
                         android:id="@+id/tvIdeaTitle"
                         android:layout_width="0dp"
