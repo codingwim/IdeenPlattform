@@ -149,7 +149,7 @@ class EditProfileViewModel(
                     notifyPropertyChanged(BR.password)
                     notifyPropertyChanged(BR.password2)
                     view?.setFocusPasswordInput()
-                    view?.setInputPasswordError("Please enter a password of minimum 8 characters, including at least 1 number and 1 letter and 1 specialchar")
+                    view?.setInputPasswordError("Password must contain a minimum of 8 characters, including at least 1 number/1 letter and a special char")
                 } else {
                     validCredentailsToRegister = true
                 }
