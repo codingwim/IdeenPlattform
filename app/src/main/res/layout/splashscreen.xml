@@ -7,7 +7,6 @@
     android:layout_height="match_parent"
     android:gravity="center">
 
-
     <ImageView
         android:id="@+id/splash_logo"
         android:src="@drawable/raika_logo"

@@ -10,7 +10,7 @@
         android:id="@+id/cvIdea"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layoutAnimation="@anim/layout_animation_idea_item"
+
         card_view:cardElevation="0dp">
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -50,7 +50,7 @@
                         card_view:layout_constraintTop_toBottomOf="@+id/tvStatus"
                         card_view:shapeAppearanceOverlay="@style/circleImageView"
                         card_view:srcCompat="@drawable/ic_baseline_person_24"
-                        card_view:strokeColor="@color/dark_grey"
+                        card_view:strokeColor="@color/grey"
                         card_view:strokeWidth="1dp"
                         />
                     <ImageView
@@ -98,10 +98,9 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="16dp"
-                        android:textStyle="bold"
+                        style="@style/ideaTitle"
                         android:lines="2"
                         android:ellipsize="end"
-                        android:textSize="@dimen/text_medium22"
                         card_view:layout_constraintStart_toEndOf="@+id/ivProfilePicture"
                         card_view:layout_constraintTop_toTopOf="@+id/ivProfilePicture"
                         card_view:layout_constraintEnd_toEndOf="parent"
@@ -111,7 +110,7 @@
                         android:id="@+id/tvAuthor"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:textSize="@dimen/text_medium18"
+                        style="@style/ideaAuthor"
                         card_view:layout_constraintBottom_toBottomOf="@id/ivProfilePicture"
                         card_view:layout_constraintStart_toStartOf="@+id/tvIdeaTitle"
                         tools:text="Jane Doe " />

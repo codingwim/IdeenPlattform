@@ -35,7 +35,11 @@
             app:popExitAnim="@anim/slide_out_to_bottom"/>
         <action
             android:id="@+id/toProfile"
-            app:destination="@id/navigation_profile" />
+            app:destination="@id/navigation_profile"
+            app:enterAnim="@anim/slide_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in_short"
+            app:popExitAnim="@anim/fade_out"/>
         <action
             android:id="@+id/toOffline"
             app:destination="@id/loadingFragment" />
@@ -70,7 +74,11 @@
             app:popExitAnim="@anim/slide_out_to_bottom"/>
         <action
             android:id="@+id/toProfile"
-            app:destination="@id/navigation_profile" />
+            app:destination="@id/navigation_profile"
+            app:enterAnim="@anim/slide_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in_short"
+            app:popExitAnim="@anim/fade_out"/>
         <action
             android:id="@+id/toOffline"
             app:destination="@id/loadingFragment" />
@@ -160,7 +168,11 @@
             app:popExitAnim="@anim/fade_out"/>
         <action
             android:id="@+id/toProfile"
-            app:destination="@id/navigation_profile" />
+            app:destination="@id/navigation_profile"
+            app:enterAnim="@anim/slide_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in_short"
+            app:popExitAnim="@anim/fade_out"/>
         <action
             android:id="@+id/toOffline"
             app:destination="@id/loadingFragment" />

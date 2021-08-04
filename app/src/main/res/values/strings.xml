@@ -16,7 +16,7 @@
     <string name="email">e-mail</string>
     <string name="repeat_password">repeat password</string>
     <string name="register">REGISTER</string>
-    <string name="cancel">CANCEL</string>
+    <string name="cancel" tools:ignore="ButtonCase">CANCEL</string>
     <string name="registration_cancelled">Registration cancelled</string>
     <string name="network_issue_check_network">There seems to be a connectivity issue, please check your network connection</string>
     <string name="long_lorem_ipsum">Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.</string>
@@ -156,5 +156,5 @@
     <string name="menu_logout">Logout</string>
     <string name="cv_trend_up_icon">Trend Up Icon</string>
     <string name="cd_trend_down_icon">Trend Down Icon</string>
-    <string name="toast_connection_problem">There seems to be a connection problem...</string>
+    <string name="toast_connection_problem">There seems to be a connection problem…</string>
 </resources>

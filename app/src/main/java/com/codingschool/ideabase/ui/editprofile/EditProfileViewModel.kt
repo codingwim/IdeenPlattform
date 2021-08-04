@@ -17,7 +17,6 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.addTo
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MultipartBody
-import retrofit2.HttpException
 import java.util.regex.Pattern
 
 class EditProfileViewModel(
@@ -82,22 +81,17 @@ class EditProfileViewModel(
         val requestBodyForUpdatedImage = getRequestBodyForUpdatedImage(imagePart)
         ideaApi.updateMyProfilePicture(requestBodyForUpdatedImage)
             .doOnError {
-
             }
             .andThen {
                 initialProfileImageUrl = profileImageUrl
             }
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
-                Log.d("IdeaBase_log", "Profile image updated")
-                //view?.navigateBack()
+
             }, { t ->
                 view?.handleErrorResponse(t.message)
                 Log.e("IdeaBase_log", "exception updating idea: $t")
             }).addTo(compositeDisposable)
-
-
-
     }
 
     fun onSaveClick() {
@@ -121,7 +115,7 @@ class EditProfileViewModel(
                 view?.setInputPasswordRepeatError(R.string.pwd_are_ot_same_error)
             } else
             // check pwd valid
-                if (!PASSWORD_PATTERN.matcher(password).matches()) {
+                if (!passwordPattern.matcher(password).matches()) {
                     password = ""
                     password2 = ""
                     notifyPropertyChanged(BR.password)
@@ -144,7 +138,6 @@ class EditProfileViewModel(
             ideaApi.updateUser(updatedUser)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
-                    Log.d("IdeaBase_log", "user updated over API")
                     view?.showToast(R.string.please_login_again)
                     view?.navigateToLoginRegistered(email)
                 }, { t ->
@@ -172,29 +165,9 @@ class EditProfileViewModel(
                 notifyPropertyChanged(BR.firstname)
                 notifyPropertyChanged(BR.lastname)
             }, { t ->
-                /*val responseMessage = t.message
-                if (responseMessage != null) {
-                    if (responseMessage.contains(
-                            "HTTP 404",
-                            ignoreCase = true
-                        )
-                    ) {
-
-                        view?.setInputPasswordError("")
-                        view?.showToast("Authorization is not valid")
-                    } else if (responseMessage.contains(
-                            "HTTP 401",
-                            ignoreCase = true
-                        )
-                    ) view?.showToast("You are not authorized to log in")
-                    else view?.showToast(R.string.network_issue_check_network)
-                }*/
+                view?.handleErrorResponse(t.message)
                 Log.e("IdeaBase_log", "exception getting user info: $t")
             }).addTo(compositeDisposable)
-    }
-
-    private fun validPassword(password: String): Boolean {
-        return password.length > 4
     }
 
     fun onFirstnameTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
@@ -212,7 +185,7 @@ class EditProfileViewModel(
     fun onPassword2TextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
         if ((count > 0) && (before==0)) view?.resetPasswordRepeatError()
     }
-    private val PASSWORD_PATTERN = Pattern.compile(
+    private val passwordPattern = Pattern.compile(
         "^" +  "(?=.*[0-9])" +         //at least 1 digit
                 "(?=.*[a-zA-Z])" +  //at least 1 letter->any letter
                 "(?=.*[@#$%^&+=!?])" +  //at least 1 special character
@@ -220,7 +193,7 @@ class EditProfileViewModel(
                 ".{8,}" +  //at least 8 characters
                 "$"
     )
-    fun getRequestBodyForUpdatedImage(imagePart: InputStreamRequestBody) =
+    private fun getRequestBodyForUpdatedImage(imagePart: InputStreamRequestBody) =
         MultipartBody.Builder()
             .setType(MultipartBody.FORM)
             .addFormDataPart(

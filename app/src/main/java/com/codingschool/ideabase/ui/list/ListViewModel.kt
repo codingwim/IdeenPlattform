@@ -58,110 +58,80 @@ class ListViewModel(
         adapter.addProfileClickListener { id ->
             view?.navigateToProfile(id)
         }
-        adapter.registerAdapterDataObserver(object : AdapterDataObserver() {
-            /*override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
-                super.onItemRangeInserted(positionStart, itemCount)
-                Log.d(
-                    "IdeaBase_log",
-                    "onItemRangeInserted with positionStart: $positionStart and itemCount: $itemCount"
-                )
-              *//*  if (positionStart>0) view?.moveToPositionInRecyclerview(positionStart)*//*
-            }
-
-            override fun onItemRangeChanged(positionStart: Int, itemCount: Int) {
-                super.onItemRangeChanged(positionStart, itemCount)
-                Log.d(
-                    "IdeaBase_log",
-                    "onItemRangeChanged with positionStart: $positionStart and itemCount: $itemCount"
-                )
-                view?.moveToPositionInRecyclerview(positionStart)
-            }
-
-            override fun onItemRangeMoved(fromPosition: Int, toPosition: Int, itemCount: Int) {
-                Log.d(
-                    "IdeaBase_log",
-                    "onItemRangeMoved with fromPosition: $fromPosition toPosition: $toPosition  and itemCount: $itemCount"
-                )
-                super.onItemRangeMoved(fromPosition, toPosition, itemCount)
-            }*/
-
-        })
 
         getCategoryItems()
 
-        /**
-         * if APP JUST STARTED, on first load of top ranked, we get all ides from api, but only show up-to lastAdapterUpdated??
-         *      + we set the badges to inform if newer available, (not for ranking status??)
-         *      = the showed top rank list is the status of last time, user needs to click again (OR REFRESH ?) to show trend updates
-         *  ELSE , we just CLICKED "top ranked" or "All" so we want to clear badges, and show all with trend info (if top ranked clicked) or status info (if all clicked)
-         *
-         *  Both options start the getPeriodicUpdatesToSetBadges
-         */
-
         if (prefs.appJustStarted()) {
-            ideaApi.getAllIdeasNoFilter()
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({ list ->
-                    val trendList = setTrendAndStatusList(list)
-                    // returned trendlist is already sorted by ranking
-                    if (trendList.isEmpty()) view?.showNoTopRankedIdeasYet()
-                    else {
-                        adapter.updateList(trendList)
-                        // set prefs top ranked list
-                        prefs.setTopRankedIds(trendList.map { it.id })
-                    }
-                    ifHasNewerOrUpdatedIdeasSetAllIdeasBadgeAccordingly(list)
-                    checkApiForUpdatesPeriodicallyToSetBadges()
-                    prefs.setAppNotJustStarted()
-                }, { t ->
-                    view?.handleErrorResponse(t.message)
-                    Log.e("IdeaBase_log", "exception getting ideas: $t")
-
-                }).addTo(compositeDisposable)
-
+            loadAndShowTopRankedIdeas()
         } else {
-            ideaApi.getAllIdeasNoFilter()
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({ list ->
-                    val sortedList = when (topOrAll) {
-                        true -> {
-                            view?.hideTopBadge()
-                            list.filter { it.numberOfRatings >= MIN_NUM_RATINGS_SHOW_IDEA_ON_TOP_RANKED }
-                                .sortedWith(
-                                    compareByDescending { it.avgRating })
-                        }
-                        false -> {
-                            view?.hideAllBadge()
-                            list.sortedWith(compareByDescending { it.lastUpdated })
-                        }
-                    }
-                    val trendList = setTrendAndStatusList(sortedList)
-                    if (trendList.isNotEmpty()) adapter.updateList(trendList) else {
-                        if (topOrAll) view?.showNoTopRankedIdeasYet() else view?.showNoIdeasYet()
-                    }
-
-                    prefs.setLastAdapterUpdateNow()
-                    view?.hideTopBadge()
-                    view?.hideAllBadge()
-                    if (topOrAll) {
-                        // set prefs top ranked list
-                        val rankedList = sortedList.map { it.id }
-                        prefs.setTopRankedIds(rankedList)
-                    }
-                    checkApiForUpdatesPeriodicallyToSetBadges()
-                    prefs.setAppNotJustStarted()
-                }, { t ->
-                    view?.handleErrorResponse(t.message)
-                    Log.e("IdeaBase_log", "exception getting ideas to adapter: $t")
-
-                }).addTo(compositeDisposable)
+            loadAndShowIdeasTopOrAll()
         }
+    }
+
+    fun attachView(view: ListView) {
+        this.view = view
+    }
+
+    private fun loadAndShowTopRankedIdeas() {
+        ideaApi.getAllIdeasNoFilter()
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({ list ->
+                val trendList = setTrendAndStatusList(list)
+                // returned trendlist is already sorted by ranking
+                if (trendList.isEmpty()) view?.showNoTopRankedIdeasYet()
+                else {
+                    adapter.updateList(trendList)
+                    // set prefs top ranked list
+                    prefs.setTopRankedIds(trendList.map { it.id })
+                }
+                ifHasNewerOrUpdatedIdeasSetAllIdeasBadgeAccordingly(list)
+                checkApiForUpdatesPeriodicallyToSetBadges()
+                prefs.setAppNotJustStarted()
+            }, { t ->
+                view?.handleErrorResponse(t.message)
+                Log.e("IdeaBase_log", "exception getting ideas: $t")
+            }).addTo(compositeDisposable)
+    }
+
+    private fun loadAndShowIdeasTopOrAll() {
+        ideaApi.getAllIdeasNoFilter()
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({ list ->
+                val sortedList = when (topOrAll) {
+                    true -> {
+                        view?.hideTopBadge()
+                        list.filter { it.numberOfRatings >= MIN_NUM_RATINGS_SHOW_IDEA_ON_TOP_RANKED }
+                            .sortedWith(
+                                compareByDescending { it.avgRating })
+                    }
+                    false -> {
+                        view?.hideAllBadge()
+                        list.sortedWith(compareByDescending { it.lastUpdated })
+                    }
+                }
+                val trendList = setTrendAndStatusList(sortedList)
+                if (trendList.isNotEmpty()) adapter.updateList(trendList) else {
+                    if (topOrAll) view?.showNoTopRankedIdeasYet() else view?.showNoIdeasYet()
+                }
+                prefs.setLastAdapterUpdateNow()
+                view?.hideTopBadge()
+                view?.hideAllBadge()
+                if (topOrAll) {
+                    // set prefs top ranked list
+                    val rankedList = sortedList.map { it.id }
+                    prefs.setTopRankedIds(rankedList)
+                }
+                checkApiForUpdatesPeriodicallyToSetBadges()
+                prefs.setAppNotJustStarted()
+            }, { t ->
+                view?.handleErrorResponse(t.message)
+                Log.e("IdeaBase_log", "exception getting ideas to adapter: $t")
+            }).addTo(compositeDisposable)
     }
 
     private fun ifHasNewerOrUpdatedIdeasSetAllIdeasBadgeAccordingly(list: List<Idea>) {
         val dateLastUpdate = prefs.getLastAdapterUpdate()
         val countNew = list.count { (it.created.compareTo(dateLastUpdate) > 0) }
-
         if (prefs.appJustStarted()) {
             if (countNew > 0) view?.setAllBadge(countNew)
             else {
@@ -212,7 +182,6 @@ class ListViewModel(
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
-                //Log.d("IdeaBase_log", "checking for updates now")
                 getIdeasSetBadges()
             },
                 { t ->
@@ -263,7 +232,6 @@ class ListViewModel(
     }
 
     private fun getMyRatingForThisIdeaAndStartDialog(id: String, position: Int) {
-        Log.d("IdeaBase_log", "getmyratingprep, id: $id & position: $position ")
         var ratingGiven: Int?
         ideaApi.getIdeaById(id)
             .observeOn(AndroidSchedulers.mainThread())
@@ -279,10 +247,6 @@ class ListViewModel(
                 view?.handleErrorResponse(t.message)
                 Log.e("IdeaBase_log", "exception getting idea: $t")
             }).addTo(compositeDisposable)
-    }
-
-    fun attachView(view: ListView) {
-        this.view = view
     }
 
     private fun getCategoryItems() {
@@ -443,12 +407,9 @@ class ListViewModel(
             .subscribe({ idea ->
                 if (topOrAll) {
                     adapter.updateRating(position, idea)
-                    Log.d("IdeaBase_log", "update rating done: $id & position: $position ")
-                    //check if ranking
                     getIdeasSetBadges()
                 } else {
                     adapter.updateRating(position, idea)
-                    Log.d("IdeaBase_log", "update rating done: $id & position: $position ")
                 }
             }, { t ->
                 // handle error
