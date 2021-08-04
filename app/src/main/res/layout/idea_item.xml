@@ -2,7 +2,6 @@
 <androidx.coordinatorlayout.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="@dimen/margin_standard">
@@ -22,7 +21,7 @@
                 android:id="@+id/cvTop"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                card_view:cardElevation="4dp"
+                card_view:cardElevation="@dimen/card_elevation_large"
                 card_view:cardUseCompatPadding="true"
                 card_view:layout_constraintBottom_toTopOf="@id/btComment"
                 card_view:layout_constraintEnd_toEndOf="parent"
@@ -32,13 +31,14 @@
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:layout_marginBottom="16dp">
+                    android:layout_marginTop="@dimen/margin_small"
+                    android:layout_marginBottom="@dimen/margin_standard">
 
                     <com.google.android.material.imageview.ShapeableImageView
                         android:id="@+id/ivProfilePicture"
-                        android:layout_width="80dp"
-                        android:layout_height="80dp"
+                        android:layout_width="@dimen/profile_pic_idea_item"
+                        android:layout_height="@dimen/profile_pic_idea_item"
+                        android:padding="@dimen/padding_xsmall"
                         android:layout_marginStart="@dimen/margin_large"
                         android:layout_marginEnd="@dimen/margin_large"
                         android:layout_marginBottom="@dimen/margin_large"
@@ -46,37 +46,37 @@
                         card_view:layout_constraintBottom_toTopOf="@+id/ivIdea"
                         card_view:layout_constraintEnd_toStartOf="@id/tvIdeaTitle"
                         card_view:layout_constraintStart_toStartOf="parent"
-
                         card_view:layout_constraintTop_toBottomOf="@+id/tvStatus"
                         card_view:shapeAppearanceOverlay="@style/circleImageView"
                         card_view:srcCompat="@drawable/ic_baseline_person_24"
-                        card_view:strokeColor="@color/grey"
+                        card_view:strokeColor="@color/dark_grey"
                         card_view:strokeWidth="1dp"
-
                         />
                     <ImageView
                         android:id="@+id/ivTrendUp"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="@dimen/trend_icon_size"
+                        android:layout_height="@dimen/trend_icon_size"
                         android:layout_marginTop="@dimen/margin_small"
                         android:layout_marginEnd="@dimen/margin_small"
                         android:visibility="gone"
                         android:src="@drawable/ic_baseline_trending_up_24"
                         card_view:layout_constraintTop_toTopOf="parent"
                         card_view:layout_constraintEnd_toStartOf="@+id/tvStatus"
-                        card_view:tint="@color/green" />
+                        card_view:tint="@color/green"
+                        android:contentDescription="@string/cv_trend_up_icon" />
 
                     <ImageView
                         android:id="@+id/ivTrendDown"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="@dimen/trend_icon_size"
+                        android:layout_height="@dimen/trend_icon_size"
                         android:layout_marginTop="@dimen/margin_small"
                         android:layout_marginEnd="@dimen/margin_small"
                         android:visibility="gone"
                         android:src="@drawable/ic_baseline_trending_down_24"
                         card_view:layout_constraintTop_toTopOf="parent"
                         card_view:layout_constraintEnd_toStartOf="@+id/tvStatus"
-                        card_view:tint="@color/red"/>
+                        card_view:tint="@color/red"
+                        android:contentDescription="@string/cd_trend_down_icon" />
 
                     <TextView
                         android:id="@+id/tvStatus"
@@ -84,7 +84,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/margin_small"
                         android:layout_marginEnd="@dimen/margin_large"
-                        android:textSize="@dimen/text_standard16"
+                        android:textSize="@dimen/text_medium18"
                         android:textStyle="bold"
                         android:letterSpacing="0.2"
                         android:textColor="@color/yellow"
@@ -96,7 +96,6 @@
                         android:id="@+id/tvIdeaTitle"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="@dimen/margin_large"
                         android:layout_marginEnd="16dp"
                         android:textStyle="bold"
                         android:lines="2"
@@ -105,7 +104,7 @@
                         card_view:layout_constraintStart_toEndOf="@+id/ivProfilePicture"
                         card_view:layout_constraintTop_toTopOf="@+id/ivProfilePicture"
                         card_view:layout_constraintEnd_toEndOf="parent"
-                        tools:text="Idea #1 lorem ipsum nostr rorum " />
+                        tools:text="Idea long title text with 2 lines going " />
 
                     <TextView
                         android:id="@+id/tvAuthor"
@@ -119,7 +118,7 @@
                     <com.google.android.material.imageview.ShapeableImageView
                         android:id="@+id/ivIdea"
                         android:layout_width="match_parent"
-                        android:layout_height="200dp"
+                        android:layout_height="@dimen/banner_image_idea_item_height"
                         android:scaleType="centerCrop"
                         card_view:layout_constraintBottom_toTopOf="@id/tvIdeaDescription"
                         card_view:layout_constraintEnd_toEndOf="parent"
@@ -132,8 +131,6 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_margin="@dimen/margin_large"
-
-
                         android:ellipsize="end"
                         android:maxLines="3"
                         android:textSize="@dimen/text_medium18"
@@ -160,8 +157,8 @@
 
             <ImageView
                 android:id="@+id/btRate"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
+                android:layout_width="@dimen/rate_button_size"
+                android:layout_height="@dimen/rate_button_size"
                 android:layout_margin="@dimen/margin_standard"
                 android:contentDescription="@string/rate_this_idea_content_description"
                 android:src="@drawable/ic_favorite_filled"

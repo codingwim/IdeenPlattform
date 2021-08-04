@@ -154,7 +154,6 @@
     <string name="menu_edit_profile">Edit profile</string>
     <string name="menu_add_idea">Add idea</string>
     <string name="menu_logout">Logout</string>
-    <string name="cd_raika_logo">Raika Logo</string>
-
-
+    <string name="cv_trend_up_icon">Trend Up Icon</string>
+    <string name="cd_trend_down_icon">Trend Down Icon</string>
 </resources>
