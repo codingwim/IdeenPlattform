@@ -20,7 +20,7 @@ class IdeaListAdapter(private val imageHandler: ImageHandler) :
     private var topOrAll: Boolean = true
     private lateinit var ideaClickListener: (String) -> Unit
     private lateinit var commentClickListener: (String) -> Unit
-    lateinit var rateClickListener: (String, Int) -> Unit
+    private lateinit var rateClickListener: (String, Int) -> Unit
     private lateinit var profileClickListener: (String) -> Unit
 
     class IdeaViewHolder(
@@ -107,7 +107,6 @@ class IdeaListAdapter(private val imageHandler: ImageHandler) :
                 else -> ""
             }
         }
-        
     }
 
     fun setTopOrAll(topOrAll: Boolean) {

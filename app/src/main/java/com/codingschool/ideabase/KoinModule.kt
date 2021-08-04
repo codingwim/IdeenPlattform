@@ -1,28 +1,23 @@
 package com.codingschool.ideabase
 
 import android.content.ContentResolver
-import android.icu.util.TimeUnit
-import androidx.room.Room
 import com.ashokvarma.gander.GanderInterceptor
-import com.codingschool.ideabase.model.data.room.AppDataBase
 import com.codingschool.ideabase.model.remote.IdeaApi
-import com.codingschool.ideabase.utils.ImageHandler
 import com.codingschool.ideabase.ui.comment.CommentViewModel
 import com.codingschool.ideabase.ui.detail.CommentListAdapter
 import com.codingschool.ideabase.ui.detail.DetailViewModel
 import com.codingschool.ideabase.ui.editprofile.EditProfileViewModel
 import com.codingschool.ideabase.ui.list.IdeaListAdapter
 import com.codingschool.ideabase.ui.list.ListViewModel
-import com.codingschool.ideabase.ui.loading.LoadingFragment
 import com.codingschool.ideabase.ui.loading.LoadingViewModel
 import com.codingschool.ideabase.ui.login.LoginViewModel
 import com.codingschool.ideabase.ui.neweditidea.NewEditIdeaViewModel
 import com.codingschool.ideabase.ui.profile.ProfileViewModel
 import com.codingschool.ideabase.ui.register.RegisterViewModel
+import com.codingschool.ideabase.utils.ImageHandler
 import com.codingschool.ideabase.utils.Preferences
 import com.codingschool.ideabase.utils.baseUrl
 import io.reactivex.schedulers.Schedulers
-import okhttp3.CacheControl
 import okhttp3.OkHttpClient
 import org.koin.android.ext.koin.androidApplication
 import org.koin.android.ext.koin.androidContext
@@ -33,23 +28,10 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 val appModule = module {
 
-    single<Preferences> {
+    single {
         Preferences(androidContext())
     }
-    single<AppDataBase> {
-        (
-                Room
-                    .databaseBuilder(
-                        androidContext(),
-                        AppDataBase::class.java,
-                        "app-db"
-                    )
-                    // REMOVE ON PRODUCTION VERSION
-                    .fallbackToDestructiveMigration()
-                    .allowMainThreadQueries()
-                    .build()
-                )
-    }
+
     single {
         OkHttpClient.Builder()
             .addNetworkInterceptor { chain ->
@@ -78,7 +60,7 @@ val appModule = module {
             .build()
     }
 
-    single<ImageHandler> {
+    single {
         ImageHandler(androidContext(), get())
     }
 
@@ -88,52 +70,59 @@ val appModule = module {
 
     factory { provideUserApi(get()) }
 
-    factory<IdeaListAdapter> {
+    factory {
         IdeaListAdapter(imageHandler = get())
     }
 
-    factory<CommentListAdapter> {
+    factory {
         CommentListAdapter(imageHandler = get())
     }
 
-    factory<LoadingViewModel> { parameters ->
+    factory { parameters ->
         LoadingViewModel(online = parameters.get(), ideaApi = get(), prefs = get())
     }
 
-    factory<LoginViewModel> { parameters ->
+    factory { parameters ->
         LoginViewModel(uNameFromArgs = parameters.get(), ideaApi = get(), prefs = get())
     }
 
-    factory<RegisterViewModel> {
+    factory {
         RegisterViewModel(ideaApi = get())
     }
 
-    factory<ListViewModel> { parameters ->
-        ListViewModel(topOrAll = parameters.get(), adapter = get(),ideaApi = get(), prefs = get())
+    factory { parameters ->
+        ListViewModel(topOrAll = parameters.get(), adapter = get(), ideaApi = get(), prefs = get())
     }
 
-    factory<DetailViewModel> { parameters ->
+    factory { parameters ->
         DetailViewModel(id = parameters.get(), adapter = get(), ideaApi = get(), prefs = get())
     }
 
-    factory<NewEditIdeaViewModel> { parameters ->
-        NewEditIdeaViewModel(editIdeaId = parameters.get(), ideaApi = get(), prefs = get(), contentResolver = get())
+    factory { parameters ->
+        NewEditIdeaViewModel(
+            editIdeaId = parameters.get(),
+            ideaApi = get(),
+            prefs = get(),
+            contentResolver = get()
+        )
     }
 
-    factory<CommentViewModel> { parameters ->
+    factory { parameters ->
         CommentViewModel(id = parameters.get(), ideaApi = get(), prefs = get())
-        //CommentViewModel(id = parameters.get(), title = parameters.get(), ideaApi = get())
     }
 
-    factory<ProfileViewModel> { parameters ->
-        ProfileViewModel(id = get(), ideaApi = get(),prefs = get())
+    factory { parameters ->
+        ProfileViewModel(id = parameters.get(), ideaApi = get(), prefs = get())
     }
-    factory<EditProfileViewModel> { parameters ->
-        EditProfileViewModel(loadPictureLoader = parameters.get(),  ideaApi = get(), prefs = get(), contentResolver = get())
+    factory { parameters ->
+        EditProfileViewModel(
+            loadPictureLoader = parameters.get(),
+            ideaApi = get(),
+            prefs = get(),
+            contentResolver = get()
+        )
     }
-
 }
-
 
 fun getAuthFromPrefs(prefs: Preferences) = prefs.getAuthString()
 

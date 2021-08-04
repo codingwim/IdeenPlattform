@@ -102,7 +102,7 @@
     <string name="remove_draft_dialog">REMOVE</string>
     <string name="dialog_comment_draft_message">It will be available the next time you comment anywhere!</string>
     <string name="dialog_save_draft_title">Save draft?</string>
-    <string name="dialog_edit_profile_message">You can change your image without making other changes. Just go \'back\' after changing it. If you make other changes, you will be redirected to the Login screen to login again!</string>
+    <string name="dialog_edit_profile_message">You can change your image without making other changes. Just go \'back\' after changing it. If you make other changes, you will need to login again!</string>
     <string name="dialog_edit_profile_title">Edit profile</string>
     <string name="search_didalog_will_be_filtered">"Result will be filtered by:  \u0020"</string>
     <string name="search_diealog_addfilter_text">Click ADD FILTER below to filter the result by categories</string>
@@ -151,6 +151,10 @@
     <string name="enter_valid_email">Please enter a valid e-mail address</string>
     <string name="please_choose_pwd">Please choose a password with minimum 8 characters, including at least 1 number, 1 letter and 1 special char</string>
     <string name="registered_succes">You are registered! You can now login with your e-mail and password</string>
+    <string name="menu_edit_profile">Edit profile</string>
+    <string name="menu_add_idea">Add idea</string>
+    <string name="menu_logout">Logout</string>
+    <string name="cd_raika_logo">Raika Logo</string>
 
 
 </resources>

@@ -39,7 +39,7 @@ class ImageHandler(
             .load(uriOrDrawable)
             .resize(480,360)
             .placeholder(R.drawable.image_placeholder_480_360)
-            .error(R.drawable.image_not_found480_360)
+            .error(R.drawable.image_not_found)
             .into(view)
     }
 

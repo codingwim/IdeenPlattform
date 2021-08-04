@@ -51,7 +51,7 @@ class ProfileViewModel(
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({ user ->
                 view?.setProfilePicture(user.profilePicture)
-                name = user.firstname + " " + user.lastname
+                name = user.toString()
                 email = if (isMyProfile()) user.email else ""
                 firstname = user.firstname
                 lastname = user.lastname
