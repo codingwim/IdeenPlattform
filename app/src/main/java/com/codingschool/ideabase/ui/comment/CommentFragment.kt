@@ -41,9 +41,8 @@ class CommentFragment : Fragment(), CommentView {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        //show keyboard and focus edittext
+        //focus edittext
         binding.etComment.requestFocus()
-        requireActivity().showKeyboard(binding.etComment)
 
         binding.vm = viewModel
         viewModel.attachView(this)
@@ -69,6 +68,7 @@ class CommentFragment : Fragment(), CommentView {
     }
 
     override fun navigateBack() {
+        view?.let { requireActivity().hideKeyboard(it) }
         Navigation.findNavController(requireView()).navigateUp()
     }
 
