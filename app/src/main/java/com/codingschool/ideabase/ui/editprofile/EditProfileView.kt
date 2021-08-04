@@ -2,7 +2,6 @@ package com.codingschool.ideabase.ui.editprofile
 
 interface EditProfileView {
     fun showToast(any: Any)
-    //fun snacker(text: String, actionText: String, tag: Int)
     fun showInfoDialog()
     fun setProfilePicture(url: String?)
     fun getProfileImageDialog()
@@ -17,5 +16,5 @@ interface EditProfileView {
     fun resetPasswordRepeatError()
     fun setFocusPasswordInput()
     fun navigateToLoginRegistered(username: String)
-    //fun navigateOffline(online: Boolean)
+    fun handleErrorResponse(errorMessage: String?)
 }

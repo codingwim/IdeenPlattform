@@ -24,8 +24,9 @@
         <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/ivProfilePicture"
             android:layout_width="@dimen/profile_picture_edit_profile"
-            android:layout_height="160dp"
+            android:layout_height="@dimen/profile_picture_edit_profile"
             android:layout_margin="@dimen/margin_large"
+            android:padding="@dimen/padding_xsmall"
             android:scaleType="centerCrop"
             android:clickable="true"
             android:focusable="true"

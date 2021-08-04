@@ -63,7 +63,6 @@ class ProfileViewModel(
 
                 if (isMyProfile()) view?.showMenu()
             }, { t ->
-                view?.handleErrorResponse(t.message)
                 Log.e("IdeaBase_log", "exception getting user profile $t")
 
             }).addTo(compositeDisposable)

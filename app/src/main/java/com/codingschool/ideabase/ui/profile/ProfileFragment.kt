@@ -72,7 +72,7 @@ class ProfileFragment : Fragment(), ProfileView {
      }
 
      override fun handleErrorResponse(errorMessage: String?) {
-         if (!requireActivity().errorHandler(errorMessage))  {
+         if (requireActivity().errorHandler(errorMessage))  {
              showNoInternet()
              hideMenu()
          }

@@ -5,8 +5,7 @@ import android.util.Log
 import com.codingschool.ideabase.R
 
 fun Context.errorHandler(errorMessage: String?): Boolean {
-    var errorHandled = true
-
+    var noInternet = false
     if (errorMessage != null) {
         val toastMessage = with(errorMessage) {
             when {
@@ -34,11 +33,14 @@ fun Context.errorHandler(errorMessage: String?): Boolean {
                     "2 exceptions occurred",
                     ignoreCase = true
                 ) -> R.string.idea_released_mot_editable_error
-                else -> "An unexpected error occurred."
+                else -> {
+                    noInternet = true
+                    ""
+                }
             }
         }
-        toast(toastMessage)
-    } else errorHandled = false
-    return errorHandled
+        if (toastMessage != "") toast(toastMessage)
+    } else noInternet = true
+    return noInternet
 }
 

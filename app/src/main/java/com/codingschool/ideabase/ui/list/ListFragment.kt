@@ -235,7 +235,7 @@ class ListFragment : Fragment(), ListView {
     }
 
     override fun handleErrorResponse(errorMessage: String?) {
-        if (!requireActivity().errorHandler(errorMessage)) showNoInternet()
+        if (requireActivity().errorHandler(errorMessage)) showNoInternet()
     }
 
     override fun showNoResultsFound() {

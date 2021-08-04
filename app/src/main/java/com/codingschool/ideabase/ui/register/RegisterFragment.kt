@@ -45,7 +45,7 @@ class RegisterFragment : Fragment(), RegisterView {
     }
 
     override fun handleErrorResponse(errorMessage: String?) {
-        if (!requireActivity().errorHandler(errorMessage)) showToast(R.string.network_issue_check_network)
+        if (requireActivity().errorHandler(errorMessage)) showToast(R.string.network_issue_check_network)
     }
     override fun setInputFirstnameError(any: Any) {
         binding.tilFirstname.error = requireActivity().getResString(any)

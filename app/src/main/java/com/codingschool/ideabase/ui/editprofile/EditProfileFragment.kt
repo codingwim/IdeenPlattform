@@ -16,6 +16,7 @@ import androidx.navigation.Navigation
 import com.codingschool.ideabase.R
 import com.codingschool.ideabase.databinding.FragmentEditProfileBinding
 import com.codingschool.ideabase.utils.ImageHandler
+import com.codingschool.ideabase.utils.errorHandler
 import com.codingschool.ideabase.utils.getResString
 import com.codingschool.ideabase.utils.toast
 import com.github.drjacky.imagepicker.ImagePicker
@@ -57,7 +58,6 @@ class EditProfileFragment: Fragment(), EditProfileView {
             container,
             false
         )
-
         return binding.root
     }
 
@@ -74,13 +74,6 @@ class EditProfileFragment: Fragment(), EditProfileView {
         requireActivity().toast(any)
     }
 
-/*    override fun snacker(text: String, actionText: String, tag: Int) {
-        Snackbar.make(requireView(), text, Snackbar.LENGTH_LONG)
-            .setAction(actionText) {
-                //viewModel.snackerClicked(tag)
-            }.show()
-    }*/
-
     override fun showInfoDialog() {
         MaterialAlertDialogBuilder(
             requireActivity(),
@@ -94,6 +87,11 @@ class EditProfileFragment: Fragment(), EditProfileView {
             .show()
     }
 
+    override fun handleErrorResponse(errorMessage: String?) {
+        if (requireActivity().errorHandler(errorMessage)) {
+            showToast(R.string.network_issue_check_network)
+        }
+    }
 
     override fun setProfilePicture(url: String?) {
         imageHandler.getProfilePic(url, binding.ivProfilePicture)

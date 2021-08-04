@@ -1,7 +1,6 @@
 package com.codingschool.ideabase
 
 import android.content.ContentResolver
-import com.ashokvarma.gander.GanderInterceptor
 import com.codingschool.ideabase.model.remote.IdeaApi
 import com.codingschool.ideabase.ui.comment.CommentViewModel
 import com.codingschool.ideabase.ui.detail.CommentListAdapter
@@ -44,10 +43,6 @@ val appModule = module {
                         .build()
                 )
             }
-            .addInterceptor(
-                GanderInterceptor(androidApplication())
-                    .showNotification(true)
-            )
             .build()
     }
 

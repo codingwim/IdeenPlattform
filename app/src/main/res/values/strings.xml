@@ -156,4 +156,5 @@
     <string name="menu_logout">Logout</string>
     <string name="cv_trend_up_icon">Trend Up Icon</string>
     <string name="cd_trend_down_icon">Trend Down Icon</string>
+    <string name="toast_connection_problem">There seems to be a connection problem...</string>
 </resources>

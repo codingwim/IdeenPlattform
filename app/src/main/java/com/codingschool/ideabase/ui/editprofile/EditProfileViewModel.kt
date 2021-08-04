@@ -92,24 +92,7 @@ class EditProfileViewModel(
                 Log.d("IdeaBase_log", "Profile image updated")
                 //view?.navigateBack()
             }, { t ->
-                val responseMessage = t.message
-                if (responseMessage != null) {
-                    if (responseMessage.contains(
-                            "HTTP 400",
-                            ignoreCase = true
-                        )
-                    ) {
-                        view?.showToast(R.string.parameter_missing_message)
-                        Log.d("IdeaBase_log", "Parameter missing: $t")
-                    } else if (responseMessage.contains(
-                            "HTTP 401",
-                            ignoreCase = true
-                        )
-                    ) {
-                        view?.showToast(R.string.not_authorized)
-                        Log.d("IdeaBase_log", "Not authorized: $t")
-                    } else view?.showToast(R.string.network_issue_check_network)
-                }
+                view?.handleErrorResponse(t.message)
                 Log.e("IdeaBase_log", "exception updating idea: $t")
             }).addTo(compositeDisposable)
 
@@ -165,20 +148,7 @@ class EditProfileViewModel(
                     view?.showToast(R.string.please_login_again)
                     view?.navigateToLoginRegistered(email)
                 }, { t ->
-                    val responseMessage = t.message
-                    if (responseMessage != null) {
-                        if (responseMessage.contains(
-                                "HTTP 401",
-                                ignoreCase = true
-                            )
-                        ) view?.showToast("You are not authorized to log in")
-                        else if (responseMessage.contains(
-                                "HTTP 400",
-                                ignoreCase = true
-                            )
-                        ) view?.showToast(R.string.parameter_missing_message)
-                        else view?.showToast(R.string.network_issue_check_network)
-                    }
+                    view?.handleErrorResponse(t.message)
                     Log.e("IdeaBase_log", "exception updating user: $t")
                 }).addTo(compositeDisposable)
         }
