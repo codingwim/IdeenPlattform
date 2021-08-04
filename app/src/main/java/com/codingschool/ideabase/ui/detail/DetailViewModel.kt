@@ -32,7 +32,6 @@ class DetailViewModel(
     }
 
     fun init() {
-        //get idea with api, and set the bindables, set menu items, set comment, set comment author click
         getIdeaAndShow()
         adapter.addCommentClickListener { id ->
             view?.navigateToProfile(id)
@@ -52,10 +51,9 @@ class DetailViewModel(
                         view?.showMenu()
                     }
                     if (prefs.getMyId() == idea.author.id) view?.showMenu()
-                } else view?.setTitleReleasedItalic()
+                } else view?.showIdeaReleased()
                 authorId = idea.author.id
                 setRatingImage(idea.avgRating)
-                // now set all the bindable details, including image
                 view?.setIdeaImage(idea.imageUrl)
                 ideaTitle = idea.title
                 ideaAuthor = idea.authorName
@@ -72,7 +70,7 @@ class DetailViewModel(
                 adapter.updateList(idea.comments.sortedByDescending { it.created })
             }, { t ->
                 view?.handleErrorResponse(t.message)
-                Log.e("observer_ex", "exception getting idea: $t")
+                Log.e("IdeaBase_log", "exception getting idea: $t")
             }).addTo(compositeDisposable)
 
     }
@@ -89,30 +87,15 @@ class DetailViewModel(
         view?.setRatingIcon(drawIcon)
     }
 
-    fun deleteIdea() {
+    private fun deleteIdea() {
         ideaApi.deleteIdeaById(id)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
-                view?.showToast(R.string.idea_deleted_message)
                 view?.navigateBack()
             }, { t ->
-                val responseMessage = t.message
-                if (responseMessage != null) {
-                    if (responseMessage.contains(
-                            "HTTP 404",
-                            ignoreCase = true
-                        )
-                    ) view?.showToast(R.string.parameter_missing_message)
-                    else if (responseMessage.contains(
-                            "HTTP 400",
-                            ignoreCase = true
-                        )
-                    ) view?.showToast(R.string.idea_not_found_message)
-                    else view?.showToast(R.string.network_issue_check_network)
-                }
-                Log.e("observer_ex", "exception deleting idea: $t")
+                view?.handleErrorResponse(t.message)
+                Log.e("IdeaBase_log", "exception deleting idea: $t")
             }).addTo(compositeDisposable)
-
     }
 
     fun onRateClick() {
@@ -127,7 +110,7 @@ class DetailViewModel(
         view?.navigateToCommentFragment(id)
     }
 
-    fun releaseIdea() {
+    private fun releaseIdea() {
         val updateReleased = UpdateReleased(true)
         ideaApi.releaseIdea(id, updateReleased)
             .observeOn(AndroidSchedulers.mainThread())
@@ -135,28 +118,14 @@ class DetailViewModel(
                 view?.showToast(R.string.idea_released_message)
                 // remove complete menu on release
                 view?.hideMenu()
-
             }, { t ->
-                val responseMessage = t.message
-                if (responseMessage != null) {
-                    if (responseMessage.contains(
-                            "HTTP 404",
-                            ignoreCase = true
-                        )
-                    ) view?.showToast(R.string.parameter_missing_message)
-                    else if (responseMessage.contains(
-                            "HTTP 400",
-                            ignoreCase = true
-                        )
-                    ) view?.showToast(R.string.idea_not_found_message)
-                    else view?.showToast(R.string.network_issue_check_network)
-                }
-                Log.e("observer_ex", "exception releasing idea: $t")
+                view?.handleErrorResponse(t.message)
+                Log.e("IdeaBase_log", "exception releasing idea: $t")
             }).addTo(compositeDisposable)
     }
 
     private fun getMyRatingForThisIdeaAndStartDialog(id: String) {
-        var ratingGiven: Int? = null
+        var ratingGiven: Int?
         ideaApi.getIdeaById(id)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({ idea ->
@@ -165,30 +134,11 @@ class DetailViewModel(
                 }.let {
                     it?.rating
                 }
-                Log.d("observer_ex", "ratingGiven : $ratingGiven")
                 val ratingItem = ratingGiven ?: -1
-                Log.d("observer_ex", "ratingItem : $ratingItem")
                 view?.showPopupRatingDialog(id, ratingItem - 1)
             }, { t ->
-                val responseMessage = t.message
-                if (responseMessage != null) {
-                    if (responseMessage.contains(
-                            "HTTP 401",
-                            ignoreCase = true
-                        )
-                    ) {
-                        Log.d("observer_ex", "401 Authorization not valid")
-                        view?.showToast(R.string.not_authorized)
-                    } else if (responseMessage.contains(
-                            "HTTP 404",
-                            ignoreCase = true
-                        )
-                    ) {
-                        Log.d("observer_ex", "404 Idea not found")
-                        view?.showToast(R.string.idea_not_found_message)
-                    } else view?.showToast(R.string.network_issue_check_network)
-                }
-                Log.e("observer_ex", "exception getting idea: $t")
+                view?.handleErrorResponse(t.message)
+                Log.e("IdeaBase_log", "exception getting idea: $t")
             }).addTo(compositeDisposable)
     }
 
@@ -228,8 +178,6 @@ class DetailViewModel(
     }
 
     fun setRating(id: String, oldCheckedItem: Int, newCheckedItem: Int) {
-        Log.d("observer_ex", "rating $newCheckedItem, before was $oldCheckedItem")
-        // careful add +1 to rating checked item, they go 0..4
         if (oldCheckedItem != newCheckedItem) {
             val newRating = newCheckedItem + 1
             val postIdeaRating = PostIdeaRating(
@@ -242,12 +190,8 @@ class DetailViewModel(
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
                     setRatingImage(newRating.toDouble())
-                    Log.d(
-                        "observer_ex",
-                        "rating has been added/updated replaced"
-                    )
                 }, { t ->
-                    Log.e("observer_ex", "exception adding/updating rating user: $t")
+                    Log.e("IdeaBase_log", "exception adding/updating rating user: $t")
                 }).addTo(compositeDisposable)
         }
     }

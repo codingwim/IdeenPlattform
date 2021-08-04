@@ -69,18 +69,8 @@ class NewEditIdeaViewModel(
                 }
                 view?.setCategoryListItems(if (prefs.isLangEn()) categoryListEN else categoryListDE)
             }, { t ->
-                val responseMessage = t.message
-                if (responseMessage != null) {
-                    if (responseMessage.contains(
-                            "HTTP 401",
-                            ignoreCase = true
-                        )
-                    ) {
-                        Log.d("observer_ex", "401 Authorization not valid")
-                        view?.showToast(R.string.not_authorized)
-                    } else view?.showToast(R.string.network_issue_check_network)
-                }
-                Log.e("observer_ex", "exception getting categories: $t")
+                view?.handleErrorResponse(t.message)
+                Log.e("IdeaBase_log", "exception getting categories: $t")
             }).addTo(compositeDisposable)
     }
 
@@ -101,13 +91,13 @@ class NewEditIdeaViewModel(
     private fun getIdeaAndPrefill() {
         saveButtonText.set(R.string.save_idea_edit)
         uploadImageButtonText.set(R.string.change_image_idea_edit)
-        view?.setActionBarTitle("Edit idea")
+        view?.setActionBarTitleEdit()
 
         ideaApi.getIdeaById(editIdeaId)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({ idea ->
-                // now set all the bindable details, including image
-                //initialImageUrl will stay the same, even if a new image was loaded
+                // set all the bindable details, including image
+                // initialImageUrl will stay the same, even if a new image was loaded
                 initialImageUrl = idea.imageUrl
                 //ideaImageUrl will change if we choose a new image
                 ideaImageUrl = initialImageUrl
@@ -117,32 +107,14 @@ class NewEditIdeaViewModel(
                 ideaCategory =
                     if (prefs.isLangEn()) idea.category.name_en else idea.category.name_de
                 view?.setSelectedCategory(ideaCategory)
-                /*view?.setSelectedCategory(ideaCategory)*/
                 ideaDescription = idea.description
                 notifyPropertyChanged(BR.ideaName)
                 notifyPropertyChanged(BR.ideaCategory)
                 notifyPropertyChanged(BR.ideaDescription)
 
             }, { t ->
-                val responseMessage = t.message
-                if (responseMessage != null) {
-                    if (responseMessage.contains(
-                            "HTTP 401",
-                            ignoreCase = true
-                        )
-                    ) {
-                        Log.d("observer_ex", "401 Authorization not valid")
-                        view?.showToast(R.string.not_authorized)
-                    } else if (responseMessage.contains(
-                            "HTTP 404",
-                            ignoreCase = true
-                        )
-                    ) {
-                        Log.d("observer_ex", "404 Idea not found")
-                        view?.showToast(R.string.idea_not_found_message)
-                    } else view?.showToast(R.string.network_issue_check_network)
-                }
-                Log.e("observer_ex", "exception getting idea: $t")
+                view?.handleErrorResponse(t.message)
+                Log.e("IdeaBase_log", "exception getting idea: $t")
             }).addTo(compositeDisposable)
 
     }
@@ -168,19 +140,18 @@ class NewEditIdeaViewModel(
 
 
     fun onSaveClick() {
-        // check empty fields
         var fieldsNotEmpty = false
 
-        if (ideaName.isEmpty()) view?.setInputNameError(R.string.error_empty_name)
-        else if (ideaDescription.isEmpty()) view?.setInputDescriptionError(R.string.error_empty_description)
-        else if (ideaCategory.isEmpty()) view?.setInputCategoryError(R.string.error_empty_category)
-        else if (ideaImageUrl.isEmpty()) view?.showToast(R.string.error_empty_image)
-        else fieldsNotEmpty = true
-
-        Log.d("observer_ex", "imageurl: $ideaImageUrl ")
+        when {
+            ideaName.isEmpty() -> view?.setInputNameError(R.string.error_empty_name)
+            ideaDescription.isEmpty() -> view?.setInputDescriptionError(R.string.error_empty_description)
+            ideaCategory.isEmpty() -> view?.setInputCategoryError(R.string.error_empty_category)
+            ideaImageUrl.isEmpty() -> view?.showToast(R.string.error_empty_image)
+            else -> fieldsNotEmpty = true
+        }
 
         if (fieldsNotEmpty) {
-            // locale check to retrieve position of selected category
+
             val categoryId =
                 categoryListIds[if (prefs.isLangEn()) categoryListEN.indexOf(ideaCategory) else categoryListDE.indexOf(
                     ideaCategory
@@ -192,8 +163,6 @@ class NewEditIdeaViewModel(
             )
             val gson = Gson()
             val ideaString = gson.toJson(createIdea)
-
-            // build the multi form to send the api call
             val imagePart =
                 InputStreamRequestBody("image/*".toMediaType(), contentResolver, ideaImageUri)
 
@@ -220,20 +189,10 @@ class NewEditIdeaViewModel(
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe({ idea ->
                         view?.infoDialog(idea.id)
-                       prefs.clearIdeaDraft()
+                        prefs.clearIdeaDraft()
                     }, { t ->
-                        val responseMessage = t.message
-                        if (responseMessage != null) {
-                            if (responseMessage.contains(
-                                    "HTTP 400",
-                                    ignoreCase = true
-                                )
-                            ) {
-                                view?.showToast(R.string.parameter_missing_message)
-                                Log.d("observer_ex", "Parameter missing: $t")
-                            } else view?.showToast(R.string.network_issue_check_network)
-                        }
-                        Log.e("observer_ex", "exception adding idea: $t")
+                        view?.handleErrorResponse(t.message)
+                        Log.e("IdeaBase_log", "exception adding idea: $t")
                     }).addTo(compositeDisposable)
             }
         }
@@ -242,8 +201,8 @@ class NewEditIdeaViewModel(
     private fun updateIdea(createIdea: CreateIdea, imagePart: InputStreamRequestBody) {
         val updateImage = !ideaImageUrl.equals(initialImageUrl, false)
         ideaApi.updateIdea(editIdeaId, createIdea)
-            .onErrorComplete {
-                it is HttpException
+            .doOnError { t ->
+                view?.handleErrorResponse(t.message)
             }
             .andThen(
                 updateImage(imagePart, updateImage)
@@ -253,42 +212,9 @@ class NewEditIdeaViewModel(
                 view?.showToast(R.string.idea_updated_successflly)
                 view?.navigateBack()
             }, { t ->
-                val responseMessage = t.message
-                if (responseMessage != null) {
-                    if (responseMessage.contains(
-                            "HTTP 400",
-                            ignoreCase = true
-                        )
-                    ) {
-                        view?.showToast(R.string.parameter_missing_message)
-                        Log.d("observer_ex", "Parameter missing: $t")
-                    } else if (responseMessage.contains(
-                            "HTTP 401",
-                            ignoreCase = true
-                        )
-                    ) {
-                        view?.showToast(R.string.not_authorized)
-                        Log.d("observer_ex", "Not authorized: $t")
-                    } else if (responseMessage.contains(
-                            "HTTP 403",
-                            ignoreCase = true
-                        )
-                    ) {
-                        view?.showToast(R.string.idea_released_mot_editable_error)
-                        Log.d(
-                            "observer_ex",
-                            "Not the author of the idea, or idea already released.: $t"
-                        )
-                    } else if (responseMessage.contains(
-                            "HTTP 404",
-                            ignoreCase = true
-                        )
-                    ) {
-                        view?.showToast(R.string.idea_not_found_message)
-                        Log.d("observer_ex", "Idea was not found: $t")
-                    } else view?.showToast(R.string.network_issue_check_network)
-                }
-                Log.e("observer_ex", "exception updating idea: $t")
+                view?.handleErrorResponse(t.message)
+                Log.e("IdeaBase_log", "exception updating idea: $t")
+                view?.navigateBack()
             }).addTo(compositeDisposable)
     }
 
@@ -299,17 +225,16 @@ class NewEditIdeaViewModel(
         } else Completable.complete()
     }
 
-
     fun onGetImageClick() {
         view?.getImageDialog()
     }
 
     fun onIdeaNameTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-        if ((count > 0) && (before==0)) view?.resetEmptyIdeaName()
+        if ((count > 0) && (before == 0)) view?.resetEmptyIdeaName()
     }
 
     fun onDescriptionTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-        if ((count > 0) && (before==0)) view?.resetEmptyDescription()
+        if ((count > 0) && (before == 0)) view?.resetEmptyDescription()
     }
 
     fun setSelectedImage(uri: Uri) {
@@ -330,7 +255,6 @@ class NewEditIdeaViewModel(
             .build()
 
     fun onBackPressed() {
-        //Log.d("observer_ex", "on back pressed")
         if ((editIdeaId.isEmpty()) &&
             (ideaCategory.isNotEmpty() or
                     ideaDescription.isNotEmpty() or
@@ -343,7 +267,7 @@ class NewEditIdeaViewModel(
 
     fun onCancelWithoutDraft() {
         prefs.clearIdeaDraft()
-        view?.showToast("Adding idea cancelled without saving")
+        view?.showToast(R.string.adding_cancelled_without_draft)
         view?.navigateBack()
     }
 
@@ -353,8 +277,7 @@ class NewEditIdeaViewModel(
         prefs.setIdeaCategoryDraft(ideaCategory)
         prefs.setIdeaDescriptionDraft(ideaDescription)
         prefs.setIdeaDraftSaved(true)
-        view?.showToast("The entered idea has been saved, but not posted")
+        view?.showToast(R.string.idea_saved)
         view?.navigateBack()
     }
-
 }

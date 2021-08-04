@@ -10,14 +10,12 @@ import androidx.navigation.NavDirections
 import androidx.navigation.Navigation
 import com.codingschool.ideabase.R
 import com.codingschool.ideabase.databinding.FragmentLoadingBinding
-import com.codingschool.ideabase.ui.login.LoginFragmentDirections
-import com.codingschool.ideabase.ui.register.RegisterFragmentDirections
 import com.codingschool.ideabase.utils.toast
 import org.koin.android.ext.android.inject
 import org.koin.core.parameter.parametersOf
 
 class LoadingFragment: Fragment(), LoadingView {
-    private val viewModel: LoadingViewModel by inject<LoadingViewModel> {
+    private val viewModel: LoadingViewModel by inject {
         parametersOf(arguments?.let { LoadingFragmentArgs.fromBundle(it).onLine })
     }
     private lateinit var binding: FragmentLoadingBinding
@@ -27,20 +25,17 @@ class LoadingFragment: Fragment(), LoadingView {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        // Inflate the layout for this fragment
         binding = DataBindingUtil.inflate(
             inflater,
             R.layout.fragment_loading,
             container,
             false
         )
-
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         binding.vm = viewModel
         viewModel.attachView(this)
         viewModel.init()
@@ -51,7 +46,6 @@ class LoadingFragment: Fragment(), LoadingView {
     }
 
     override fun navigateToLogin() {
-        //toLogin with userName !!
         val action: NavDirections =
             LoadingFragmentDirections.toLogin()
         Navigation.findNavController(requireView()).navigate(action)
@@ -67,5 +61,4 @@ class LoadingFragment: Fragment(), LoadingView {
         super.onDestroy()
         viewModel.compositeDisposable.clear()
     }
-
 }

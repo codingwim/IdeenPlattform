@@ -11,7 +11,7 @@ import com.codingschool.ideabase.utils.ImageHandler
 class CommentListAdapter(private val imageHandler: ImageHandler): RecyclerView.Adapter<CommentListAdapter.CommentViewHolder>() {
 
     private var list: List<Comment> = emptyList()
-    lateinit var commentClickListener: (String) -> Unit
+    private lateinit var commentClickListener: (String) -> Unit
 
     class CommentViewHolder(private val binding: CommentItemBinding,private val imageHandler: ImageHandler): RecyclerView.ViewHolder(binding.root) {
         fun setBinding(
@@ -67,7 +67,6 @@ class CommentListAdapter(private val imageHandler: ImageHandler): RecyclerView.A
         val idea = list[position]
         holder.setBinding(idea, commentClickListener)
     }
-
 
     fun addCommentClickListener(listener: (String) -> Unit) {
         this.commentClickListener = listener

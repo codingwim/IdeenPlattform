@@ -1,8 +1,6 @@
 package com.codingschool.ideabase
 
 import android.app.Application
-import com.ashokvarma.gander.Gander
-import com.ashokvarma.gander.imdb.GanderIMDB
 import com.jakewharton.threetenabp.AndroidThreeTen
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
@@ -19,13 +17,11 @@ class MyApplication : Application() {
         super.onCreate()
         AndroidThreeTen.init(this)
 
-        startKoin() {
+        startKoin {
             androidLogger(Level.DEBUG)
             androidContext(this@MyApplication)
             modules(appModule)
         }
-
-        Gander.setGanderStorage(GanderIMDB.getInstance())
     }
         companion object {
             private var instance: MyApplication? = null

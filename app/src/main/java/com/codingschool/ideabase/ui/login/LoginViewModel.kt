@@ -25,8 +25,7 @@ class LoginViewModel(
     fun init() {
         if (prefs.getAuthString().isNotEmpty()) {
             checkCredentialsWithAPI()
-        } else Log.d("observer_ex", "prefs empty")
-        Log.d("observer_ex", "logon prefs: ${prefs.getLocale()}")
+        }
     }
 
     fun attachView(view: LoginView) {
@@ -45,19 +44,16 @@ class LoginViewModel(
         else if (!validEmail(username)) view?.setInputUsernameError(R.string.error_not_email_adress)
         else if (password.isEmpty()) view?.setInputPasswordError(R.string.error_empty_password)
         else {
-            // fields are valid, lets build the encoded base Auth string, and confirm credentials with "get own" user data
+            // fields are valid, build the encoded base Auth token string, put in prefs
             buildBasicAuthAndStoreInPrefs()
-
-            // with getOwnUser we can check credentials, will automatically use auth token from preferences !
+            // with getOwnUser we can check credentials, will automatically use base Auth token from preferences !
             checkCredentialsWithAPI()
         }
     }
 
     private fun checkCredentialsWithAPI() {
         ideaApi.getOwnUser().observeOn(AndroidSchedulers.mainThread())
-            //.subscribeOn(Schedulers.io())
             .subscribe({ user ->
-                // we could put the users firstname, etc in sharedprefs if we need to...
                 prefs.setCredentialID(user.id)
                 prefs.setIsManager(user.isManager)
                 if (user.profilePicture != null) {
@@ -65,28 +61,29 @@ class LoginViewModel(
                     view?.navigateToTopRankedFragment()
                 } else view?.showSetProfilePictureDialog()
 
-                //Log.d("observer_ex", "Current logged in user: ${user.firstname}")
             }, { t ->
                 val responseMessage = t.message
                 if (responseMessage != null) {
-                    if (responseMessage.contains(
+                    when {
+                        responseMessage.contains(
                             "HTTP 404",
                             ignoreCase = true
-                        )
-                    ) {
-                        view?.setInputUsernameError("")
-                        view?.setInputPasswordError("")
-                        view?.showToast(R.string.worng_login_credentials_message)
-                    } else if (responseMessage.contains(
+                        ) -> {
+                            view?.setInputUsernameError("")
+                            view?.setInputPasswordError("")
+                            view?.showToast(R.string.worng_login_credentials_message)
+                        }
+                        responseMessage.contains(
                             "HTTP 401",
                             ignoreCase = true
-                        )
-                    ) {
-                        prefs.setCommentDraft("")
-                        view?.showToast(R.string.error_pwd_user_not_valid)
-                    } else view?.showToast(R.string.network_issue_check_network)
+                        ) -> {
+                            prefs.setCommentDraft("")
+                            view?.showToast(R.string.error_pwd_user_not_valid)
+                        }
+                        else -> view?.showToast(R.string.network_issue_check_network)
+                    }
                 }
-                Log.e("observer_ex", "exception adding new user: $t")
+                Log.e("IdeaBase_log", "exception adding new user: $t")
             }).addTo(compositeDisposable)
     }
 
@@ -100,7 +97,7 @@ class LoginViewModel(
     }
 
     fun onSetPictureNow() {
-        // navigate to editprofile AND open image selector
+        // navigate to editProfile AND open image selector
         view?.navigateToEditProfileFragmentAndLoadPictureSelector()
 
     }

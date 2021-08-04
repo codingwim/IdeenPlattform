@@ -10,11 +10,10 @@ import androidx.navigation.NavDirections
 import androidx.navigation.Navigation
 import com.codingschool.ideabase.R
 import com.codingschool.ideabase.databinding.FragmentRegisterBinding
-import com.codingschool.ideabase.ui.login.LoginFragmentDirections
+import com.codingschool.ideabase.utils.errorHandler
 import com.codingschool.ideabase.utils.getResString
 import com.codingschool.ideabase.utils.toast
 import org.koin.android.ext.android.inject
-
 
 class RegisterFragment : Fragment(), RegisterView {
 
@@ -26,7 +25,6 @@ class RegisterFragment : Fragment(), RegisterView {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        // Inflate the layout for this fragment
         binding = DataBindingUtil.inflate(
             inflater,
             R.layout.fragment_register,
@@ -38,16 +36,17 @@ class RegisterFragment : Fragment(), RegisterView {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         binding.vm = viewModel
         viewModel.attachView(this)
     }
-
 
     override fun showToast(any: Any) {
         requireActivity().toast(any)
     }
 
+    override fun handleErrorResponse(errorMessage: String?) {
+        if (requireActivity().errorHandler(errorMessage)) showToast(R.string.network_issue_check_network)
+    }
     override fun setInputFirstnameError(any: Any) {
         binding.tilFirstname.error = requireActivity().getResString(any)
     }
@@ -93,14 +92,12 @@ class RegisterFragment : Fragment(), RegisterView {
     }
 
     override fun navigateToLoginRegistered(username: String) {
-        //toLogin with userName !!
         val action: NavDirections =
             RegisterFragmentDirections.toLogin(username)
         Navigation.findNavController(requireView()).navigate(action)
     }
 
     override fun navigateCancelRegistration() {
-        //toLogin with userName null
         val action: NavDirections =
             RegisterFragmentDirections.toLogin()
         Navigation.findNavController(requireView()).navigate(action)
@@ -110,5 +107,4 @@ class RegisterFragment : Fragment(), RegisterView {
         super.onDestroy()
         viewModel.compositeDisposable.clear()
     }
-
 }

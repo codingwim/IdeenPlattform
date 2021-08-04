@@ -20,10 +20,7 @@ import androidx.navigation.Navigation
 import com.codingschool.ideabase.MainActivity
 import com.codingschool.ideabase.R
 import com.codingschool.ideabase.databinding.FragmentNewEditIdeaBinding
-import com.codingschool.ideabase.utils.ImageHandler
-import com.codingschool.ideabase.utils.getResString
-import com.codingschool.ideabase.utils.hideKeyboard
-import com.codingschool.ideabase.utils.toast
+import com.codingschool.ideabase.utils.*
 import com.github.drjacky.imagepicker.ImagePicker
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import org.koin.android.ext.android.inject
@@ -49,16 +46,15 @@ class NewEditIdeaFragment: Fragment(), NewEditIdeaView {
             }
         }
 
-        // we need menu to catch back arrow in action bar
+        // menu to catch back arrow in action bar
         setHasOptionsMenu(true)
 
-        // below catches android back button
+        // catch android back button
         requireActivity()
             .onBackPressedDispatcher
             .addCallback(this) {
                 viewModel.onBackPressed()
             }
-
     }
 
     override fun onCreateView(
@@ -66,7 +62,6 @@ class NewEditIdeaFragment: Fragment(), NewEditIdeaView {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        // Inflate the layout for this fragment
         binding = DataBindingUtil.inflate(
             inflater,
             R.layout.fragment_new_edit_idea,
@@ -78,20 +73,13 @@ class NewEditIdeaFragment: Fragment(), NewEditIdeaView {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         binding.vm = viewModel
         viewModel.attachView(this)
         viewModel.init()
-
-
     }
 
-/*    override fun getStringResource(res: Int) {
-        requireActivity().getString(res)
-    }*/
-
-    override fun setActionBarTitle(title: String) {
-        (activity as MainActivity).supportActionBar?.title = title
+    override fun setActionBarTitleEdit() {
+        (activity as MainActivity).supportActionBar?.title = requireActivity().getResString(R.string.edit_idea_title)
     }
 
     override fun setCategoryListItems(items: List<String>) {
@@ -169,6 +157,10 @@ class NewEditIdeaFragment: Fragment(), NewEditIdeaView {
                 dialog.dismiss()
             }
             .show()
+    }
+
+    override fun handleErrorResponse(errorMessage: String?) {
+        if (requireActivity().errorHandler(errorMessage)) showToast(R.string.network_issue_check_network)
     }
 
     override fun navigateToDetailFragment(id: String) {

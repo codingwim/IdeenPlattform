@@ -16,10 +16,9 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import org.koin.android.ext.android.inject
 import org.koin.core.parameter.parametersOf
 
-
 class LoginFragment : Fragment(), LoginView {
 
-    private val viewModel: LoginViewModel by inject<LoginViewModel> {
+    private val viewModel: LoginViewModel by inject {
         parametersOf(arguments?.let { LoginFragmentArgs.fromBundle(it).userName })
         }
     private lateinit var binding: FragmentLoginBinding
@@ -29,20 +28,17 @@ class LoginFragment : Fragment(), LoginView {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        // Inflate the layout for this fragment
         binding = DataBindingUtil.inflate(
             inflater,
             R.layout.fragment_login,
             container,
             false
         )
-
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         binding.vm = viewModel
         viewModel.attachView(this)
         viewModel.init()
@@ -60,13 +56,13 @@ class LoginFragment : Fragment(), LoginView {
         MaterialAlertDialogBuilder(
             requireActivity()
         )
-            .setTitle("Set your profile picture")
-            .setMessage("Other users will recognise your ideas and comments easier if you set a profile picture! You can to this later in the menu of the profile screen")
-            .setNegativeButton("SET PROFILE PICTURE NOW") { dialog, _ ->
+            .setTitle(getString(R.string.set_profile_pic))
+            .setMessage(getString(R.string.porfile_message))
+            .setNegativeButton(getString(R.string.btn_prof_set_not)) { dialog, _ ->
                 viewModel.onSetPictureNow()
                 dialog.dismiss()
             }
-            .setPositiveButton("LATER") { dialog, _ ->
+            .setPositiveButton(getString(R.string.btn_later)) { dialog, _ ->
                 navigateToTopRankedFragment()
                 dialog.dismiss()
             }

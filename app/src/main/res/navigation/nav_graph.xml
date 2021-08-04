@@ -16,7 +16,11 @@
             />
         <action
             android:id="@+id/toEditNewIdea"
-            app:destination="@id/newEditIdeaFragment" />
+            app:destination="@id/newEditIdeaFragment"
+            app:enterAnim="@anim/slide_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in_short"
+            app:popExitAnim="@anim/fade_out"/>
         <argument
             android:name="topOrAll"
             app:argType="boolean"
@@ -24,10 +28,18 @@
             />
         <action
             android:id="@+id/toComment"
-            app:destination="@id/commentFragment" />
+            app:destination="@id/commentFragment"
+            app:enterAnim="@anim/slide_in_from_bottom"
+            app:popEnterAnim="@anim/fade_in_short"
+            app:exitAnim="@anim/fade_out"
+            app:popExitAnim="@anim/slide_out_to_bottom"/>
         <action
             android:id="@+id/toProfile"
-            app:destination="@id/navigation_profile" />
+            app:destination="@id/navigation_profile"
+            app:enterAnim="@anim/slide_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in_short"
+            app:popExitAnim="@anim/fade_out"/>
         <action
             android:id="@+id/toOffline"
             app:destination="@id/loadingFragment" />
@@ -43,7 +55,11 @@
             app:destination="@id/detailFragment" />
         <action
             android:id="@+id/toEditNewIdea"
-            app:destination="@id/newEditIdeaFragment" />
+            app:destination="@id/newEditIdeaFragment"
+            app:enterAnim="@anim/slide_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in_short"
+            app:popExitAnim="@anim/fade_out"/>
         <argument
             android:name="topOrAll"
             app:argType="boolean"
@@ -51,10 +67,18 @@
             />
         <action
             android:id="@+id/toComment"
-            app:destination="@id/commentFragment" />
+            app:destination="@id/commentFragment"
+            app:enterAnim="@anim/slide_in_from_bottom"
+            app:popEnterAnim="@anim/fade_in_short"
+            app:exitAnim="@anim/fade_out"
+            app:popExitAnim="@anim/slide_out_to_bottom"/>
         <action
             android:id="@+id/toProfile"
-            app:destination="@id/navigation_profile" />
+            app:destination="@id/navigation_profile"
+            app:enterAnim="@anim/slide_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in_short"
+            app:popExitAnim="@anim/fade_out"/>
         <action
             android:id="@+id/toOffline"
             app:destination="@id/loadingFragment" />
@@ -73,7 +97,11 @@
             app:destination="@id/loginFragment" />
         <action
             android:id="@+id/toEditNewIdea"
-            app:destination="@id/newEditIdeaFragment" />
+            app:destination="@id/newEditIdeaFragment"
+            app:enterAnim="@anim/slide_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in_short"
+            app:popExitAnim="@anim/fade_out"/>
         <argument
             android:name="id"
             app:argType="string"
@@ -126,13 +154,25 @@
             app:argType="string" />
         <action
             android:id="@+id/toComment"
-            app:destination="@id/commentFragment" />
+            app:destination="@id/commentFragment"
+            app:enterAnim="@anim/slide_in_from_bottom"
+            app:popEnterAnim="@anim/fade_in_short"
+            app:exitAnim="@anim/fade_out"
+            app:popExitAnim="@anim/slide_out_to_bottom"/>
         <action
             android:id="@+id/toEditNewIdea"
-            app:destination="@id/newEditIdeaFragment" />
+            app:destination="@id/newEditIdeaFragment"
+            app:enterAnim="@anim/slide_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in_short"
+            app:popExitAnim="@anim/fade_out"/>
         <action
             android:id="@+id/toProfile"
-            app:destination="@id/navigation_profile" />
+            app:destination="@id/navigation_profile"
+            app:enterAnim="@anim/slide_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in_short"
+            app:popExitAnim="@anim/fade_out"/>
         <action
             android:id="@+id/toOffline"
             app:destination="@id/loadingFragment" />

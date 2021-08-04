@@ -20,8 +20,6 @@ class ImageHandler(
     fun getProfilePic(url: String?, view: ImageView) {
         val uriOrDrawable = if (url != null) url else "R.drawable.ic_baseline_person_24"
         picasso
-            .setIndicatorsEnabled(true)
-        picasso
             .load(uriOrDrawable)
             .resize(240,240)
             .centerCrop()
@@ -32,14 +30,11 @@ class ImageHandler(
 
     fun getIdeaImage(uri: String, view: ImageView) {
         val uriOrDrawable = if (uri.isNotEmpty()) uri else "R.drawable.image_placeholder_480_360"
-
-        picasso
-            .setIndicatorsEnabled(true)
         picasso
             .load(uriOrDrawable)
             .resize(480,360)
             .placeholder(R.drawable.image_placeholder_480_360)
-            .error(R.drawable.image_not_found480_360)
+            .error(R.drawable.image_not_found)
             .into(view)
     }
 

@@ -17,7 +17,6 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.addTo
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MultipartBody
-import retrofit2.HttpException
 import java.util.regex.Pattern
 
 class EditProfileViewModel(
@@ -81,40 +80,18 @@ class EditProfileViewModel(
             InputStreamRequestBody("image/*".toMediaType(), contentResolver, profileImageUri)
         val requestBodyForUpdatedImage = getRequestBodyForUpdatedImage(imagePart)
         ideaApi.updateMyProfilePicture(requestBodyForUpdatedImage)
-            .onErrorComplete {
-                it is HttpException
+            .doOnError {
             }
             .andThen {
                 initialProfileImageUrl = profileImageUrl
             }
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
-                Log.d("observer_ex", "Profile image updated")
-                //view?.navigateBack()
+
             }, { t ->
-                val responseMessage = t.message
-                if (responseMessage != null) {
-                    if (responseMessage.contains(
-                            "HTTP 400",
-                            ignoreCase = true
-                        )
-                    ) {
-                        view?.showToast(R.string.parameter_missing_message)
-                        Log.d("observer_ex", "Parameter missing: $t")
-                    } else if (responseMessage.contains(
-                            "HTTP 401",
-                            ignoreCase = true
-                        )
-                    ) {
-                        view?.showToast(R.string.not_authorized)
-                        Log.d("observer_ex", "Not authorized: $t")
-                    } else view?.showToast(R.string.network_issue_check_network)
-                }
-                Log.e("observer_ex", "exception updating idea: $t")
+                view?.handleErrorResponse(t.message)
+                Log.e("IdeaBase_log", "exception updating idea: $t")
             }).addTo(compositeDisposable)
-
-
-
     }
 
     fun onSaveClick() {
@@ -124,7 +101,7 @@ class EditProfileViewModel(
         when {
             firstname.isEmpty() -> view?.setInputFirstnameError(R.string.enter_first_name_error)
             lastname.isEmpty() -> view?.setInputLastnameError(R.string.error_enter_last_name)
-            password.isEmpty() -> view?.setInputPasswordError(R.string.pwd_min_error)
+            password.isEmpty() -> view?.setInputPasswordError(R.string.please_choose_pwd)
             password2.isEmpty() -> view?.setInputPasswordRepeatError(R.string.pwd_same_error)
             else -> fieldsNotEmpty = true
         }
@@ -138,13 +115,13 @@ class EditProfileViewModel(
                 view?.setInputPasswordRepeatError(R.string.pwd_are_ot_same_error)
             } else
             // check pwd valid
-                if (!PASSWORD_PATTERN.matcher(password).matches()) {
+                if (!passwordPattern.matcher(password).matches()) {
                     password = ""
                     password2 = ""
                     notifyPropertyChanged(BR.password)
                     notifyPropertyChanged(BR.password2)
                     view?.setFocusPasswordInput()
-                    view?.setInputPasswordError("Password must contain a minimum of 8 characters, including at least 1 number/1 letter and a special char")
+                    view?.setInputPasswordError(R.string.password_rule)
                 } else {
                     validCredentialsToRegister = true
                 }
@@ -161,25 +138,11 @@ class EditProfileViewModel(
             ideaApi.updateUser(updatedUser)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
-                    Log.d("observer_ex", "user updated over API")
                     view?.showToast(R.string.please_login_again)
                     view?.navigateToLoginRegistered(email)
                 }, { t ->
-                    val responseMessage = t.message
-                    if (responseMessage != null) {
-                        if (responseMessage.contains(
-                                "HTTP 401",
-                                ignoreCase = true
-                            )
-                        ) view?.showToast("You are not authorized to log in")
-                        else if (responseMessage.contains(
-                                "HTTP 400",
-                                ignoreCase = true
-                            )
-                        ) view?.showToast(R.string.parameter_missing_message)
-                        else view?.showToast(R.string.network_issue_check_network)
-                    }
-                    Log.e("observer_ex", "exception updating user: $t")
+                    view?.handleErrorResponse(t.message)
+                    Log.e("IdeaBase_log", "exception updating user: $t")
                 }).addTo(compositeDisposable)
         }
 
@@ -202,29 +165,9 @@ class EditProfileViewModel(
                 notifyPropertyChanged(BR.firstname)
                 notifyPropertyChanged(BR.lastname)
             }, { t ->
-                /*val responseMessage = t.message
-                if (responseMessage != null) {
-                    if (responseMessage.contains(
-                            "HTTP 404",
-                            ignoreCase = true
-                        )
-                    ) {
-
-                        view?.setInputPasswordError("")
-                        view?.showToast("Authorization is not valid")
-                    } else if (responseMessage.contains(
-                            "HTTP 401",
-                            ignoreCase = true
-                        )
-                    ) view?.showToast("You are not authorized to log in")
-                    else view?.showToast(R.string.network_issue_check_network)
-                }*/
-                Log.e("observer_ex", "exception getting user info: $t")
+                view?.handleErrorResponse(t.message)
+                Log.e("IdeaBase_log", "exception getting user info: $t")
             }).addTo(compositeDisposable)
-    }
-
-    private fun validPassword(password: String): Boolean {
-        return password.length > 4
     }
 
     fun onFirstnameTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
@@ -242,7 +185,7 @@ class EditProfileViewModel(
     fun onPassword2TextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
         if ((count > 0) && (before==0)) view?.resetPasswordRepeatError()
     }
-    private val PASSWORD_PATTERN = Pattern.compile(
+    private val passwordPattern = Pattern.compile(
         "^" +  "(?=.*[0-9])" +         //at least 1 digit
                 "(?=.*[a-zA-Z])" +  //at least 1 letter->any letter
                 "(?=.*[@#$%^&+=!?])" +  //at least 1 special character
@@ -250,7 +193,7 @@ class EditProfileViewModel(
                 ".{8,}" +  //at least 8 characters
                 "$"
     )
-    fun getRequestBodyForUpdatedImage(imagePart: InputStreamRequestBody) =
+    private fun getRequestBodyForUpdatedImage(imagePart: InputStreamRequestBody) =
         MultipartBody.Builder()
             .setType(MultipartBody.FORM)
             .addFormDataPart(

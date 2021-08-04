@@ -10,19 +10,14 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.Navigation
 import com.codingschool.ideabase.R
 import com.codingschool.ideabase.databinding.FragmentCommentBinding
-import com.codingschool.ideabase.utils.getResString
-import com.codingschool.ideabase.utils.showKeyboard
-import com.codingschool.ideabase.utils.toast
+import com.codingschool.ideabase.utils.*
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import org.koin.android.ext.android.inject
 import org.koin.core.parameter.parametersOf
-import com.codingschool.ideabase.utils.ImageHandler
-import com.codingschool.ideabase.utils.hideKeyboard
-
 
 class CommentFragment : Fragment(), CommentView {
 
-    private val viewModel: CommentViewModel by inject<CommentViewModel> {
+    private val viewModel: CommentViewModel by inject {
         parametersOf(arguments?.let { CommentFragmentArgs.fromBundle(it).id })
     }
 
@@ -34,23 +29,20 @@ class CommentFragment : Fragment(), CommentView {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        // Inflate the layout for this fragment
         binding = DataBindingUtil.inflate(
             inflater,
             R.layout.fragment_comment,
             container,
             false
         )
-
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        //show keyboard and focus edittext
+        //focus edittext
         binding.etComment.requestFocus()
-        requireActivity().showKeyboard(binding.etComment)
 
         binding.vm = viewModel
         viewModel.attachView(this)
@@ -64,21 +56,24 @@ class CommentFragment : Fragment(), CommentView {
         imageHandler.getProfilePic(url, binding.ivProfilePicture)
     }
 
-
     override fun setCommentEmptyError(any: Any) {
         binding.tvCommentTitle.text = requireActivity().getResString(any)
-        //add warning color
         binding.tvCommentTitle.setTextColor(Color.RED)
     }
 
     override fun resetCommentEmptyError() {
-        binding.tvCommentTitle.text = requireActivity().getResString(R.string.prof_info_will_be_visible_commenting)
-        //remove warning color
+        binding.tvCommentTitle.text =
+            requireActivity().getResString(R.string.prof_info_will_be_visible_commenting)
         binding.tvCommentTitle.setTextColor(Color.BLACK)
     }
 
     override fun navigateBack() {
+        view?.let { requireActivity().hideKeyboard(it) }
         Navigation.findNavController(requireView()).navigateUp()
+    }
+
+    override fun handleErrorResponse(errorMessage: String?) {
+        if (requireActivity().errorHandler(errorMessage)) showToast(R.string.network_issue_check_network)
     }
 
     override fun cancelDialog() {
@@ -92,7 +87,7 @@ class CommentFragment : Fragment(), CommentView {
                 viewModel.onCancelWithoutDraft()
                 dialog.dismiss()
             }
-            .setPositiveButton("SAVE") { dialog, _ ->
+            .setPositiveButton(getString(R.string.save)) { dialog, _ ->
                 viewModel.onCancelWithDraft()
                 dialog.dismiss()
             }
@@ -103,5 +98,4 @@ class CommentFragment : Fragment(), CommentView {
         super.onDestroy()
         viewModel.compositeDisposable.clear()
     }
-
 }

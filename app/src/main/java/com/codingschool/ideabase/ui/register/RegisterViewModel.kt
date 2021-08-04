@@ -36,43 +36,41 @@ class RegisterViewModel(private val ideaApi: IdeaApi) : BaseObservable() {
     @get:Bindable
     var password2: String = ""
 
-
     fun onRegisterClick() {
-        // check empty fields
         var fieldsNotEmpty = false
 
-        if (firstname.isEmpty()) view?.setInputFirstnameError("Please enter your first name")
-        else if (lastname.isEmpty()) view?.setInputLastnameError("Please enter your first name")
-        else if (email.isEmpty()) view?.setInputEmailError("Please enter a valid e-mail address")
-        else if (password.isEmpty()) view?.setInputPasswordError("Please enter a password of minimum 8 characters, including at least 1 number")
-        else if (password2.isEmpty()) view?.setInputPasswordRepeatError("Please enter the same password again")
-        else fieldsNotEmpty = true
+        when {
+            firstname.isEmpty() -> view?.setInputFirstnameError(R.string.enter_first_name_error)
+            lastname.isEmpty() -> view?.setInputLastnameError(R.string.error_enter_last_name)
+            email.isEmpty() -> view?.setInputEmailError(R.string.enter_valid_email)
+            password.isEmpty() -> view?.setInputPasswordError(R.string.please_choose_pwd)
+            password2.isEmpty() -> view?.setInputPasswordRepeatError(R.string.pwd_same_error)
+            else -> fieldsNotEmpty = true
+        }
 
         // if fields not empty, check validity
-        var validCredentailsToRegister = false
+        var validCredentialsToRegister = false
         if (fieldsNotEmpty) {
-            // check valid e-mail
-            if (!validEmail(email)) view?.setInputEmailError("Please enter a valid e-mail address")
+            if (!validEmail(email)) view?.setInputEmailError(R.string.enter_valid_email)
             else
             // check pwds the same
                 if (!(password.equals(password2))) {
-                    view?.setInputPasswordRepeatError("Passwords are not the same")
+                    view?.setInputPasswordRepeatError(R.string.pwd_are_ot_same_error)
                 } else
                 // check pwd valid
-                    if (!PASSWORD_PATTERN.matcher(password).matches()) {
+                    if (!passwordPattern.matcher(password).matches()) {
                         password = ""
                         password2 = ""
                         notifyPropertyChanged(BR.password)
                         notifyPropertyChanged(BR.password2)
                         view?.setFocusPasswordInput()
-                        view?.setInputPasswordError("Password must contain a minimum of 8 characters, including at least 1 number/1 letter and a special char")
+                        view?.setInputPasswordError(R.string.password_rule)
                     } else {
-                        validCredentailsToRegister = true
+                        validCredentialsToRegister = true
                     }
         }
 
-        // if credentials valid, register User via API call
-        if (validCredentailsToRegister) {
+        if (validCredentialsToRegister) {
             val newUser = CreateUser(
                 email,
                 firstname,
@@ -82,25 +80,11 @@ class RegisterViewModel(private val ideaApi: IdeaApi) : BaseObservable() {
             ideaApi.registerUser(newUser)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
-                    Log.d("observer_ex", "new user added over API")
-                    view?.showToast("You are registered! You can now login with your e-mail and password")
+                    view?.showToast(R.string.registered_succes)
                     view?.navigateToLoginRegistered(email)
                 }, { t ->
-                    val responseMessage = t.message
-                    if (responseMessage != null) {
-                        if (responseMessage.contains(
-                                "HTTP 409",
-                                ignoreCase = true
-                            )
-                        ) view?.setInputEmailError(R.string.email_already_inuse_input_error)
-                        else if (responseMessage.contains(
-                                "HTTP 400",
-                                ignoreCase = true
-                            )
-                        ) view?.setInputEmailError("Some parameter is missing")
-                        else view?.showToast(R.string.network_issue_check_network)
-                    }
-                    Log.e("observer_ex", "exception adding new user: $t")
+                    view?.handleErrorResponse(t.message)
+                    Log.e("IdeaBase_log", "exception adding new user: $t")
                 }).addTo(compositeDisposable)
         }
     }
@@ -108,36 +92,33 @@ class RegisterViewModel(private val ideaApi: IdeaApi) : BaseObservable() {
     private fun validEmail(email: String) =
         android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()
 
-    private fun validPassword(password: String): Boolean {
-        return password.length > 4
-    }
-
     fun onCancelClick() {
         view?.showToast(R.string.registration_cancelled)
         view?.navigateCancelRegistration()
     }
 
     fun onFirstnameTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-        if ((count > 0) && (before==0)) view?.resetFirstnameError()
+        if ((count > 0) && (before == 0)) view?.resetFirstnameError()
     }
 
     fun onLastnameTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-        if ((count > 0) && (before==0)) view?.resetLastnameError()
+        if ((count > 0) && (before == 0)) view?.resetLastnameError()
     }
 
     fun onEmailTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-        if ((count > 0) && (before==0)) view?.resetEmailError()
+        if ((count > 0) && (before == 0)) view?.resetEmailError()
     }
 
     fun onPasswordTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-        if ((count > 0) && (before==0)) view?.resetPasswordError()
+        if ((count > 0) && (before == 0)) view?.resetPasswordError()
     }
 
     fun onPassword2TextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-        if ((count > 0) && (before==0)) view?.resetPasswordRepeatError()
+        if ((count > 0) && (before == 0)) view?.resetPasswordRepeatError()
     }
-    private val PASSWORD_PATTERN = Pattern.compile(
-        "^" +  "(?=.*[0-9])" +         //at least 1 digit
+
+    private val passwordPattern = Pattern.compile(
+        "^" + "(?=.*[0-9])" +         //at least 1 digit
                 "(?=.*[a-zA-Z])" +  //at least 1 letter->any letter
                 "(?=.*[@#$%^&+=!?])" +  //at least 1 special character
                 "(?=\\S+$)" +  //no white spaces

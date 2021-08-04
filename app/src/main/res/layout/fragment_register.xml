@@ -162,7 +162,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/button_height"
                     android:layout_margin="@dimen/margin_small"
-                    app:layout_constraintVertical_bias="0.9"
                     android:backgroundTint="@color/yellow"
                     android:onClick="@{() -> vm.onRegisterClick()}"
                     android:text="@string/register"

@@ -34,7 +34,7 @@ class CommentViewModel (
     var comment: String = prefs.getCommentDraft()
 
     fun onCommentTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-        if (count > 0) view?.resetCommentEmptyError()
+        if ((count > 0) && (before == 0)) view?.resetCommentEmptyError()
     }
 
     fun onSubmitClick() {
@@ -48,21 +48,8 @@ class CommentViewModel (
                     prefs.setCommentDraft("")
                     view?.navigateBack()
                 }, { t ->
-                    val responseMessage = t.message
-                    if (responseMessage != null) {
-                        if (responseMessage.contains(
-                                "HTTP 404",
-                                ignoreCase = true
-                            )
-                        ) view?.showToast(R.string.parameter_missing_message)
-                        else if (responseMessage.contains(
-                                "HTTP 400",
-                                ignoreCase = true
-                            )
-                        ) view?.showToast(R.string.idea_not_found_message)
-                        else view?.showToast(R.string.network_issue_check_network)
-                    }
-                    Log.e("observer_ex", "exception adding comment: $t")
+                    view?.handleErrorResponse(t.message)
+                    Log.e("IdeaBase_log", "exception adding comment: $t")
                 }).addTo(compositeDisposable)
 
         }

@@ -24,8 +24,9 @@
         <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/ivProfilePicture"
             android:layout_width="@dimen/profile_picture_edit_profile"
-            android:layout_height="160dp"
+            android:layout_height="@dimen/profile_picture_edit_profile"
             android:layout_margin="@dimen/margin_large"
+            android:padding="@dimen/padding_xsmall"
             android:scaleType="centerCrop"
             android:clickable="true"
             android:focusable="true"
@@ -34,12 +35,10 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-
             app:shapeAppearanceOverlay="@style/circleImageView"
             app:srcCompat="@drawable/ic_baseline_person_add_alt_1_24"
             app:strokeColor="@color/grey"
             app:strokeWidth="1dp"
-
             />
 
         <TextView

@@ -80,27 +80,4 @@ fun Context.hideKeyboard(view: View) {
     imm.hideSoftInputFromWindow(view.windowToken, 0)
 }
 
-fun Context.errorHandler(errorMessage: String?): Boolean {
-    var errorHandled = false
-    errorMessage?.let {
-        if (errorMessage.contains(
-                "HTTP 401",
-                ignoreCase = true
-            )
-        ) {
-            Log.d("observer_ex", "401 Authorization not valid")
-            this.toast(R.string.not_authorized)
-            errorHandled = true
-        } else if (errorMessage.contains(
-                "HTTP 404",
-                ignoreCase = true
-            )
-        ) {
-            Log.d("observer_ex", "404 Idea not found")
-            toast(R.string.idea_not_found_message)
-            errorHandled = true
-        }
-    }
-    return errorHandled
-}
 

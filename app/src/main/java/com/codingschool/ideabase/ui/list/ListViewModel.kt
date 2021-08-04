@@ -47,7 +47,6 @@ class ListViewModel(
         adapter.setTopOrAll(topOrAll)
 
         adapter.addIdeaClickListener { id ->
-            Log.d("observer_ex", "Idea clicked")
             view?.navigateToDetailFragment(id)
         }
         adapter.addCommentClickListener { id ->
@@ -59,110 +58,80 @@ class ListViewModel(
         adapter.addProfileClickListener { id ->
             view?.navigateToProfile(id)
         }
-        adapter.registerAdapterDataObserver(object : AdapterDataObserver() {
-            /*override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
-                super.onItemRangeInserted(positionStart, itemCount)
-                Log.d(
-                    "observer_ex",
-                    "onItemRangeInserted with positionStart: $positionStart and itemCount: $itemCount"
-                )
-              *//*  if (positionStart>0) view?.moveToPositionInRecyclerview(positionStart)*//*
-            }
-
-            override fun onItemRangeChanged(positionStart: Int, itemCount: Int) {
-                super.onItemRangeChanged(positionStart, itemCount)
-                Log.d(
-                    "observer_ex",
-                    "onItemRangeChanged with positionStart: $positionStart and itemCount: $itemCount"
-                )
-                view?.moveToPositionInRecyclerview(positionStart)
-            }
-
-            override fun onItemRangeMoved(fromPosition: Int, toPosition: Int, itemCount: Int) {
-                Log.d(
-                    "observer_ex",
-                    "onItemRangeMoved with fromPosition: $fromPosition toPosition: $toPosition  and itemCount: $itemCount"
-                )
-                super.onItemRangeMoved(fromPosition, toPosition, itemCount)
-            }*/
-
-        })
 
         getCategoryItems()
 
-        /**
-         * if APP JUST STARTED, on first load of top ranked, we get all ides from api, but only show up-to lastAdapterUpdated??
-         *      + we set the badges to inform if newer available, (not for ranking status??)
-         *      = the showed top rank list is the status of last time, user needs to click again (OR REFRESH ?) to show trend updates
-         *  ELSE , we just CLICKED "top ranked" or "All" so we want to clear badges, and show all with trend info (if top ranked clicked) or status info (if all clicked)
-         *
-         *  Both options start the getPeriodicUpdatesToSetBadges
-         */
-
         if (prefs.appJustStarted()) {
-            ideaApi.getAllIdeasNoFilter()
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({ list ->
-                    val trendList = setTrendAndStatusList(list)
-                    // returned trendlist is already sorted by ranking
-                    if (trendList.isEmpty()) view?.showNoTopRankedIdeasYet()
-                    else {
-                        adapter.updateList(trendList)
-                        // set prefs top ranked list
-                        prefs.setTopRankedIds(trendList.map { it.id })
-                    }
-                    ifHasNewerOrUpdatedIdeasSetAllIdeasBadgeAccordingly(list)
-                    checkApiForUpdatesPeriodicallyToSetBadges()
-                    prefs.setAppNotJustStarted()
-                }, { t ->
-                    view?.handleErrorResponse(t.message)
-                    Log.e("observer_ex", "exception getting ideas: $t")
-
-                }).addTo(compositeDisposable)
-
+            loadAndShowTopRankedIdeas()
         } else {
-            ideaApi.getAllIdeasNoFilter()
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({ list ->
-                    val sortedList = when (topOrAll) {
-                        true -> {
-                            view?.hideTopBadge()
-                            list.filter { it.numberOfRatings >= MIN_NUM_RATINGS_SHOW_IDEA_ON_TOP_RANKED }
-                                .sortedWith(
-                                    compareByDescending { it.avgRating })
-                        }
-                        false -> {
-                            view?.hideAllBadge()
-                            list.sortedWith(compareByDescending { it.lastUpdated })
-                        }
-                    }
-                    val trendList = setTrendAndStatusList(sortedList)
-                    if (trendList.isNotEmpty()) adapter.updateList(trendList) else {
-                        if (topOrAll) view?.showNoTopRankedIdeasYet() else view?.showNoIdeasYet()
-                    }
-
-                    prefs.setLastAdapterUpdateNow()
-                    view?.hideTopBadge()
-                    view?.hideAllBadge()
-                    if (topOrAll) {
-                        // set prefs top ranked list
-                        val rankedList = sortedList.map { it.id }
-                        prefs.setTopRankedIds(rankedList)
-                    }
-                    checkApiForUpdatesPeriodicallyToSetBadges()
-                    prefs.setAppNotJustStarted()
-                }, { t ->
-                    view?.handleErrorResponse(t.message)
-                    Log.e("observer_ex", "exception getting ideas to adapter: $t")
-
-                }).addTo(compositeDisposable)
+            loadAndShowIdeasTopOrAll()
         }
+    }
+
+    fun attachView(view: ListView) {
+        this.view = view
+    }
+
+    private fun loadAndShowTopRankedIdeas() {
+        ideaApi.getAllIdeasNoFilter()
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({ list ->
+                val trendList = setTrendAndStatusList(list)
+                // returned trendlist is already sorted by ranking
+                if (trendList.isEmpty()) view?.showNoTopRankedIdeasYet()
+                else {
+                    adapter.updateList(trendList)
+                    // set prefs top ranked list
+                    prefs.setTopRankedIds(trendList.map { it.id })
+                }
+                ifHasNewerOrUpdatedIdeasSetAllIdeasBadgeAccordingly(list)
+                checkApiForUpdatesPeriodicallyToSetBadges()
+                prefs.setAppNotJustStarted()
+            }, { t ->
+                view?.handleErrorResponse(t.message)
+                Log.e("IdeaBase_log", "exception getting ideas: $t")
+            }).addTo(compositeDisposable)
+    }
+
+    private fun loadAndShowIdeasTopOrAll() {
+        ideaApi.getAllIdeasNoFilter()
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({ list ->
+                val sortedList = when (topOrAll) {
+                    true -> {
+                        view?.hideTopBadge()
+                        list.filter { it.numberOfRatings >= MIN_NUM_RATINGS_SHOW_IDEA_ON_TOP_RANKED }
+                            .sortedWith(
+                                compareByDescending { it.avgRating })
+                    }
+                    false -> {
+                        view?.hideAllBadge()
+                        list.sortedWith(compareByDescending { it.lastUpdated })
+                    }
+                }
+                val trendList = setTrendAndStatusList(sortedList)
+                if (trendList.isNotEmpty()) adapter.updateList(trendList) else {
+                    if (topOrAll) view?.showNoTopRankedIdeasYet() else view?.showNoIdeasYet()
+                }
+                prefs.setLastAdapterUpdateNow()
+                view?.hideTopBadge()
+                view?.hideAllBadge()
+                if (topOrAll) {
+                    // set prefs top ranked list
+                    val rankedList = sortedList.map { it.id }
+                    prefs.setTopRankedIds(rankedList)
+                }
+                checkApiForUpdatesPeriodicallyToSetBadges()
+                prefs.setAppNotJustStarted()
+            }, { t ->
+                view?.handleErrorResponse(t.message)
+                Log.e("IdeaBase_log", "exception getting ideas to adapter: $t")
+            }).addTo(compositeDisposable)
     }
 
     private fun ifHasNewerOrUpdatedIdeasSetAllIdeasBadgeAccordingly(list: List<Idea>) {
         val dateLastUpdate = prefs.getLastAdapterUpdate()
         val countNew = list.count { (it.created.compareTo(dateLastUpdate) > 0) }
-
         if (prefs.appJustStarted()) {
             if (countNew > 0) view?.setAllBadge(countNew)
             else {
@@ -195,9 +164,11 @@ class ListViewModel(
             if (topRankedIdsLastUpdate.isNotEmpty()) {
                 val positionLastUpdate = (topRankedIdsLastUpdate.indexOfFirst { it == idea.id })
                 if (positionLastUpdate != -1) {
-                    if (positionLastUpdate > i) idea.trend = Trend.UP
-                    else if (positionLastUpdate < i) idea.trend = Trend.DOWN
-                    else idea.trend = Trend.NONE
+                    when {
+                        positionLastUpdate > i -> idea.trend = Trend.UP
+                        positionLastUpdate < i -> idea.trend = Trend.DOWN
+                        else -> idea.trend = Trend.NONE
+                    }
                 } else idea.trend = Trend.UP
             } else {
                 idea.trend = Trend.NONE
@@ -211,11 +182,10 @@ class ListViewModel(
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
-                //Log.d("observer_ex", "checking for updates now")
                 getIdeasSetBadges()
             },
                 { t ->
-                    Log.e("observer_ex", "exception with periodic update: $t")
+                    Log.e("IdeaBase_log", "exception with periodic update: $t")
                 }).addTo(compositeDisposable)
 
     }
@@ -239,7 +209,7 @@ class ListViewModel(
                 }
                 // check if sortedList other ranking than lastUpdate
                 var trendChanges = false
-                if (sortedList.size > 0) {
+                if (sortedList.isNotEmpty()) {
                     if (sortedList.size == topRankedIdsLastUpdate.size) {
                         for (i in sortedList.indices) {
                             val ideaId = sortedList[i].id
@@ -256,7 +226,7 @@ class ListViewModel(
                 } else view?.hideTopBadge()
             }, { t ->
                 view?.handleErrorResponse(t.message)
-                Log.e("observer_ex", "exception getting ideas to adapter: $t")
+                Log.e("IdeaBase_log", "exception getting ideas to adapter: $t")
 
             }).addTo(compositeDisposable)
     }
@@ -275,12 +245,8 @@ class ListViewModel(
                 view?.showPopupRatingDialog(id, ratingItem - 1, position)
             }, { t ->
                 view?.handleErrorResponse(t.message)
-                Log.e("observer_ex", "exception getting idea: $t")
+                Log.e("IdeaBase_log", "exception getting idea: $t")
             }).addTo(compositeDisposable)
-    }
-
-    fun attachView(view: ListView) {
-        this.view = view
     }
 
     private fun getCategoryItems() {
@@ -298,7 +264,7 @@ class ListViewModel(
                 }
             }, { t ->
                 view?.handleErrorResponse(t.message)
-                Log.e("observer_ex", "exception getting categories: $t")
+                Log.e("IdeaBase_log", "exception getting categories: $t")
             }).addTo(compositeDisposable)
     }
 
@@ -308,7 +274,7 @@ class ListViewModel(
         searchText: String
     ) {
         // Build the category message text
-        val listOfSearchCategories = getlistOfSearchCategories(checkedItems)
+        val listOfSearchCategories = getListOfSearchCategories(checkedItems)
         val selectedCategoriesAsString = listOfSearchCategories.joinToString(", ")
         view?.showSearchDialog(
             categoryArray,
@@ -334,9 +300,9 @@ class ListViewModel(
         searchTextFromDialog: String
     ) {
         // Build the category search List for the filtering
-        listOfSearchCategories = getlistOfSearchCategories(checkedItems)
+        listOfSearchCategories = getListOfSearchCategories(checkedItems)
         searchString = searchTextFromDialog
-        //Log.d("observer_ex", "selectedItems: $searchCategoryString ")
+        //Log.d("IdeaBase_log", "selectedItems: $searchCategoryString ")
         getIdeasToAdapter(
             listOfSearchCategories,
             searchString
@@ -376,7 +342,7 @@ class ListViewModel(
                 if (sortedList.isNotEmpty()) adapter.updateList(sortedList) else view?.showNoResultsFound()
             }, { t ->
                 view?.handleErrorResponse(t.message)
-                Log.e("observer_ex", "exception getting searched ideas: $t")
+                Log.e("IdeaBase_log", "exception getting searched ideas: $t")
             }).addTo(compositeDisposable)
     }
 
@@ -404,12 +370,12 @@ class ListViewModel(
                 }
             }, { t ->
                 view?.handleErrorResponse(t.message)
-                Log.e("observer_ex", "exception getting all ideas: $t")
+                Log.e("IdeaBase_log", "exception getting all ideas: $t")
 
             }).addTo(compositeDisposable)
     }
 
-    private fun getlistOfSearchCategories(checkedItems: BooleanArray): List<String> {
+    private fun getListOfSearchCategories(checkedItems: BooleanArray): List<String> {
         val listOfSearchCategories = emptyList<String>().toMutableList()
         for (i in checkedItems.indices)
             if (checkedItems[i]) listOfSearchCategories += categoryList[i]
@@ -417,9 +383,7 @@ class ListViewModel(
     }
 
     fun setRating(id: String, oldCheckedItem: Int, newCheckedItem: Int, position: Int) {
-        // careful add +1 to rating checked item, they go 0..4
         if (oldCheckedItem != newCheckedItem) {
-            var updatedIdea: Idea
             val postIdeaRating = PostIdeaRating(
                 newCheckedItem + 1
             )
@@ -432,7 +396,7 @@ class ListViewModel(
                     //refresh rv position
                     getUpdatedIdeaAndUpdateRVItemAtPosition(id, position)
                 }, { t ->
-                    Log.e("observer_ex", "exception adding/updating rating user: $t")
+                    Log.e("IdeaBase_log", "exception adding/updating rating user: $t")
                 }).addTo(compositeDisposable)
         }
     }
@@ -443,9 +407,10 @@ class ListViewModel(
             .subscribe({ idea ->
                 if (topOrAll) {
                     adapter.updateRating(position, idea)
-                    //check if ranking
                     getIdeasSetBadges()
-                } else adapter.updateRating(position, idea)
+                } else {
+                    adapter.updateRating(position, idea)
+                }
             }, { t ->
                 // handle error
                 view?.handleErrorResponse(t.message)

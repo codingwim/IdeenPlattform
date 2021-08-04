@@ -4,6 +4,7 @@ import android.util.Log
 import android.view.View
 import androidx.databinding.BaseObservable
 import androidx.databinding.Bindable
+import androidx.databinding.ObservableInt
 import androidx.databinding.library.baseAdapters.BR
 import com.codingschool.ideabase.R
 import com.codingschool.ideabase.model.remote.IdeaApi
@@ -40,13 +41,8 @@ class LoadingViewModel(
 
         } else if (prefs.getAuthString().isNotEmpty()) {
             // on loading viewmodel, check if we have valid credentials in shared prefs,
-            // do check login auto login and navigate to Top Ranked
-            // while "checking" in, rotate progressbar with info text!!
-            loadingMessage = "Checking credentials..."
-            notifyPropertyChanged(BR.loadingMessage)
             checkCredentialsWithAPI()
         } else {
-            loadingMessage = "..."
             view?.navigateToLogin()
         }
     }
@@ -68,7 +64,7 @@ class LoadingViewModel(
     var progressIndicatorVisibility: Int = View.VISIBLE
 
     @get:Bindable
-    var loadingMessage: String = ""
+    var loadingMessage = ObservableInt(R.string.chacking_credentials_loading)
 
     fun onRefreshClick() {
             layoutRetry()
@@ -83,35 +79,34 @@ class LoadingViewModel(
                 prefs.setCredentialID(user.id)
                 prefs.setIsManager(user.isManager)
                 user.profilePicture?.let { prefs.setProfileImage(it) }
-                // TODO welcome back!!
                 view?.navigateToTopRankedFragment()
-                //Log.d("observer_ex", "Current logged in user: ${user.firstname}")
             }, { t ->
                 val responseMessage = t.message
                 if (responseMessage != null) {
-                    if (responseMessage.contains(
+                    when {
+                        responseMessage.contains(
                             "HTTP 404",
                             ignoreCase = true
-                        )
-                    ) {
-                        view?.navigateToLogin()
-                    } else if (responseMessage.contains(
+                        ) -> {
+                            view?.navigateToLogin()
+                        }
+                        responseMessage.contains(
                             "HTTP 401",
                             ignoreCase = true
-                        )
-                    ) {
-                        view?.navigateToLogin()
-                    } else {
-                        layoutOffline()
-                        //view?.showToast(R.string.network_issue_check_network)
+                        ) -> {
+                            view?.navigateToLogin()
+                        }
+                        else -> {
+                            layoutOffline()
+                        }
                     }
                 }
-                Log.e("observer_ex", "exception checking user credentials: $t")
+                Log.e("IdeaBase_log", "exception checking user credentials: $t")
             }).addTo(compositeDisposable)
     }
 
     private fun layoutOffline() {
-        loadingMessage = "Oops, there seems to be a connectivity Issue. Please check your internet connection and try again..."
+        loadingMessage.set(R.string.oops_offline_try_again_loading)
         logoVisibility = View.INVISIBLE
         progressIndicatorVisibility = View.INVISIBLE
         errorVisibility = View.VISIBLE
@@ -125,7 +120,7 @@ class LoadingViewModel(
     }
 
     private fun layoutRetry() {
-        loadingMessage = "Trying to check credentials again..."
+        loadingMessage.set(R.string.checking_credentials_again_loading)
         logoVisibility = View.INVISIBLE
         progressIndicatorVisibility = View.VISIBLE
         errorVisibility = View.VISIBLE
