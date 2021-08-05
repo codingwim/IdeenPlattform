@@ -21,7 +21,6 @@ import com.codingschool.ideabase.utils.getResString
 import com.codingschool.ideabase.utils.toast
 import com.github.drjacky.imagepicker.ImagePicker
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.google.android.material.snackbar.Snackbar
 import org.koin.android.ext.android.inject
 import org.koin.core.parameter.parametersOf
 

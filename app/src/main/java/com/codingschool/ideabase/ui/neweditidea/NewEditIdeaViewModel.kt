@@ -139,7 +139,7 @@ class NewEditIdeaViewModel(
 
         var fieldsNotEmptyOrTooLong = false
 
-        if (!(ideaName.length > 20) && !(ideaDescription.length > 1000)) {
+        if (ideaName.length <= 20 && ideaDescription.length <= 1000) {
             when {
                 ideaName.isEmpty() -> view?.setInputNameError(R.string.error_empty_name)
                 ideaDescription.isEmpty() -> view?.setInputDescriptionError(R.string.error_empty_description)
