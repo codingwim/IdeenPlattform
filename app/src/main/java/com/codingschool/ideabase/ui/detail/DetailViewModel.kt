@@ -44,14 +44,22 @@ class DetailViewModel(
             .subscribe({ idea ->
                 // set idea name in title
                 view?.setActionBarTitle(idea.title)
-                // first set the menu options: add release if manager // no menu when released OR not owner // not "release" and owner sees Edit/delete
-                if (!idea.released) {
-                    if (prefs.isManager()) {
-                        view?.addReleaseMenuItem(prefs.getMyId() == idea.author.id)
+
+                /**
+                 * first set the menu options:
+                 *      default no menu when released OR not owner
+                 *      add release if manager and author (with invalidateOptionsmenu and isAuthor = true)
+                 *      only release if manager , not author (with invalidateOptionsmenu and isAuthor = false)
+                 *      not "released" and owner sees Edit/delete (standard menu)
+                 */
+
+                if (prefs.isManager()) {
+                    if (!idea.released) {
+                        view?.setIsManagerSetIsAuthorOrNotAndResetMenu(prefs.getMyId() == idea.author.id)
                         view?.showMenu()
-                    }
-                    if (prefs.getMyId() == idea.author.id) view?.showMenu()
-                } else view?.showIdeaReleased()
+                    } else view?.showIdeaReleased()
+                } else if ((prefs.getMyId() == idea.author.id) && (!idea.released)) view?.showMenu()
+
                 authorId = idea.author.id
                 setRatingImage(idea.avgRating)
                 view?.setIdeaImage(idea.imageUrl)
@@ -61,7 +69,9 @@ class DetailViewModel(
                 ideaCategory =
                     if (prefs.isLangEn()) idea.category.name_en else idea.category.name_de
                 ideaDescription = idea.description
-                if (idea.comments.isEmpty()) commentTitle.set(R.string.be_the_first_to_comment) else commentTitle.set(R.string.comments_title_detail_idea)
+                if (idea.comments.isEmpty()) commentTitle.set(R.string.be_the_first_to_comment) else commentTitle.set(
+                    R.string.comments_title_detail_idea
+                )
                 notifyPropertyChanged(BR.ideaTitle)
                 notifyPropertyChanged(BR.ideaAuthor)
                 notifyPropertyChanged(BR.ideaCategory)

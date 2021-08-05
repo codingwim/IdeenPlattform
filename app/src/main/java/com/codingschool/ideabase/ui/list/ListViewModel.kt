@@ -40,7 +40,11 @@ class ListViewModel(
 
     fun init() {
 
+        getCategoryItems()
+
         adapter.setTopOrAll(topOrAll)
+
+        if (prefs.isManager()) adapter.setIsManager()
 
         adapter.addIdeaClickListener { id ->
             view?.navigateToDetailFragment(id)
@@ -54,8 +58,6 @@ class ListViewModel(
         adapter.addProfileClickListener { id ->
             view?.navigateToProfile(id)
         }
-
-        getCategoryItems()
 
         if (prefs.appJustStarted()) {
             loadAndShowTopRankedIdeas()

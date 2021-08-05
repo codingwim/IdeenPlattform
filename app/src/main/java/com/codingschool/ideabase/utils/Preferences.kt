@@ -12,7 +12,6 @@ import com.codingschool.ideabase.utils.Keys.DRAFT_IMAGE
 import com.codingschool.ideabase.utils.Keys.DRAFT_NAME
 import com.codingschool.ideabase.utils.Keys.IS_MANAGER
 import com.codingschool.ideabase.utils.Keys.LAST_ADAPTER_UPDATE
-import com.codingschool.ideabase.utils.Keys.LAST_TOPRANK_UPDATE
 import com.codingschool.ideabase.utils.Keys.LOCALE_STRING
 import com.codingschool.ideabase.utils.Keys.PREF_NAME
 import com.codingschool.ideabase.utils.Keys.TOP_RANKED_IDS
