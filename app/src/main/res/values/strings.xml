@@ -157,4 +157,6 @@
     <string name="cv_trend_up_icon">Trend Up Icon</string>
     <string name="cd_trend_down_icon">Trend Down Icon</string>
     <string name="toast_connection_problem">There seems to be a connection problem…</string>
+    <string name="max_title_lenght_error">Your title has to many characters</string>
+    <string name="descriütiion_too_long_error">Your description has to many characters</string>
 </resources>

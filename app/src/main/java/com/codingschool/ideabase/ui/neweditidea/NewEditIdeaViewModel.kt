@@ -52,7 +52,6 @@ class NewEditIdeaViewModel(
         } else if (prefs.hasSavedIdeaDraft()) getPrefillDraft()
     }
 
-
     private fun getAndSetCategoryItems() {
         ideaApi.getAllCategories()
             .observeOn(AndroidSchedulers.mainThread())
@@ -116,7 +115,6 @@ class NewEditIdeaViewModel(
                 view?.handleErrorResponse(t.message)
                 Log.e("IdeaBase_log", "exception getting idea: $t")
             }).addTo(compositeDisposable)
-
     }
 
     private var initialImageUrl: String = ""
@@ -138,22 +136,21 @@ class NewEditIdeaViewModel(
     @get: Bindable
     val uploadImageButtonText = ObservableInt(R.string.upload_image_idea_new)
 
-
     fun onSaveClick() {
-        var fieldsNotEmpty = false
 
-        when {
-            ideaName.isEmpty() -> view?.setInputNameError(R.string.error_empty_name)
-            ideaDescription.isEmpty() -> view?.setInputDescriptionError(R.string.error_empty_description)
-            ideaCategory.isEmpty() -> view?.setInputCategoryError(R.string.error_empty_category)
-            ideaImageUrl.isEmpty() -> view?.showToast(R.string.error_empty_image)
-             (ideaName.length>20)-> view?.showToast("Your title has to many chars. Max 20")
-            (ideaDescription.length>1000) ->view?.showToast("Your description has to many chars. Max 1000")
+        var fieldsNotEmptyOrTooLong = false
 
-            else -> fieldsNotEmpty = true
+        if (!(ideaName.length > 20) && !(ideaDescription.length > 1000)) {
+            when {
+                ideaName.isEmpty() -> view?.setInputNameError(R.string.error_empty_name)
+                ideaDescription.isEmpty() -> view?.setInputDescriptionError(R.string.error_empty_description)
+                ideaCategory.isEmpty() -> view?.setInputCategoryError(R.string.error_empty_category)
+                ideaImageUrl.isEmpty() -> view?.showToast(R.string.error_empty_image)
+                else -> fieldsNotEmptyOrTooLong = true
+            }
         }
 
-        if (fieldsNotEmpty) {
+        if (fieldsNotEmptyOrTooLong) {
 
             val categoryId =
                 categoryListIds[if (prefs.isLangEn()) categoryListEN.indexOf(ideaCategory) else categoryListDE.indexOf(
