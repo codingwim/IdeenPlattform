@@ -82,7 +82,6 @@ class DetailViewModel(
                 view?.handleErrorResponse(t.message)
                 Log.e("IdeaBase_log", "exception getting idea: $t")
             }).addTo(compositeDisposable)
-
     }
 
     private fun setRatingImage(avgRating: Double) {

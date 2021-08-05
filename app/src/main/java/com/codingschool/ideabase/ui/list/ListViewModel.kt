@@ -303,7 +303,10 @@ class ListViewModel(
         listOfSearchCategories: List<String>,
         searchQuery: String
     ) {
-        if (searchQuery.isEmpty()) getAllIdeas(listOfSearchCategories)
+        if (searchQuery.isEmpty()) {
+            view?.hideNoResultsFound()
+            getAllIdeas(listOfSearchCategories)
+        }
         else ideaApi.searchIdeas(searchQuery)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({ list ->
@@ -323,7 +326,10 @@ class ListViewModel(
                         listFromSearch.sortedWith(compareByDescending { it.lastUpdated })
                     }
                 }
-                if (sortedList.isNotEmpty()) adapter.updateList(sortedList) else view?.showNoResultsFound()
+                if (sortedList.isNotEmpty()) {
+                    view?.hideNoResultsFound()
+                    adapter.updateList(sortedList)
+                } else view?.showNoResultsFound()
             }, { t ->
                 view?.handleErrorResponse(t.message)
                 Log.e("IdeaBase_log", "exception getting searched ideas: $t")

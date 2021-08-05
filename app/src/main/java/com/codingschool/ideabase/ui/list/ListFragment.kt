@@ -6,6 +6,7 @@ import android.util.Log
 import android.view.*
 import android.widget.EditText
 import android.widget.LinearLayout
+import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavDirections
@@ -243,6 +244,14 @@ class ListFragment : Fragment(), ListView {
         binding.rvIdeas.visibility = View.INVISIBLE
         binding.noSearchResultToShowMessageLayout.root.visibility = View.VISIBLE
     }
+
+    override fun hideNoResultsFound() {
+        if (binding.noSearchResultToShowMessageLayout.root.isVisible)  {
+            binding.noSearchResultToShowMessageLayout.root.visibility = View.INVISIBLE
+            binding.rvIdeas.visibility = View.VISIBLE
+        }
+    }
+
     override fun showNoTopRankedIdeasYet() {
         binding.rvIdeas.visibility = View.INVISIBLE
         binding.noTopRankedMessageLayout.root.visibility = View.VISIBLE

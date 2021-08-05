@@ -19,4 +19,5 @@ interface ListView {
     fun showNoTopRankedIdeasYet()
     fun showNoIdeasYet()
     fun showNoResultsFound()
+    fun hideNoResultsFound()
 }
