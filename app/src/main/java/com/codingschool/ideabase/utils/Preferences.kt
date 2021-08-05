@@ -2,7 +2,6 @@ package com.codingschool.ideabase.utils
 
 import android.content.Context
 import android.content.SharedPreferences
-import android.util.Log
 import com.codingschool.ideabase.utils.Keys.APP_STARTED
 import com.codingschool.ideabase.utils.Keys.BASE_AUTH_STRING
 import com.codingschool.ideabase.utils.Keys.DRAFT_CATEGORY
@@ -13,20 +12,13 @@ import com.codingschool.ideabase.utils.Keys.DRAFT_IMAGE
 import com.codingschool.ideabase.utils.Keys.DRAFT_NAME
 import com.codingschool.ideabase.utils.Keys.IS_MANAGER
 import com.codingschool.ideabase.utils.Keys.LAST_ADAPTER_UPDATE
+import com.codingschool.ideabase.utils.Keys.LAST_TOPRANK_UPDATE
 import com.codingschool.ideabase.utils.Keys.LOCALE_STRING
 import com.codingschool.ideabase.utils.Keys.PREF_NAME
 import com.codingschool.ideabase.utils.Keys.TOP_RANKED_IDS
-import com.codingschool.ideabase.utils.Keys.USER_EMAIL
-import com.codingschool.ideabase.utils.Keys.USER_FNAME
 import com.codingschool.ideabase.utils.Keys.USER_ID
 import com.codingschool.ideabase.utils.Keys.USER_IMAGE
-import com.codingschool.ideabase.utils.Keys.USER_LNAME
-import org.threeten.bp.LocalDateTime
 import org.threeten.bp.ZonedDateTime
-import java.time.LocalDate
-import java.time.LocalDateTime.now
-import java.time.ZoneOffset
-import java.util.*
 
 class Preferences(
 
@@ -38,7 +30,7 @@ class Preferences(
 
     fun getLocale() = preferences.getString(LOCALE_STRING, "en") ?: "en"
     fun appJustStarted() = preferences.getBoolean(APP_STARTED, true)
-    fun getLastAdapterUpdate() = preferences.getString(LAST_ADAPTER_UPDATE, "") ?: ""
+    fun getLastAllAdapterUpdate() = preferences.getString(LAST_ADAPTER_UPDATE, "") ?: ""
     fun getAuthString() = preferences.getString(BASE_AUTH_STRING, "") ?: ""
     fun getMyId() = preferences.getString(USER_ID, "") ?: ""
     fun isManager() = preferences.getBoolean(IS_MANAGER, false)
@@ -54,10 +46,6 @@ class Preferences(
         val result: List<String> = idsAsString.split(",").map { it.trim() }
         return result
     }
-
-
-
-    //fun getEmailString() = preferences.getString(USER_EMAIL, "")
 
     fun setLocale(localeString: String) {
         preferences.edit().putString(LOCALE_STRING, localeString).apply()
@@ -116,8 +104,7 @@ class Preferences(
         preferences.edit().putBoolean(APP_STARTED, true).apply()
     }
 
-    // todo check timezone problems if phone in other timezome
-    fun setLastAdapterUpdateNow() {
+    fun setLastAllAdapterUpdateNow() {
         val currentDateTime = ZonedDateTime.now().withZoneSameInstant(org.threeten.bp.ZoneOffset.UTC).toString()
         preferences.edit().putString(LAST_ADAPTER_UPDATE, currentDateTime).apply()
     }
@@ -125,19 +112,6 @@ class Preferences(
     fun setTopRankedIds(list: List<String>) {
         preferences.edit().putString(Keys.TOP_RANKED_IDS, list.joinToString()).apply()
     }
-    /*fun setCredentialMail(mail: String) {
-        preferences.edit().putString(Keys.USER_EMAIL, mail).apply()
-    }
-
-    fun setCredentialFName(fname: String) {
-        preferences.edit().putString(Keys.USER_FNAME, fname).apply()
-    }
-
-    fun setCredentialLName(fname: String) {
-        preferences.edit().putString(Keys.USER_LNAME, fname).apply()
-    }*/
-
-
 }
 
 object Keys {
@@ -149,9 +123,6 @@ object Keys {
     const val IS_MANAGER = "is_manager"
     const val USER_ID = "user_id"
     const val USER_IMAGE = "profile_image_url"
-    const val USER_FNAME = "user_fn"
-    const val USER_LNAME = "user_ln"
-    const val USER_EMAIL = "user_email"
     const val DRAFT_IDEA_SAVED = "idea_draft_saved"
     const val DRAFT_COMMENT = "saved_comment_draft"
     const val DRAFT_IMAGE = "saved_idea_url"
@@ -159,6 +130,4 @@ object Keys {
     const val DRAFT_DESCRIPTION = "saved_idea_description"
     const val DRAFT_CATEGORY = "saved_idea"
     const val TOP_RANKED_IDS ="ordered_top_ranked_ids"
-
-
 }

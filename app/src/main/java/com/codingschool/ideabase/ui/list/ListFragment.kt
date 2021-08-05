@@ -230,8 +230,9 @@ class ListFragment : Fragment(), ListView {
     }
 
     override fun setAllBadgeNoNumber() {
-        allBadge.isVisible = true
+        allBadge.isVisible = false
         allBadge.clearNumber()
+        allBadge.isVisible = true
     }
 
     override fun handleErrorResponse(errorMessage: String?) {
