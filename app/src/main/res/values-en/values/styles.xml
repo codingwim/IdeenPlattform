@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+    <style name="SplashScreenTheme" parent = "Theme.AppCompat.NoActionBar">
+        <item name="android:windowBackground">@drawable/splash_screen_background</item>
+    </style>
+
+    <style name="circleImageView" parent="ShapeAppearance.MaterialComponents.MediumComponent">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">50%</item>
+    </style>
+
+    <style name="Widget.App.FloatingActionButton"  parent="Widget.MaterialComponents.FloatingActionButton">
+        <item name="materialThemeOverlay">@style/ThemeOverlay.App.FloatingActionButton</item>
+    </style>
+
+    <style name="Widget.BottomNavigationView"  parent="Widget.MaterialComponents.BottomNavigationView.Colored">
+        <item name="materialThemeOverlay">@style/ThemeOverlay.App.BottomNavigationView</item>
+    </style>
+
+    <style name="ThemeOverlay.App.BottomNavigationView"  parent="">
+        <item name="colorOnPrimary">@color/dark_grey</item>
+    </style>
+
+    <style name="ThemeOverlay.App.FloatingActionButton"  parent="">
+        <item name="colorSecondary">@color/yellow</item>
+        <item name="colorOnSecondary">@color/black</item>
+        <item name="colorOnSurface">@color/white</item>
+    </style>
+
+    <style name="materialDialog" parent="Theme.AppCompat.DayNight.Dialog.Alert">
+        <item name="colorAccent">@color/yellow</item>
+        <item name="buttonBarPositiveButtonStyle">@style/positiveButton</item>
+    </style>
+
+    <style name="positiveButton" parent="Widget.MaterialComponents.Button.TextButton.Dialog">
+        <item name="android:textColor">@color/yellow</item>
+    </style>
+
+    <style name="ideaTitle" parent="TextAppearance.AppCompat.Headline">
+        <item name="android:textColor">@color/title</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">@dimen/text_medium22</item>
+    </style>
+
+    <style name="ideaAuthor" parent="TextAppearance.AppCompat.Headline">
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textSize">@dimen/text_medium18</item>
+    </style>
+
+</resources>
