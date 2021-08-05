@@ -11,7 +11,7 @@ interface DetailView {
     fun setRatingIcon(drawIcon: Int)
     fun showMenu()
     fun hideMenu()
-    fun addReleaseMenuItem(isAuthor: Boolean)
+    fun setIsManagerSetIsAuthorOrNotAndResetMenu(isAuthor: Boolean)
     fun setActionBarTitle(title: String)
     fun navigateToProfile(id: String)
     fun releaseDialog()

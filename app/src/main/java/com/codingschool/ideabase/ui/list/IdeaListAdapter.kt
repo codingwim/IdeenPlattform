@@ -18,6 +18,7 @@ class IdeaListAdapter(private val imageHandler: ImageHandler) :
 
     private var list: List<Idea> = emptyList()
     private var topOrAll: Boolean = true
+    private var isManager: Boolean = false
     private lateinit var ideaClickListener: (String) -> Unit
     private lateinit var commentClickListener: (String) -> Unit
     private lateinit var rateClickListener: (String, Int) -> Unit
@@ -30,13 +31,14 @@ class IdeaListAdapter(private val imageHandler: ImageHandler) :
         fun setBinding(
             idea: Idea,
             topOrAll: Boolean,
+            isManager: Boolean,
             ideaClickListener: (String) -> Unit,
             commentClickListener: (String) -> Unit,
             rateClickListener: (String, Int) -> Unit,
             profileClickListener: (String) -> Unit
         ) {
-            binding.tvIdeaTitle.text = idea.title //+ " R:" + idea.avgRating.toString()
-            if (idea.released) {
+            binding.tvIdeaTitle.text = idea.title
+            if (idea.released && isManager) {
                 val yellow = ContextCompat.getColor(this.itemView.context, R.color.yellow)
                 binding.cvTop.strokeColor = yellow
                 binding.cvTop.strokeWidth = 2
@@ -113,6 +115,10 @@ class IdeaListAdapter(private val imageHandler: ImageHandler) :
         this.topOrAll = topOrAll
     }
 
+    fun setIsManager() {
+        this.isManager = true
+    }
+
     fun updateList(newList: List<Idea>) {
         val diffResult = DiffUtil.calculateDiff(
             object : DiffUtil.Callback() {
@@ -154,6 +160,7 @@ class IdeaListAdapter(private val imageHandler: ImageHandler) :
         holder.setBinding(
             idea,
             topOrAll,
+            isManager,
             ideaClickListener,
             commentClickListener,
             rateClickListener,

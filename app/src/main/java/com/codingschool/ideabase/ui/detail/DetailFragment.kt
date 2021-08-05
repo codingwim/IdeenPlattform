@@ -26,7 +26,7 @@ class DetailFragment: Fragment(), DetailView {
     private lateinit var binding: FragmentDetailBinding
 
     private val imageHandler: ImageHandler by inject()
-    private var menuForManager = false
+    private var isManager = false
     private var managerIsAuthor = false
 
     override fun onCreateView(
@@ -85,9 +85,9 @@ class DetailFragment: Fragment(), DetailView {
         setHasOptionsMenu(false)
     }
 
-    override fun addReleaseMenuItem(isAuthor: Boolean) {
+    override fun setIsManagerSetIsAuthorOrNotAndResetMenu(isAuthor: Boolean) {
         // user MANAGER, add release menu item, and if also author, edit/delete in onprepare options menu
-        menuForManager = true
+        isManager = true
         managerIsAuthor = isAuthor
         requireActivity().invalidateOptionsMenu()
     }
@@ -189,9 +189,9 @@ class DetailFragment: Fragment(), DetailView {
     override fun onPrepareOptionsMenu(menu: Menu) {
         super.onPrepareOptionsMenu(menu)
         // if  admin, add release menu item
-        menu.findItem(R.id.release)?.isEnabled = menuForManager
-        menu.findItem(R.id.delete)?.isEnabled = (!menuForManager) or (menuForManager && managerIsAuthor)
-        menu.findItem(R.id.edit)?.isEnabled = (!menuForManager) or (menuForManager && managerIsAuthor)
+        menu.findItem(R.id.release)?.isEnabled = isManager
+        menu.findItem(R.id.delete)?.isEnabled = (!isManager) or (isManager && managerIsAuthor)
+        menu.findItem(R.id.edit)?.isEnabled = (!isManager) or (isManager && managerIsAuthor)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
