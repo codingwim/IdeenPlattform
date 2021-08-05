@@ -39,6 +39,9 @@ class CommentViewModel (
 
     fun onSubmitClick() {
         if (comment.isEmpty()) view?.setCommentEmptyError(R.string.comment_empty_error_message)
+        else if (comment.length>200) view?.showToast("Your comment has to many chars. Max 200")
+
+
         else {
             val createComment = CreateComment(comment)
             ideaApi.commentIdea(id, createComment)

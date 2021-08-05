@@ -147,6 +147,9 @@ class NewEditIdeaViewModel(
             ideaDescription.isEmpty() -> view?.setInputDescriptionError(R.string.error_empty_description)
             ideaCategory.isEmpty() -> view?.setInputCategoryError(R.string.error_empty_category)
             ideaImageUrl.isEmpty() -> view?.showToast(R.string.error_empty_image)
+             (ideaName.length>20)-> view?.showToast("Your title has to many chars. Max 20")
+            (ideaDescription.length>1000) ->view?.showToast("Your description has to many chars. Max 1000")
+
             else -> fieldsNotEmpty = true
         }
 
