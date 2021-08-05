@@ -2,7 +2,6 @@ package com.codingschool.ideabase.ui.list
 
 import android.os.Bundle
 import android.text.InputType
-import android.util.Log
 import android.view.*
 import android.widget.EditText
 import android.widget.LinearLayout
@@ -55,7 +54,9 @@ class ListFragment : Fragment(), ListView {
         bottomNav =
             (requireActivity() as MainActivity).findViewById(R.id.nav_view)
         topBadge = bottomNav.getOrCreateBadge(R.id.navigation_top_ranked)
+        topBadge.isVisible = false
         allBadge = bottomNav.getOrCreateBadge(R.id.navigation_all_ideas)
+        allBadge.isVisible = false
 
         // set fab button
         binding.fab.setOnClickListener {
@@ -254,6 +255,7 @@ class ListFragment : Fragment(), ListView {
 
     override fun showNoTopRankedIdeasYet() {
         binding.rvIdeas.visibility = View.INVISIBLE
+        binding.fab.visibility = View.INVISIBLE
         binding.noTopRankedMessageLayout.root.visibility = View.VISIBLE
     }
 

@@ -26,7 +26,7 @@
     <string name="search_menu_title">Suche</string>
     <string name="title_search_dialog">Gib den Suchtext ein</string>
     <string name="btn_cancel_dialog" tools:ignore="ButtonCase">Abbrechen</string>
-    <string name="btn_filter_dialog">Füge einen Filter hinzu</string>
+    <string name="btn_filter_dialog">Filter hinzufügen</string>
     <string name="btn_search_dialog">Suche</string>
     <string name="btn_back_dialog">Ändere den Suchtext</string>
     <string name="title_filter_dialog">Filtere die Suche nach Kategorien</string>

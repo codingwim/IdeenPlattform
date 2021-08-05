@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-
         <variable
             name="vm"
             type="com.codingschool.ideabase.ui.profile.ProfileViewModel" />
@@ -19,15 +17,21 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layout_constraintVertical_chainStyle="spread_inside"
+            android:layout_height="match_parent"
+            app:layout_constraintVertical_chainStyle="spread"
             tools:context=".ui.profile.ProfileFragment">
 
             <include
                 layout="@layout/layout_no_internet"
                 android:id="@+id/noInternetMessageLayout"
                 android:visibility="invisible"
-                />
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"/>
+
             <com.google.android.material.imageview.ShapeableImageView
                 android:id="@+id/ivProfilePicture"
                 android:layout_width="@dimen/profile_picture_edit_profile"
