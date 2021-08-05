@@ -7,7 +7,7 @@
         android:title="@string/top_ranked" />
 
     <item
-        android:id="@+id/navigation_ideas"
+        android:id="@+id/navigation_all_ideas"
         android:icon="@drawable/ic_lightbulb"
         android:title="@string/ideas_bottom_nav" />
 

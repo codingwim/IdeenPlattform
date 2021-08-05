@@ -2,33 +2,187 @@
 
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    >
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <variable
-            name = "vm"
-            type = "com.codingschool.ideabase.ui.profile.ProfileViewModel"/>
+            name="vm"
+            type="com.codingschool.ideabase.ui.profile.ProfileViewModel" />
     </data>
 
-
-<androidx.constraintlayout.widget.ConstraintLayout
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".ui.profile.ProfileFragment">
-
-    <TextView
-        android:id="@+id/text_notifications"
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:textAlignment="center"
-        android:textSize="20sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-</androidx.constraintlayout.widget.ConstraintLayout>
+        android:layout_height="match_parent"
+        android:fillViewport="true"
+        android:fitsSystemWindows="true">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintVertical_chainStyle="spread_inside"
+            tools:context=".ui.profile.ProfileFragment">
+
+            <include
+                layout="@layout/layout_no_internet"
+                android:id="@+id/noInternetMessageLayout"
+                android:visibility="invisible"
+                />
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/ivProfilePicture"
+                android:layout_width="@dimen/profile_picture_edit_profile"
+                android:layout_height="@dimen/profile_picture_edit_profile"
+                android:layout_margin="@dimen/margin_xlarge"
+                android:padding="@dimen/padding_xsmall"
+                android:scaleType="centerCrop"
+                app:layout_constraintBottom_toTopOf="@+id/vwTitleAndMail"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:shapeAppearanceOverlay="@style/circleImageView"
+                app:srcCompat="@drawable/ic_baseline_person_24"
+                app:strokeColor="@color/grey"
+                app:strokeWidth="1dp" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/vwTitleAndMail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/margin_large"
+                android:textSize="@dimen/text_medium22"
+                app:layout_constraintBottom_toTopOf="@+id/vwDetails"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/ivProfilePicture"
+                app:layout_constraintVertical_chainStyle="packed">
+
+
+                <TextView
+                    android:id="@+id/tvUserNameFL"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/margin_standard"
+                    android:text="@{vm.name}"
+                    android:textSize="@dimen/text_xlarge28"
+                    android:textColor="@color/black"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toTopOf="@id/tvUserMail"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:text="Wim Janssen">
+
+                </TextView>
+
+                <TextView
+                    android:id="@+id/tvUserMail"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/margin_standard"
+                    android:text="@={vm.email}"
+                    android:textSize="@dimen/text_medium22"
+                    android:textColor="@color/black"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/tvUserNameFL"
+                    tools:text="Wim.Janssen@mail.com">
+
+                </TextView>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/vwDetails"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/margin_standard"
+                android:textColor="@color/black"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/vwTitleAndMail"
+                app:layout_constraintVertical_chainStyle="packed">
+
+                <TextView
+                    android:id="@+id/tvFNameTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/margin_large"
+                    android:textColor="@color/black"
+                    android:text="@string/first_name_profile"
+                    android:textSize="@dimen/text_medium22"
+                    app:layout_constraintEnd_toStartOf="@+id/tvFName"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                </TextView>
+
+                <TextView
+                    android:id="@+id/tvFName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/margin_large"
+                    android:text="@{vm.firstname}"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text_medium22"
+                    app:layout_constraintStart_toEndOf="@+id/tvFNameTitle"
+                    app:layout_constraintTop_toTopOf="@+id/tvFNameTitle"
+                    tools:text="Wim">
+
+                </TextView>
+
+                <TextView
+                    android:id="@+id/tvLNameTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/margin_large"
+                    android:layout_marginBottom="@dimen/margin_xlarge"
+                    android:textColor="@color/black"
+                    android:text="@string/last_name_profile"
+                    android:textSize="@dimen/text_medium22"
+                    app:layout_constraintBottom_toTopOf="@+id/tvRolleTitle"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/tvFName"/>
+
+                <TextView
+                    android:id="@+id/tvLName2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/margin_large"
+                    android:textColor="@color/black"
+                    android:text="@{vm.lastname}"
+                    android:textSize="@dimen/text_medium22"
+                    app:layout_constraintStart_toEndOf="@+id/tvLNameTitle"
+                    app:layout_constraintTop_toTopOf="@+id/tvLNameTitle"
+                    tools:text="Janssen"/>
+
+                <TextView
+                    android:id="@+id/tvRolleTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/margin_large"
+                    android:layout_marginTop="@dimen/margin_xlarge"
+                    android:layout_marginBottom="@dimen/margin_standard"
+                    android:textColor="@color/black"
+                    android:text="@string/role_profile"
+                    android:textSize="@dimen/text_medium22"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/tvLNameTitle"
+                    app:layout_constraintBottom_toBottomOf="parent"/>
+
+                <TextView
+                    android:id="@+id/tvRole2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/margin_large"
+                    android:textColor="@color/black"
+                    android:text="@{vm.role}"
+                    android:textSize="@dimen/text_medium22"
+                    app:layout_constraintStart_toEndOf="@+id/tvRolleTitle"
+                    app:layout_constraintTop_toTopOf="@+id/tvRolleTitle"
+                    tools:text="Ideenmanager">
+
+                </TextView>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.core.widget.NestedScrollView>
 </layout>

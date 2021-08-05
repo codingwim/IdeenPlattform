@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    >
+
+    <com.google.android.material.card.MaterialCardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/cvIdea"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        card_view:cardElevation="0dp">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/ivProfilePicture"
+                android:layout_width="@dimen/profile_picture_comment"
+                android:layout_height="@dimen/profile_picture_comment"
+                android:layout_margin="@dimen/margin_standard"
+                android:padding="@dimen/padding_xsmall"
+                android:scaleType="centerCrop"
+                card_view:layout_constraintStart_toStartOf="parent"
+                card_view:layout_constraintEnd_toStartOf="@+id/tvCommentAuthor"
+                card_view:layout_constraintTop_toTopOf="parent"
+                card_view:shapeAppearanceOverlay="@style/circleImageView"
+                card_view:srcCompat="@drawable/ic_baseline_person_outline_24"
+                card_view:strokeColor="@color/grey"
+                card_view:strokeWidth="1dp"
+                />
+            <TextView
+                android:id="@+id/tvCommentAuthor"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/margin_standard"
+                android:textSize="@dimen/text_standard16"
+                android:textStyle="bold"
+                android:textAllCaps="true"
+                card_view:layout_constraintBottom_toTopOf="@id/tvComment"
+                card_view:layout_constraintEnd_toEndOf="parent"
+                card_view:layout_constraintStart_toEndOf="@+id/ivProfilePicture"
+                card_view:layout_constraintTop_toTopOf="parent"
+                tools:text="Jhonny Depp" />
+
+            <TextView
+                android:id="@+id/tvComment"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/margin_standard"
+                android:layout_marginBottom="@dimen/margin_standard"
+                android:textSize="@dimen/text_medium18"
+                card_view:layout_constraintBottom_toTopOf="@id/vwLine"
+                card_view:layout_constraintEnd_toEndOf="parent"
+                card_view:layout_constraintStart_toStartOf="@id/tvCommentAuthor"
+                card_view:layout_constraintTop_toBottomOf="@id/tvCommentAuthor"
+                tools:text="This is the coolest idea ever " />
+
+            <View
+                android:id="@+id/vwLine"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:visibility="visible"
+                android:background="@color/light_grey"
+                card_view:layout_constraintBottom_toBottomOf="parent"
+                card_view:layout_constraintEnd_toEndOf="parent"
+                card_view:layout_constraintStart_toStartOf="parent"
+                card_view:layout_constraintTop_toBottomOf="@id/tvComment"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </com.google.android.material.card.MaterialCardView>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

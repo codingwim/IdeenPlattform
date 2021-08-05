@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="vm"
+            type="com.codingschool.ideabase.ui.loading.LoadingViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="@dimen/margin_standard"
+        app:layout_constraintVertical_chainStyle="spread_inside"
+        tools:context=".ui.loading.LoadingFragment">
+
+        <ImageView
+            android:id="@+id/ivLogo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/margin_standard"
+            android:src="@drawable/raika_logo"
+            android:visibility="@{vm.logoVisibility, default=visible}"
+            app:layout_constraintBottom_toTopOf="@+id/tvLoadingMessage"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:contentDescription="@string/cd_raika_logo" />
+
+        <ImageView
+            android:id="@+id/ivNoInternet"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/margin_standard"
+            android:src="@drawable/nointernet"
+            android:visibility="@{vm.errorVisibility, default=invisible}"
+            app:layout_constraintBottom_toTopOf="@+id/tvLoadingMessage"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:contentDescription="@string/cd_no_internet_image" />
+
+        <TextView
+            android:id="@+id/tvLoadingMessage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/margin_standard"
+            android:text="@{vm.loadingMessage}"
+            android:textAlignment="center"
+            android:textSize="@dimen/text_xlarge28"
+            app:layout_constraintBottom_toTopOf="@+id/btNext"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/ivLogo" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btNext"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="@{() -> vm.onRefreshClick()}"
+            android:text="@string/try_again_btn_no_internet"
+            android:visibility="@{vm.refreshButtonVisibility, default=invisible}"
+            app:layout_constraintBottom_toTopOf="@+id/prCircular"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tvLoadingMessage" />
+
+        <com.google.android.material.progressindicator.CircularProgressIndicator
+            android:id="@+id/prCircular"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:indeterminate="true"
+            android:visibility="@{vm.progressIndicatorVisibility, default=visible}"
+            app:indicatorSize="100dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/btNext" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
