@@ -54,9 +54,7 @@ class ListFragment : Fragment(), ListView {
         bottomNav =
             (requireActivity() as MainActivity).findViewById(R.id.nav_view)
         topBadge = bottomNav.getOrCreateBadge(R.id.navigation_top_ranked)
-        topBadge.isVisible = false
         allBadge = bottomNav.getOrCreateBadge(R.id.navigation_all_ideas)
-        allBadge.isVisible = false
 
         // set fab button
         binding.fab.setOnClickListener {
@@ -271,6 +269,10 @@ class ListFragment : Fragment(), ListView {
         setHasOptionsMenu(false)
     }
 
+    override fun onPause() {
+        super.onPause()
+        viewModel.periodicUpdateDisposable.clear()
+    }
     override fun onDestroyView() {
         super.onDestroyView()
         viewModel.compositeDisposable.clear()

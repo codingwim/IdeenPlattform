@@ -9,6 +9,7 @@ import com.codingschool.ideabase.utils.*
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.disposables.Disposable
 import io.reactivex.rxkotlin.addTo
 import io.reactivex.schedulers.Schedulers
 import retrofit2.HttpException
@@ -25,6 +26,7 @@ class ListViewModel(
     private var view: ListView? = null
 
     val compositeDisposable = CompositeDisposable()
+    val periodicUpdateDisposable = CompositeDisposable()
 
     private var categoryList = emptyList<String>()
     private var categoryArrayDE: Array<String> = emptyArray()
@@ -175,7 +177,7 @@ class ListViewModel(
             },
                 { t ->
                     Log.e("IdeaBase_log", "exception with periodic update: $t")
-                }).addTo(compositeDisposable)
+                }).addTo(periodicUpdateDisposable)
     }
 
     private fun getIdeasSetBadges() {
