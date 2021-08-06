@@ -87,4 +87,5 @@ Too all the motivated teachers / mentors!
 ## Authors
 
 [Niko Kuschnig](https://gitlab.tailored-apps.com/codingschool_nkuschnig)
+
 [Wim Janssen](https://gitlab.tailored-apps.com/codingschool_wjanssen)
