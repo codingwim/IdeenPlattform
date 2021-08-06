@@ -46,9 +46,13 @@ See questions below, and our view on it:
 As the app developed and the minimal viable product was done, we took the liberty to implement some extra features:
 
 * rating icon with fill, shows the average rating the idea has
+  
   * empty hart: not rated yet
+    
   * full hart: average rating above 4.5 / 5
+    
   * partial fill, everything in between
+  
   
 * to inform the Idea managers of the released status we colour the cardview border in yellow if the idea is released
 
@@ -56,18 +60,25 @@ As the app developed and the minimal viable product was done, we took the libert
   * every x seconds (default 15) the idea list gets fetched from the backend (api call)
   
   * if there are status changes like NEW, UPDATED or RELEASED, a badge for all ideas bottom nav will be show.
+    
     -> empty badge (no number) for UPDATED, RELEASED 
+    
     -> or badge with number of NEW ideas
       
   * if there are trend changes, a badge for the Top Ranked bottom nav button will be show. 
+    
     -> empty badge
     
   * on click auf bottom nav All Ideas: 
+    
     -> the list gets loaded, sorted by lastupdated, with the STATUS showing in right hand top corner, plus the cardview with dark border
+  
     -> the badge gets reset
     
   * on click auf bottom nav Top Ranked:
+    
     -> the list gets loaded, sorted by rating, with POSITION UP or DOWN change showing in right hand top corner
+    
     -> the badge gets reset
       
 ## Thanks
