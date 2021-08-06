@@ -60,25 +60,25 @@ As the app developed and the minimal viable product was done, we took the libert
 
   * if there are status changes like NEW, UPDATED or RELEASED, a badge for all ideas bottom nav will be show.
 
-    > empty badge (no number) for UPDATED, RELEASED
+    * empty badge (no number) for UPDATED, RELEASED
 
-    > or badge with number of NEW ideas
+    * or badge with number of NEW ideas
 
   * if there are trend changes, a badge for the Top Ranked bottom nav button will be show.
 
-    > empty badge
+    * empty badge
 
   * on click auf bottom nav All Ideas:
 
-    > the list gets loaded, sorted by lastupdated, with the STATUS showing in right hand top corner, plus the cardview with dark border
+    * the list gets loaded, sorted by lastupdated, with the STATUS showing in right hand top corner, plus the cardview with dark border
 
-    > the badge gets reset
+    * the badge gets reset
 
   * on click auf bottom nav Top Ranked:
 
-    > the list gets loaded, sorted by rating, with POSITION UP or DOWN change showing in right hand top corner
+    * the list gets loaded, sorted by rating, with POSITION UP or DOWN change showing in right hand top corner
 
-    > the badge gets reset
+    * the badge gets reset
 
 ## Thanks
 
