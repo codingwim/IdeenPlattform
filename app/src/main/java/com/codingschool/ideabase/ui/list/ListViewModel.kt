@@ -30,7 +30,6 @@ class ListViewModel(
     private var categoryArrayDE: Array<String> = emptyArray()
     private var categoryArrayEN: Array<String> = emptyArray()
 
-
     private var listOfSearchCategories: List<String> = emptyList()
     private var searchString = ""
 
