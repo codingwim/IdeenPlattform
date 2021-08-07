@@ -100,6 +100,11 @@ class ListViewModel(
                 if (topOrAll) {
                     if (listWithTrendOrStatus.isNotEmpty()) {
                         adapter.updateList(listWithTrendOrStatus)
+                        // if list has trend changes, move to top of changes?
+                        val highestTrendChangeIdeaPosition = listWithTrendOrStatus.indexOfFirst {
+                            it.trend == Trend.UP
+                        }
+                        if (highestTrendChangeIdeaPosition > 0) view?.scrollToItem(highestTrendChangeIdeaPosition)
                         view?.hideTopBadge()
                         val rankedList = listWithTrendOrStatus.map { it.id }
                         prefs.setTopRankedIds(rankedList)

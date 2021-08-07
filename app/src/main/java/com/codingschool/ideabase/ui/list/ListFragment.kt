@@ -66,6 +66,9 @@ class ListFragment : Fragment(), ListView {
         viewModel.init()
     }
 
+    override fun scrollToItem(position: Int) {
+        binding.rvIdeas.layoutManager?.scrollToPosition(position)
+    }
     override fun showToast(any: Any) {
         requireActivity().toast(any)
     }
@@ -123,10 +126,6 @@ class ListFragment : Fragment(), ListView {
         val action: NavDirections =
             ListFragmentDirections.toProfile(id)
         Navigation.findNavController(requireView()).navigate(action)
-    }
-
-    override fun moveToPositionInRecyclerview(position: Int) {
-        binding.rvIdeas.smoothScrollToPosition(position)
     }
 
     override fun showSearchDialog(
