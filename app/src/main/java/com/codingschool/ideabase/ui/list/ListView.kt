@@ -14,6 +14,7 @@ interface ListView {
     fun setTopBadge()
     fun hideAllBadge()
     fun setAllBadge(numberOfNewItems: Int)
+    fun setInitTopAndAllBadge(numberOfNewItems: Int?)
     fun setAllBadgeNoNumber()
     fun handleErrorResponse(errorMessage: String?)
     fun showNoTopRankedIdeasYet()

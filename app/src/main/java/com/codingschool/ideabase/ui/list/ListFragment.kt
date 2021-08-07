@@ -53,8 +53,6 @@ class ListFragment : Fragment(), ListView {
         //access bottom navigation badges
         bottomNav =
             (requireActivity() as MainActivity).findViewById(R.id.nav_view)
-        topBadge = bottomNav.getOrCreateBadge(R.id.navigation_top_ranked)
-        allBadge = bottomNav.getOrCreateBadge(R.id.navigation_all_ideas)
 
         // set fab button
         binding.fab.setOnClickListener {
@@ -152,7 +150,8 @@ class ListFragment : Fragment(), ListView {
         val message =
             if (hasFilterSelection) getString(R.string.search_didalog_will_be_filtered) + selectedCategoriesAsString
             else getString(R.string.search_diealog_addfilter_text)
-        val filterBtnText = if (hasFilterSelection) getString(R.string.change_filter_search_dialog) else getString(R.string.btn_filter_dialog)
+        val filterBtnText =
+            if (hasFilterSelection) getString(R.string.change_filter_search_dialog) else getString(R.string.btn_filter_dialog)
         MaterialAlertDialogBuilder(
             requireActivity(),
             R.style.materialDialog
@@ -188,8 +187,10 @@ class ListFragment : Fragment(), ListView {
         searchText: String
     ) {
 
-        val backBtnText = if (searchText.isEmpty()) getString(R.string.add_serach_text_filter_dialog) else getString(
-                    R.string.change_search_text_filter_dialog)
+        val backBtnText =
+            if (searchText.isEmpty()) getString(R.string.add_serach_text_filter_dialog) else getString(
+                R.string.change_search_text_filter_dialog
+            )
         MaterialAlertDialogBuilder(
             requireActivity()
         )
@@ -211,26 +212,42 @@ class ListFragment : Fragment(), ListView {
             .show()
     }
 
+    override fun setInitTopAndAllBadge(numberOfNewItems: Int?) {
+        topBadge = bottomNav.getOrCreateBadge(R.id.navigation_top_ranked)
+        hideTopBadge()
+        allBadge = bottomNav.getOrCreateBadge(R.id.navigation_all_ideas)
+        if (numberOfNewItems == null) allBadge.isVisible = false
+        else {
+            allBadge.isVisible = true
+            if (numberOfNewItems > 0) allBadge.number = numberOfNewItems
+        }
+    }
+
     override fun hideTopBadge() {
+        topBadge = bottomNav.getOrCreateBadge(R.id.navigation_top_ranked)
         topBadge.isVisible = false
     }
 
     override fun setTopBadge() {
+        topBadge = bottomNav.getOrCreateBadge(R.id.navigation_top_ranked)
         topBadge.isVisible = true
     }
 
     override fun hideAllBadge() {
+        allBadge = bottomNav.getOrCreateBadge(R.id.navigation_all_ideas)
+
         allBadge.isVisible = false
         allBadge.clearNumber()
     }
 
     override fun setAllBadge(numberOfNewItems: Int) {
+        allBadge = bottomNav.getOrCreateBadge(R.id.navigation_all_ideas)
         allBadge.isVisible = true
         allBadge.number = numberOfNewItems
     }
 
     override fun setAllBadgeNoNumber() {
-        allBadge.isVisible = false
+        allBadge = bottomNav.getOrCreateBadge(R.id.navigation_all_ideas)
         allBadge.clearNumber()
         allBadge.isVisible = true
     }
@@ -245,7 +262,7 @@ class ListFragment : Fragment(), ListView {
     }
 
     override fun hideNoResultsFound() {
-        if (binding.noSearchResultToShowMessageLayout.root.isVisible)  {
+        if (binding.noSearchResultToShowMessageLayout.root.isVisible) {
             binding.noSearchResultToShowMessageLayout.root.visibility = View.INVISIBLE
             binding.rvIdeas.visibility = View.VISIBLE
         }
@@ -273,6 +290,7 @@ class ListFragment : Fragment(), ListView {
         super.onPause()
         viewModel.periodicUpdateDisposable.clear()
     }
+
     override fun onDestroyView() {
         super.onDestroyView()
         viewModel.compositeDisposable.clear()

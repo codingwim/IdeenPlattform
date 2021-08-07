@@ -18,7 +18,6 @@ class MyApplication : Application() {
         AndroidThreeTen.init(this)
 
         startKoin {
-            androidLogger(Level.DEBUG)
             androidContext(this@MyApplication)
             modules(appModule)
         }

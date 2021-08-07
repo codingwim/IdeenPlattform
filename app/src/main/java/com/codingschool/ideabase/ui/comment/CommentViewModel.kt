@@ -11,7 +11,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.addTo
 
-class CommentViewModel (
+class CommentViewModel(
     private val id: String,
     private val ideaApi: IdeaApi,
     private val prefs: Preferences
@@ -39,9 +39,7 @@ class CommentViewModel (
 
     fun onSubmitClick() {
         if (comment.isEmpty()) view?.setCommentEmptyError(R.string.comment_empty_error_message)
-        else if (comment.length>200) view?.showToast("Your comment has to many chars. Max 200")
-
-
+        else if (comment.length > 200) view?.showToast("Your comment has to many chars. Max 200")
         else {
             val createComment = CreateComment(comment)
             ideaApi.commentIdea(id, createComment)

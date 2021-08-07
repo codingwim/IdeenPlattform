@@ -307,8 +307,7 @@ class ListViewModel(
         if (searchQuery.isEmpty()) {
             view?.hideNoResultsFound()
             getAllIdeas(listOfSearchCategories)
-        }
-        else ideaApi.searchIdeas(searchQuery)
+        } else ideaApi.searchIdeas(searchQuery)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({ list ->
                 val listFromSearch =

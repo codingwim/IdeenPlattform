@@ -46,6 +46,7 @@ class CommentFragment : Fragment(), CommentView {
 
         binding.vm = viewModel
         viewModel.attachView(this)
+        viewModel.init()
     }
 
     override fun showToast(any: Any) {
