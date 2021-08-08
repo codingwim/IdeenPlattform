@@ -157,5 +157,7 @@
     <string name="cd_trend_down_icon">Trend Down Icon</string>
     <string name="toast_connection_problem">There seems to be a connection problem…</string>
     <string name="comment_max_lenght_reached">You have reached the maximum length for a comment</string>
-
+    <string name="title_comment">Comment</string>
+    <string name="title_details">Idea details</string>
+    <string name="loading_title_fragment">Loading</string>
 </resources>

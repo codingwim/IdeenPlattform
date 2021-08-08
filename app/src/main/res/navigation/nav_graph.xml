@@ -148,7 +148,7 @@
     <fragment
         android:id="@+id/detailFragment"
         android:name="com.codingschool.ideabase.ui.detail.DetailFragment"
-        android:label="DetailFragment" >
+        android:label="@string/title_details" >
         <argument
             android:name="id"
             app:argType="string" />
@@ -180,7 +180,7 @@
     <fragment
         android:id="@+id/newEditIdeaFragment"
         android:name="com.codingschool.ideabase.ui.neweditidea.NewEditIdeaFragment"
-        android:label="Add Idea">
+        android:label="@string/menu_add_idea">
         <argument
             android:name="editIdea"
             android:defaultValue=""
@@ -202,7 +202,7 @@
     <fragment
         android:id="@+id/commentFragment"
         android:name="com.codingschool.ideabase.ui.comment.CommentFragment"
-        android:label="CommentFragment" >
+        android:label="@string/title_comment" >
         <argument
             android:name="id"
             app:argType="string" />
@@ -213,7 +213,7 @@
     <fragment
         android:id="@+id/editProfileFragment"
         android:name="com.codingschool.ideabase.ui.editprofile.EditProfileFragment"
-        android:label="Edit Profile" >
+        android:label="@string/menu_edit_profile" >
         <action
             android:id="@+id/toLogin"
             app:destination="@id/loginFragment" />
@@ -228,7 +228,7 @@
     <fragment
         android:id="@+id/loadingFragment"
         android:name="com.codingschool.ideabase.ui.loading.LoadingFragment"
-        android:label="LoadingFragment" >
+        android:label="@string/loading_title_fragment" >
         <action
             android:id="@+id/toTopRanked"
             app:destination="@id/navigation_top_ranked"
