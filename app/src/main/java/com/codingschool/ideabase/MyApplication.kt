@@ -3,9 +3,7 @@ package com.codingschool.ideabase
 import android.app.Application
 import com.jakewharton.threetenabp.AndroidThreeTen
 import org.koin.android.ext.koin.androidContext
-import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin
-import org.koin.core.logger.Level
 
 class MyApplication : Application() {
 
@@ -18,7 +16,6 @@ class MyApplication : Application() {
         AndroidThreeTen.init(this)
 
         startKoin {
-            androidLogger(Level.DEBUG)
             androidContext(this@MyApplication)
             modules(appModule)
         }

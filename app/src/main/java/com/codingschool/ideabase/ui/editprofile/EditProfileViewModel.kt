@@ -149,7 +149,6 @@ class EditProfileViewModel(
     }
     private fun setMyCredentialsFromAPI() {
         ideaApi.getOwnUser().observeOn(AndroidSchedulers.mainThread())
-            //.subscribeOn(Schedulers.io())
             .subscribe({ user ->
                 view?.showInfoDialog()
                 initialProfileImageUrl = user.profilePicture ?: ""

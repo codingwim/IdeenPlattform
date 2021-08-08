@@ -1,12 +1,13 @@
 package com.codingschool.ideabase.ui.list
 
+import android.R.attr
 import android.os.Bundle
 import android.text.InputType
-import android.util.Log
 import android.view.*
 import android.widget.EditText
 import android.widget.LinearLayout
 import androidx.core.view.isVisible
+import androidx.core.view.marginStart
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavDirections
@@ -22,6 +23,14 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import org.koin.android.ext.android.inject
 import org.koin.core.parameter.parametersOf
+import android.R.attr.bottom
+
+import android.R.attr.right
+
+import android.R.attr.top
+
+import android.R.attr.left
+
 
 class ListFragment : Fragment(), ListView {
 
@@ -54,8 +63,6 @@ class ListFragment : Fragment(), ListView {
         //access bottom navigation badges
         bottomNav =
             (requireActivity() as MainActivity).findViewById(R.id.nav_view)
-        topBadge = bottomNav.getOrCreateBadge(R.id.navigation_top_ranked)
-        allBadge = bottomNav.getOrCreateBadge(R.id.navigation_all_ideas)
 
         // set fab button
         binding.fab.setOnClickListener {
@@ -67,6 +74,10 @@ class ListFragment : Fragment(), ListView {
         binding.rvIdeas.adapter = viewModel.adapter
         viewModel.attachView(this)
         viewModel.init()
+    }
+
+    override fun scrollToItem(position: Int) {
+        binding.rvIdeas.layoutManager?.scrollToPosition(position)
     }
 
     override fun showToast(any: Any) {
@@ -128,10 +139,6 @@ class ListFragment : Fragment(), ListView {
         Navigation.findNavController(requireView()).navigate(action)
     }
 
-    override fun moveToPositionInRecyclerview(position: Int) {
-        binding.rvIdeas.smoothScrollToPosition(position)
-    }
-
     override fun showSearchDialog(
         categoryArray: Array<String>,
         checkedItems: BooleanArray,
@@ -143,17 +150,11 @@ class ListFragment : Fragment(), ListView {
         if (searchText.isNotEmpty()) inputEditTextField.setText(searchText) else inputEditTextField.hint =
             getString(R.string.search_for_hint_dialog)
         inputEditTextField.inputType = InputType.TYPE_CLASS_TEXT
-        val linearLayoutParams = LinearLayout.LayoutParams(
-            LinearLayout.LayoutParams.MATCH_PARENT,
-            LinearLayout.LayoutParams.WRAP_CONTENT
-        )
-        linearLayoutParams.setMargins(150, 0, 150, 0)
-        inputEditTextField.layoutParams = linearLayoutParams
-
         val message =
             if (hasFilterSelection) getString(R.string.search_didalog_will_be_filtered) + selectedCategoriesAsString
             else getString(R.string.search_diealog_addfilter_text)
-        val filterBtnText = if (hasFilterSelection) getString(R.string.change_filter_search_dialog) else getString(R.string.btn_filter_dialog)
+        val filterBtnText =
+            if (hasFilterSelection) getString(R.string.change_filter_search_dialog) else getString(R.string.btn_filter_dialog)
         MaterialAlertDialogBuilder(
             requireActivity(),
             R.style.materialDialog
@@ -189,8 +190,10 @@ class ListFragment : Fragment(), ListView {
         searchText: String
     ) {
 
-        val backBtnText = if (searchText.isEmpty()) getString(R.string.add_serach_text_filter_dialog) else getString(
-                    R.string.change_search_text_filter_dialog)
+        val backBtnText =
+            if (searchText.isEmpty()) getString(R.string.add_serach_text_filter_dialog) else getString(
+                R.string.change_search_text_filter_dialog
+            )
         MaterialAlertDialogBuilder(
             requireActivity()
         )
@@ -212,26 +215,42 @@ class ListFragment : Fragment(), ListView {
             .show()
     }
 
+    override fun setInitTopAndAllBadge(numberOfNewItems: Int?) {
+        topBadge = bottomNav.getOrCreateBadge(R.id.navigation_top_ranked)
+        hideTopBadge()
+        allBadge = bottomNav.getOrCreateBadge(R.id.navigation_all_ideas)
+        if (numberOfNewItems == null) allBadge.isVisible = false
+        else {
+            allBadge.isVisible = true
+            if (numberOfNewItems > 0) allBadge.number = numberOfNewItems
+        }
+    }
+
     override fun hideTopBadge() {
+        topBadge = bottomNav.getOrCreateBadge(R.id.navigation_top_ranked)
         topBadge.isVisible = false
     }
 
     override fun setTopBadge() {
+        topBadge = bottomNav.getOrCreateBadge(R.id.navigation_top_ranked)
         topBadge.isVisible = true
     }
 
     override fun hideAllBadge() {
+        allBadge = bottomNav.getOrCreateBadge(R.id.navigation_all_ideas)
+
         allBadge.isVisible = false
         allBadge.clearNumber()
     }
 
     override fun setAllBadge(numberOfNewItems: Int) {
+        allBadge = bottomNav.getOrCreateBadge(R.id.navigation_all_ideas)
         allBadge.isVisible = true
         allBadge.number = numberOfNewItems
     }
 
     override fun setAllBadgeNoNumber() {
-        allBadge.isVisible = false
+        allBadge = bottomNav.getOrCreateBadge(R.id.navigation_all_ideas)
         allBadge.clearNumber()
         allBadge.isVisible = true
     }
@@ -246,7 +265,7 @@ class ListFragment : Fragment(), ListView {
     }
 
     override fun hideNoResultsFound() {
-        if (binding.noSearchResultToShowMessageLayout.root.isVisible)  {
+        if (binding.noSearchResultToShowMessageLayout.root.isVisible) {
             binding.noSearchResultToShowMessageLayout.root.visibility = View.INVISIBLE
             binding.rvIdeas.visibility = View.VISIBLE
         }
@@ -254,6 +273,7 @@ class ListFragment : Fragment(), ListView {
 
     override fun showNoTopRankedIdeasYet() {
         binding.rvIdeas.visibility = View.INVISIBLE
+        binding.fab.visibility = View.INVISIBLE
         binding.noTopRankedMessageLayout.root.visibility = View.VISIBLE
     }
 
@@ -267,6 +287,11 @@ class ListFragment : Fragment(), ListView {
         binding.fab.visibility = View.INVISIBLE
         binding.noInternetMessageLayout.root.visibility = View.VISIBLE
         setHasOptionsMenu(false)
+    }
+
+    override fun onPause() {
+        super.onPause()
+        viewModel.periodicUpdateDisposable.clear()
     }
 
     override fun onDestroyView() {

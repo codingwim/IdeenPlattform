@@ -42,8 +42,7 @@ class Preferences(
     fun getIdeaCategoryDraft() = preferences.getString(DRAFT_CATEGORY, "") ?: ""
     fun getTopRankedIds(): List<String> {
         val idsAsString = preferences.getString(TOP_RANKED_IDS, "") ?: ""
-        val result: List<String> = idsAsString.split(",").map { it.trim() }
-        return result
+        return idsAsString.split(",").map { it.trim() }
     }
 
     fun setLocale(localeString: String) {
@@ -91,7 +90,7 @@ class Preferences(
     }
 
     fun setIdeaCategoryDraft(draft: String) {
-        preferences.edit().putString(Keys.DRAFT_CATEGORY, draft).apply()
+        preferences.edit().putString(DRAFT_CATEGORY, draft).apply()
     }
 
     fun isLangEn() = getLocale().equals("en")
@@ -109,7 +108,7 @@ class Preferences(
     }
 
     fun setTopRankedIds(list: List<String>) {
-        preferences.edit().putString(Keys.TOP_RANKED_IDS, list.joinToString()).apply()
+        preferences.edit().putString(TOP_RANKED_IDS, list.joinToString()).apply()
     }
 }
 

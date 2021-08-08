@@ -42,6 +42,11 @@ class IdeaListAdapter(private val imageHandler: ImageHandler) :
                 val yellow = ContextCompat.getColor(this.itemView.context, R.color.yellow)
                 binding.cvTop.strokeColor = yellow
                 binding.cvTop.strokeWidth = 2
+            } else {
+                // because of an issue wit RV bindviewholder reusinglayout every x items,
+                // the stroke colour of the first x items gets used in the next x times
+                // to prevent this we rest strokewidth
+                binding.cvTop.strokeWidth = 0
             }
             binding.tvAuthor.text = idea.authorName
             binding.tvIdeaDescription.text = idea.description
@@ -129,7 +134,7 @@ class IdeaListAdapter(private val imageHandler: ImageHandler) :
                 override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
                     val oldItem = list[oldItemPosition]
                     val newItem = newList[newItemPosition]
-                    return (oldItem.id == newItem.id)
+                    return (oldItem.id == newItem.id && oldItem.status == newItem.status)
                 }
 
                 override fun areContentsTheSame(
@@ -138,7 +143,7 @@ class IdeaListAdapter(private val imageHandler: ImageHandler) :
                 ): Boolean {
                     val oldItem = list[oldItemPosition]
                     val newItem = newList[newItemPosition]
-                    return oldItem.title == newItem.title && oldItem.description == newItem.description && oldItem.category == newItem.category && oldItem.imageUrl == newItem.imageUrl && oldItem.avgRating == newItem.avgRating
+                    return oldItem.title == newItem.title && oldItem.description == newItem.description && oldItem.category == newItem.category && oldItem.imageUrl == newItem.imageUrl && oldItem.avgRating == newItem.avgRating && oldItem.status == newItem.status
                 }
             }
         )
@@ -190,8 +195,8 @@ class IdeaListAdapter(private val imageHandler: ImageHandler) :
 
     fun updateRating(position: Int, idea: Idea) {
         val updatesList = list.toMutableList()
-            updatesList[position] = idea
-        list=updatesList
+        updatesList[position] = idea
+        list = updatesList
         notifyItemChanged(position)
     }
 }

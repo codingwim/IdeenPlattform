@@ -74,7 +74,6 @@ class LoadingViewModel(
 
     private fun checkCredentialsWithAPI() {
         ideaApi.getOwnUser().observeOn(AndroidSchedulers.mainThread())
-            //.subscribeOn(Schedulers.io())
             .subscribe({ user ->
                 prefs.setCredentialID(user.id)
                 prefs.setIsManager(user.isManager)

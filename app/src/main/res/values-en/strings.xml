@@ -146,7 +146,6 @@
     <string name="idea_saved">The entered idea has been saved, but not posted</string>
     <string name="idea_manager">Idea manager</string>
     <string name="user_not_idea_manager">User</string>
-    <string name="empty">""</string>
     <string name="password_rule">Password must contain a minimum of 8 characters, including at least 1 number/1 letter and a special char</string>
     <string name="enter_valid_email">Please enter a valid e-mail address</string>
     <string name="please_choose_pwd">Please choose a password with minimum 8 characters, including at least 1 number, 1 letter and 1 special char</string>
@@ -157,4 +156,8 @@
     <string name="cv_trend_up_icon">Trend Up Icon</string>
     <string name="cd_trend_down_icon">Trend Down Icon</string>
     <string name="toast_connection_problem">There seems to be a connection problem…</string>
+    <string name="comment_max_lenght_reached">You have reached the maximum length for a comment</string>
+    <string name="title_comment">Comment</string>
+    <string name="title_details">Idea details</string>
+    <string name="loading_title_fragment">Loading</string>
 </resources>

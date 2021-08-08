@@ -10,4 +10,4 @@ const val INITIAL_DELAY = 2L
 const val UPDATE_INTERVAL = 15L
 
 // here we can set the minimum amount of ratings an idea needs, to be included on the top ranked screen Min 2 recommended
-const val MIN_NUM_RATINGS_SHOW_IDEA_ON_TOP_RANKED = 2
+const val MIN_NUM_RATINGS_SHOW_IDEA_ON_TOP_RANKED = 3
