@@ -54,12 +54,11 @@
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/margin_large"
             android:textSize="@dimen/text_medium18"
-            app:errorEnabled="true"
+            android:text="@{vm.commentTitle}"
             app:layout_constraintBottom_toTopOf="@id/etComment"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/ivProfilePicture"
             app:layout_constraintTop_toBottomOf="@id/vwLine"
-            android:text="@string/prof_info_will_be_visible_commenting"
              />
 
         <com.google.android.material.imageview.ShapeableImageView
@@ -86,10 +85,7 @@
             android:inputType="textMultiLine"
             android:hint="@string/write_comment_hint"
             android:focusable="true"
-            app:counterEnabled="true"
-            app:counterMaxLength="200"
-           
-            app:errorEnabled="true"
+            android:maxLength="500"
             android:gravity="top"
             android:onTextChanged="@{vm::onCommentTextChanged}"
             android:text="@={vm.comment}"

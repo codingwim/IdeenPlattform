@@ -5,6 +5,7 @@
     <color name ="grey">#D3D3D3</color>
     <color name ="light_grey">#F3F3F3</color>
     <color name ="red">#FF7575</color>
+    <color name ="error_red">#FFDD2C00</color>
     <color name ="green">#99FF82</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
@@ -12,4 +13,7 @@
     <color name ="profile_overlay_transp_20">#33000000</color>
     <color name ="profile_overlay_transp_40">#66000000</color>
     <color name ="profile_overlay_transp_60">#99000000</color>
+    <color name ="comment_title_black">@color/black</color>
+    <color name ="comment_title_error">@color/error_red</color>
+
 </resources>

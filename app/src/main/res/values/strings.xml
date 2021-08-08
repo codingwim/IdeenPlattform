@@ -156,4 +156,5 @@
     <string name="cd_trend_down_icon"> Trend-Down-Symbol </string>
     <string name="toast_connection_problem"> Es scheint ein Verbindungsproblem zu geben…</string>
     <string name="cd_no_top_ranked_ideas_yet">Keine Top Bewerteten Ideen bis jetzt</string>
+    <string name="comment_max_lenght_reached">Du hast die maximale Kommentar Länge erreicht…</string>
 </resources>

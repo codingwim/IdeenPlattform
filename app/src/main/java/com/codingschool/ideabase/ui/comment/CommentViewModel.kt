@@ -3,6 +3,7 @@ package com.codingschool.ideabase.ui.comment
 import android.util.Log
 import androidx.databinding.BaseObservable
 import androidx.databinding.Bindable
+import androidx.databinding.ObservableInt
 import com.codingschool.ideabase.R
 import com.codingschool.ideabase.model.data.CreateComment
 import com.codingschool.ideabase.model.remote.IdeaApi
@@ -33,13 +34,34 @@ class CommentViewModel(
     @get:Bindable
     var comment: String = prefs.getCommentDraft()
 
+    @get:Bindable
+    val commentTitle = ObservableInt(R.string.prof_info_will_be_visible_commenting)
+
     fun onCommentTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-        if ((count > 0) && (before == 0)) view?.resetCommentEmptyError()
+         when {
+            s.length in 1 until MAX_COMMENT_LENGTH-1 -> resetCommentEmptyError()
+            s.length == MAX_COMMENT_LENGTH -> setMaxLenghtError()
+            before>0 -> resetCommentEmptyError()
+        }
+    }
+
+    private fun setCommentEmptyError() {
+        commentTitle.set(R.string.comment_empty_error_message)
+        view?.setError()
+    }
+
+    private fun setMaxLenghtError() {
+        commentTitle.set(R.string.comment_max_lenght_reached)
+        view?.setError()
+    }
+
+    private fun resetCommentEmptyError() {
+        commentTitle.set(R.string.prof_info_will_be_visible_commenting)
+        view?.clearError()
     }
 
     fun onSubmitClick() {
-        if (comment.isEmpty()) view?.setCommentEmptyError(R.string.comment_empty_error_message)
-        else if (comment.length > 200) view?.showToast("Your comment is too long")
+        if (comment.isEmpty()) setCommentEmptyError()
         else {
             val createComment = CreateComment(comment)
             ideaApi.commentIdea(id, createComment)
@@ -52,7 +74,6 @@ class CommentViewModel(
                     view?.handleErrorResponse(t.message)
                     Log.e("IdeaBase_log", "exception adding comment: $t")
                 }).addTo(compositeDisposable)
-
         }
     }
 
@@ -70,6 +91,10 @@ class CommentViewModel(
         prefs.setCommentDraft(comment)
         view?.showToast(R.string.comment_saved_as_draft)
         view?.navigateBack()
+    }
+
+    companion object {
+        const val MAX_COMMENT_LENGTH = 500
     }
 
 }
