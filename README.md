@@ -11,7 +11,7 @@ The app is the final challenge of the Mobile App Development - Android course of
 ## Technologies
 
 * Kotlin
-* ViewBinding
+* DataBinding
 * Koin for dependency injection
 * Retrofit/OkHttp/Gson for networking
 * MVVM as architectural pattern
@@ -19,6 +19,7 @@ The app is the final challenge of the Mobile App Development - Android course of
 ## Interpretation of the information given
 
 The information given was quite extensive, and the designs were mostly clear. Nevertheless did some questions pop.
+In real life, some clarifications would be requested before proceeding to develop the app. For the purpose of the challenge, we took our interpretation to continue.
 See questions below, and our view on it:
 
 * Why do idea managers release the ideas ?
@@ -26,9 +27,9 @@ See questions below, and our view on it:
 
 * Should only released ideas be visible to other users, so they can rate and comment ?
 
-  > all ideas are vidible and can be commented
+  > all ideas are visible and can be commented
 
-* Should top ranked show ideas that have no rank or just one rating ?
+* Should top ranked show ideas that have no rank yet, or just one or a few ratings ?
 
   > No. Top ranked should only show ideas that have minimum more than 1 rating. We have set a constant for it, default on 3
 
@@ -36,7 +37,7 @@ See questions below, and our view on it:
 
   > users no, idea managers yes
 
-* search and filter from one icon click ?
+* search and filter from one icon click, as in the design ?
 
   > yes
 
