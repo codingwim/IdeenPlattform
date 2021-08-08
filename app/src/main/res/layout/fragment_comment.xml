@@ -17,8 +17,8 @@
 
         <ImageView
             android:id="@+id/btClose"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="@dimen/close_button_size"
+            android:layout_height="@dimen/close_button_size"
             android:onClick="@{() -> vm.onCloseClick()}"
             android:layout_margin="@dimen/margin_small"
             android:contentDescription="@string/cancel_comment_contenct_description"
@@ -53,8 +53,6 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/margin_large"
-            android:ellipsize="end"
-            android:maxLines="3"
             android:textSize="@dimen/text_medium18"
             app:errorEnabled="true"
             app:layout_constraintBottom_toTopOf="@id/etComment"
@@ -66,8 +64,8 @@
 
         <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/ivProfilePicture"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
+            android:layout_width="@dimen/profile_picture_comment"
+            android:layout_height="@dimen/profile_picture_comment"
             android:layout_margin="@dimen/margin_large"
             android:scaleType="centerCrop"
             app:layout_constraintStart_toStartOf="parent"
@@ -90,6 +88,7 @@
             android:focusable="true"
             app:counterEnabled="true"
             app:counterMaxLength="200"
+           
             app:errorEnabled="true"
             android:gravity="top"
             android:onTextChanged="@{vm::onCommentTextChanged}"

@@ -13,12 +13,12 @@ class ImageHandler(
 ) {
     private val appContext = context.applicationContext
 
-    val picasso = Picasso.Builder(appContext)
+    private val picasso: Picasso = Picasso.Builder(appContext)
         .downloader(OkHttp3Downloader(okHttpClient))
         .build()
 
     fun getProfilePic(url: String?, view: ImageView) {
-        val uriOrDrawable = if (url != null) url else "R.drawable.ic_baseline_person_24"
+        val uriOrDrawable = url ?: "R.drawable.ic_baseline_person_24"
         picasso
             .load(uriOrDrawable)
             .resize(240,240)

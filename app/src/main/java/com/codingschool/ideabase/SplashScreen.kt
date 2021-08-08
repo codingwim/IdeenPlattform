@@ -2,8 +2,6 @@ package com.codingschool.ideabase
 
 import android.content.Intent
 import android.os.Bundle
-import android.os.Handler
-import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 
 class SplashScreen : AppCompatActivity() {

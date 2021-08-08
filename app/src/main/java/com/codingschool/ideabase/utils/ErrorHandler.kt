@@ -1,7 +1,6 @@
 package com.codingschool.ideabase.utils
 
 import android.content.Context
-import android.util.Log
 import com.codingschool.ideabase.R
 
 fun Context.errorHandler(errorMessage: String?): Boolean {

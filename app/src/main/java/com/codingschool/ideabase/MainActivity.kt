@@ -1,18 +1,16 @@
 package com.codingschool.ideabase
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.appcompat.app.ActionBar
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
-import com.codingschool.ideabase.databinding.ActivityMainBinding
 import com.codingschool.ideabase.utils.Preferences
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import org.koin.android.ext.android.inject
 import java.util.*
 
@@ -59,25 +57,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-
-    private fun showAppBarAndBottomNaviagtionBar(
-        navView: BottomNavigationView,
-        actionBar: ActionBar?
-    ) {
-        actionBar?.show()
-        navView.visibility = View.VISIBLE
-    }
-
-    private fun hideAppBarAndBottomNaviagtionBar(
-        navView: BottomNavigationView,
-        actionBar: ActionBar?
-    ) {
-        actionBar?.hide()
-        navView.visibility = View.GONE
-    }
-
     override fun onSupportNavigateUp(): Boolean {
         return navController.navigateUp()
     }
-
 }

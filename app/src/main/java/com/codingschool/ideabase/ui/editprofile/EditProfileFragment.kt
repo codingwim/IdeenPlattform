@@ -26,7 +26,7 @@ import org.koin.core.parameter.parametersOf
 
 class EditProfileFragment: Fragment(), EditProfileView {
 
-    private val viewModel: EditProfileViewModel by inject<EditProfileViewModel> {
+    private val viewModel: EditProfileViewModel by inject {
         parametersOf(arguments?.let { EditProfileFragmentArgs.fromBundle(it).loadPictureSelector })
     }
     private lateinit var binding: FragmentEditProfileBinding

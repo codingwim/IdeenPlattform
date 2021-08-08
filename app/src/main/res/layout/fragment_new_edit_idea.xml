@@ -23,18 +23,16 @@
 
             <com.google.android.material.imageview.ShapeableImageView
                 android:id="@+id/ivIdeaImage"
-                android:layout_width="160dp"
-                android:layout_height="160dp"
+                android:layout_width="@dimen/new_idea_image_size"
+                android:layout_height="@dimen/new_idea_image_size"
                 android:layout_margin="@dimen/margin_large"
                 android:scaleType="centerCrop"
                 app:layout_constraintBottom_toTopOf="@+id/tilIdeaName"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-
                 app:srcCompat="@drawable/image_placeholder_480_360"
                 app:strokeColor="@color/grey"
                 app:strokeWidth="1dp"
-
                 />
 
             <com.google.android.material.button.MaterialButton

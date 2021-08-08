@@ -1,22 +1,11 @@
 package com.codingschool.ideabase.utils
 
 import android.app.Activity
-import android.content.ContentResolver
 import android.content.Context
-import android.net.Uri
-import android.util.Log
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.Toast
-import com.codingschool.ideabase.MyApplication
-import com.codingschool.ideabase.R
-import com.google.android.material.snackbar.Snackbar
-import okhttp3.MediaType
-import okhttp3.RequestBody
-import okio.BufferedSink
-import okio.source
-import java.io.IOException
 
 
 fun Context.toast(text: String) {
