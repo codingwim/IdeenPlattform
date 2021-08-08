@@ -91,6 +91,9 @@ class NewEditIdeaFragment: Fragment(), NewEditIdeaView {
         binding.tilIdeaName.error = null
     }
 
+    override fun resetEmptyCategory() {
+        binding.tilCategory.error = null
+    }
     override fun showToast(any: Any) {
         requireActivity().toast(any)
     }

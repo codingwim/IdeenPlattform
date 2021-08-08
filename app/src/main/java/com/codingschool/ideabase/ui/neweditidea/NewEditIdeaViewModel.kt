@@ -1,8 +1,12 @@
 package com.codingschool.ideabase.ui.neweditidea
 
+import android.annotation.SuppressLint
 import android.content.ContentResolver
 import android.net.Uri
 import android.util.Log
+import android.view.MenuItem
+import android.view.View
+import android.widget.AdapterView
 import androidx.core.net.toUri
 import androidx.databinding.BaseObservable
 import androidx.databinding.Bindable
@@ -43,9 +47,7 @@ class NewEditIdeaViewModel(
     }
 
     fun init() {
-        // optionally: add progress indicator loading categories / prefill and wait (completable?) disable update button till loaded
         getAndSetCategoryItems()
-        // set edittexts with hint or prefill depending on NEW editIdea("") or EDIT editIdea(id)
         if (editIdeaId.isNotEmpty()) {
             getIdeaAndPrefill()
         } else if (prefs.hasSavedIdeaDraft()) getPrefillDraft()
@@ -213,6 +215,7 @@ class NewEditIdeaViewModel(
             }).addTo(compositeDisposable)
     }
 
+    @SuppressLint("CheckResult")
     private fun updateImage(imagePart: InputStreamRequestBody, updateImage: Boolean): Completable {
         return if (updateImage) {
             val requestBodyForUpdatedImage = getRequestBodyForUpdatedImage(imagePart)
@@ -230,6 +233,11 @@ class NewEditIdeaViewModel(
 
     fun onDescriptionTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
         if ((count > 0) && (before == 0)) view?.resetEmptyDescription()
+    }
+
+    fun onItemSelected(v: View) {
+        view?.resetEmptyCategory()
+
     }
 
     fun setSelectedImage(uri: Uri) {
@@ -278,6 +286,5 @@ class NewEditIdeaViewModel(
     companion object {
         const val MAX_TITLE_LENGTH = 30
         const val MAX_DESCRIPTION_LENGTH = 1000
-
     }
 }

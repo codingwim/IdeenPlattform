@@ -130,6 +130,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="none"
+                    android:onClick="@{vm::onItemSelected}"
                     android:text="@={vm.ideaCategory}"
                     tools:ignore="LabelFor" />
             </com.google.android.material.textfield.TextInputLayout>
