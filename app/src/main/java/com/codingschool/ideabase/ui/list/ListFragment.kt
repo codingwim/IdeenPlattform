@@ -1,11 +1,13 @@
 package com.codingschool.ideabase.ui.list
 
+import android.R.attr
 import android.os.Bundle
 import android.text.InputType
 import android.view.*
 import android.widget.EditText
 import android.widget.LinearLayout
 import androidx.core.view.isVisible
+import androidx.core.view.marginStart
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavDirections
@@ -21,6 +23,14 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import org.koin.android.ext.android.inject
 import org.koin.core.parameter.parametersOf
+import android.R.attr.bottom
+
+import android.R.attr.right
+
+import android.R.attr.top
+
+import android.R.attr.left
+
 
 class ListFragment : Fragment(), ListView {
 
@@ -69,6 +79,7 @@ class ListFragment : Fragment(), ListView {
     override fun scrollToItem(position: Int) {
         binding.rvIdeas.layoutManager?.scrollToPosition(position)
     }
+
     override fun showToast(any: Any) {
         requireActivity().toast(any)
     }
@@ -139,13 +150,6 @@ class ListFragment : Fragment(), ListView {
         if (searchText.isNotEmpty()) inputEditTextField.setText(searchText) else inputEditTextField.hint =
             getString(R.string.search_for_hint_dialog)
         inputEditTextField.inputType = InputType.TYPE_CLASS_TEXT
-        val linearLayoutParams = LinearLayout.LayoutParams(
-            LinearLayout.LayoutParams.MATCH_PARENT,
-            LinearLayout.LayoutParams.WRAP_CONTENT
-        )
-        linearLayoutParams.setMargins(150, 0, 150, 0)
-        inputEditTextField.layoutParams = linearLayoutParams
-
         val message =
             if (hasFilterSelection) getString(R.string.search_didalog_will_be_filtered) + selectedCategoriesAsString
             else getString(R.string.search_diealog_addfilter_text)
