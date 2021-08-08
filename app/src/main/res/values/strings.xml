@@ -44,7 +44,7 @@
     <string name="menu_detail_release_idea">Idee freigeben</string>
     <string name="comments_title_detail_idea">Kommentare</string>
     <string name="save">SPEICHERN</string>
-    <string name="save_idea_new">HOCHLADEN</string>
+    <string name="save_idea_new">EINREICHEN</string>
     <string name="save_idea_edit">SPEICHERN</string>
     <string name="upload_image_idea_new">BILD HINZUFÜGEN</string>
     <string name="change_image_idea_edit">BILD ÄNDERN</string>
