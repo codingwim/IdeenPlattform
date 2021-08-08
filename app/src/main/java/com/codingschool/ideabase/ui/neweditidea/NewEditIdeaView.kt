@@ -10,6 +10,7 @@ interface NewEditIdeaView {
     fun getImageDialog()
     fun resetEmptyIdeaName()
     fun resetEmptyDescription()
+    fun resetEmptyCategory()
     fun setInputNameError(any:Any)
     fun setInputDescriptionError(any:Any)
     fun setInputCategoryError(any:Any)

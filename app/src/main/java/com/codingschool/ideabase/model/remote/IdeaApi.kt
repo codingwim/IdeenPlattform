@@ -4,18 +4,12 @@ import com.codingschool.ideabase.model.data.*
 import io.reactivex.Completable
 import io.reactivex.Single
 import okhttp3.RequestBody
-import org.w3c.dom.Comment
-import retrofit2.Response
-import retrofit2.adapter.rxjava2.Result
 import retrofit2.http.*
 
 interface IdeaApi {
 
     @POST("user")
     fun registerUser(@Body createUser: CreateUser): Completable
-
-    @GET("user")
-    fun getAllUsers(): Single<List<User>>
 
     @PUT("user")
     fun updateUser(@Body updateUser: UpdateUser): Completable
@@ -30,17 +24,8 @@ interface IdeaApi {
     @POST("user/image")
     fun updateMyProfilePicture(@Body multiPartImageBody:  RequestBody): Completable
 
-    @DELETE("user/image")
-    fun deleteProfilePicture(): Completable
-
     @GET("category")
     fun getAllCategories(): Single<List<Category>>
-
-    @GET("category/{id}")
-    fun getCategoryById(@Path ("id") id: String): Single<Category>
-
-    @GET("idea")
-    fun getAllIdeas(@Query ("categoryId") categoryId: String): Single<List<Idea>>
 
     // without categories = no filter
     @GET("idea")
@@ -65,12 +50,8 @@ interface IdeaApi {
     @POST("idea/{id}/released")
     fun releaseIdea(@Path ("id") id: String, @Body updateReleased:  UpdateReleased): Completable
 
-
     @POST("idea/{id}/comment")
     fun commentIdea(@Path ("id") id: String, @Body createComment:  CreateComment): Completable
-
-    @GET("idea/{id}/comment")
-    fun getIdeaComments(@Path ("id") id: String): Single<List<Comment>>
 
     @POST("idea/{id}/rating")
     fun rateIdea(@Path ("id") id: String, @Body postIdeaRating:  PostIdeaRating): Completable

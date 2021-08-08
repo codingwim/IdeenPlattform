@@ -1,8 +1,12 @@
 package com.codingschool.ideabase.ui.neweditidea
 
+import android.annotation.SuppressLint
 import android.content.ContentResolver
 import android.net.Uri
 import android.util.Log
+import android.view.MenuItem
+import android.view.View
+import android.widget.AdapterView
 import androidx.core.net.toUri
 import androidx.databinding.BaseObservable
 import androidx.databinding.Bindable
@@ -43,9 +47,7 @@ class NewEditIdeaViewModel(
     }
 
     fun init() {
-        // optionally: add progress indicator loading categories / prefill and wait (completable?) disable update button till loaded
         getAndSetCategoryItems()
-        // set edittexts with hint or prefill depending on NEW editIdea("") or EDIT editIdea(id)
         if (editIdeaId.isNotEmpty()) {
             getIdeaAndPrefill()
         } else if (prefs.hasSavedIdeaDraft()) getPrefillDraft()
@@ -94,14 +96,11 @@ class NewEditIdeaViewModel(
         ideaApi.getIdeaById(editIdeaId)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({ idea ->
-                // set all the bindable details, including image
-                // initialImageUrl will stay the same, even if a new image was loaded
                 initialImageUrl = idea.imageUrl
                 //ideaImageUrl will change if we choose a new image
                 ideaImageUrl = initialImageUrl
                 view?.setIdeaImage(ideaImageUrl)
                 ideaName = idea.title
-                // locale check to get correct language category
                 ideaCategory =
                     if (prefs.isLangEn()) idea.category.name_en else idea.category.name_de
                 view?.setSelectedCategory(ideaCategory)
@@ -109,7 +108,6 @@ class NewEditIdeaViewModel(
                 notifyPropertyChanged(BR.ideaName)
                 notifyPropertyChanged(BR.ideaCategory)
                 notifyPropertyChanged(BR.ideaDescription)
-
             }, { t ->
                 view?.handleErrorResponse(t.message)
                 Log.e("IdeaBase_log", "exception getting idea: $t")
@@ -139,7 +137,7 @@ class NewEditIdeaViewModel(
 
         var fieldsNotEmptyOrTooLong = false
 
-        if (ideaName.length <= 20 && ideaDescription.length <= 1000) {
+        if (ideaName.length <= MAX_TITLE_LENGTH && ideaDescription.length <= MAX_DESCRIPTION_LENGTH) {
             when {
                 ideaName.isEmpty() -> view?.setInputNameError(R.string.error_empty_name)
                 ideaDescription.isEmpty() -> view?.setInputDescriptionError(R.string.error_empty_description)
@@ -217,6 +215,7 @@ class NewEditIdeaViewModel(
             }).addTo(compositeDisposable)
     }
 
+    @SuppressLint("CheckResult")
     private fun updateImage(imagePart: InputStreamRequestBody, updateImage: Boolean): Completable {
         return if (updateImage) {
             val requestBodyForUpdatedImage = getRequestBodyForUpdatedImage(imagePart)
@@ -234,6 +233,11 @@ class NewEditIdeaViewModel(
 
     fun onDescriptionTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
         if ((count > 0) && (before == 0)) view?.resetEmptyDescription()
+    }
+
+    fun onItemSelected(v: View) {
+        view?.resetEmptyCategory()
+
     }
 
     fun setSelectedImage(uri: Uri) {
@@ -278,5 +282,9 @@ class NewEditIdeaViewModel(
         prefs.setIdeaDraftSaved(true)
         view?.showToast(R.string.idea_saved)
         view?.navigateBack()
+    }
+    companion object {
+        const val MAX_TITLE_LENGTH = 30
+        const val MAX_DESCRIPTION_LENGTH = 1000
     }
 }

@@ -25,11 +25,11 @@ class ListViewModel(
     private var view: ListView? = null
 
     val compositeDisposable = CompositeDisposable()
+    val periodicUpdateDisposable = CompositeDisposable()
 
     private var categoryList = emptyList<String>()
     private var categoryArrayDE: Array<String> = emptyArray()
     private var categoryArrayEN: Array<String> = emptyArray()
-
 
     private var listOfSearchCategories: List<String> = emptyList()
     private var searchString = ""
@@ -99,6 +99,11 @@ class ListViewModel(
                 if (topOrAll) {
                     if (listWithTrendOrStatus.isNotEmpty()) {
                         adapter.updateList(listWithTrendOrStatus)
+                        // if list has trend changes, move to top of changes?
+                        val highestTrendChangeIdeaPosition = listWithTrendOrStatus.indexOfFirst {
+                            it.trend == Trend.UP
+                        }
+                        if (highestTrendChangeIdeaPosition > 0) view?.scrollToItem(highestTrendChangeIdeaPosition)
                         view?.hideTopBadge()
                         val rankedList = listWithTrendOrStatus.map { it.id }
                         prefs.setTopRankedIds(rankedList)
@@ -176,7 +181,7 @@ class ListViewModel(
             },
                 { t ->
                     Log.e("IdeaBase_log", "exception with periodic update: $t")
-                }).addTo(compositeDisposable)
+                }).addTo(periodicUpdateDisposable)
     }
 
     private fun getIdeasSetBadges() {
@@ -306,8 +311,7 @@ class ListViewModel(
         if (searchQuery.isEmpty()) {
             view?.hideNoResultsFound()
             getAllIdeas(listOfSearchCategories)
-        }
-        else ideaApi.searchIdeas(searchQuery)
+        } else ideaApi.searchIdeas(searchQuery)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({ list ->
                 val listFromSearch =

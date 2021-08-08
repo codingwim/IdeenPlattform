@@ -26,14 +26,14 @@
     <string name="search_menu_title">Suche</string>
     <string name="title_search_dialog">Gib den Suchtext ein</string>
     <string name="btn_cancel_dialog" tools:ignore="ButtonCase">Abbrechen</string>
-    <string name="btn_filter_dialog">Füge einen Filter hinzu</string>
+    <string name="btn_filter_dialog">Filter hinzufügen</string>
     <string name="btn_search_dialog">Suche</string>
     <string name="btn_back_dialog">Ändere den Suchtext</string>
     <string name="title_filter_dialog">Filtere die Suche nach Kategorien</string>
     <string name="search_for_hint_dialog">Suche nach…</string>
     <string name="contennt_description_fab_add_idea">Füge Idee hinzu</string>
     <string name="cancel_comment_contenct_description">Kommentieren abbrechen</string>
-    <string name="submit_btn_comment">BESTÄTIGEN</string>
+    <string name="submit_btn_comment">SENDEN</string>
     <string name="write_comment_hint">Schreibe Kommentar…</string>
     <string name="add_comment_cancelled">Schreiben eines Kommentars abgebrochen ohne zu speichern</string>
     <string name="prof_info_will_be_visible_commenting">Wenn du einen Kommentar hinzufügst, wird dein Profil für die anderen Benutzer sichtbar</string>
@@ -44,7 +44,7 @@
     <string name="menu_detail_release_idea">Idee freigeben</string>
     <string name="comments_title_detail_idea">Kommentare</string>
     <string name="save">SPEICHERN</string>
-    <string name="save_idea_new">HOCHLADEN</string>
+    <string name="save_idea_new">EINREICHEN</string>
     <string name="save_idea_edit">SPEICHERN</string>
     <string name="upload_image_idea_new">BILD HINZUFÜGEN</string>
     <string name="change_image_idea_edit">BILD ÄNDERN</string>
@@ -99,7 +99,7 @@
     <string name="add_comment_detail"> KOMMENTIEREN</string>
     <string name="be_the_first_to_comment">Sei der erste:</string>
     <string name="understood_button">VERSTANDEN</string>
-    <string name="remove_draft_dialog">ENTFERNEN</string>
+    <string name="remove_draft_dialog">VERWERFEN</string>
     <string name="dialog_comment_draft_message">Es wird verfügbar sein, sobald du das nächste mal kommentierst!</string>
     <string name="dialog_save_draft_title">Entwurf speichern?</string>
     <string name="dialog_edit_profile_message">Du kannst dein Bild ändern, ohne andere Änderungen vorzunehmen. Gehe einfach auf  \'zurück\', nachdem du es geändert hast. Wenn du andere Änderungen vornehmen willst, musst du dich erneut anmelden!</string>
@@ -111,7 +111,7 @@
     <string name="change_filter_search_dialog">FILTER ÄNDERN</string>
     <string name="save_idea_draft_title">Idee als Entwurf speichern?</string>
     <string name="save_idea_draft_message">Sie wird verfügbar sein, nachdem du das nächste mal eine neue Idee hinzufügst!</string>
-    <string name="save_idea_draft_cancel">ENTFERNEN</string>
+    <string name="save_idea_draft_cancel">VERWERFEN</string>
     <string name="save_idea_draft_save">SPEICHERN</string>
     <string name="change_prodile_picture_overlay">Ändern</string>
     <string name="enter_first_name_error">Bitte gib deinen Vornamen ein</string>
@@ -156,4 +156,8 @@
     <string name="cd_trend_down_icon"> Trend-Down-Symbol </string>
     <string name="toast_connection_problem"> Es scheint ein Verbindungsproblem zu geben…</string>
     <string name="cd_no_top_ranked_ideas_yet">Keine Top Bewerteten Ideen bis jetzt</string>
+    <string name="comment_max_lenght_reached">Du hast die maximale Kommentar Länge erreicht…</string>
+    <string name="title_comment">Kommentieren</string>
+    <string name="title_details">Idee Details</string>
+    <string name="loading_title_fragment">Loading</string>
 </resources>

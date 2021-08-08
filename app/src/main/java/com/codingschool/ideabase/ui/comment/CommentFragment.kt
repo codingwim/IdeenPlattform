@@ -1,16 +1,19 @@
 package com.codingschool.ideabase.ui.comment
 
-import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat.getColor
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.navigation.Navigation
 import com.codingschool.ideabase.R
 import com.codingschool.ideabase.databinding.FragmentCommentBinding
-import com.codingschool.ideabase.utils.*
+import com.codingschool.ideabase.utils.ImageHandler
+import com.codingschool.ideabase.utils.errorHandler
+import com.codingschool.ideabase.utils.hideKeyboard
+import com.codingschool.ideabase.utils.toast
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import org.koin.android.ext.android.inject
 import org.koin.core.parameter.parametersOf
@@ -46,6 +49,7 @@ class CommentFragment : Fragment(), CommentView {
 
         binding.vm = viewModel
         viewModel.attachView(this)
+        viewModel.init()
     }
 
     override fun showToast(any: Any) {
@@ -56,15 +60,12 @@ class CommentFragment : Fragment(), CommentView {
         imageHandler.getProfilePic(url, binding.ivProfilePicture)
     }
 
-    override fun setCommentEmptyError(any: Any) {
-        binding.tvCommentTitle.text = requireActivity().getResString(any)
-        binding.tvCommentTitle.setTextColor(Color.RED)
+    override fun setError() {
+        binding.tvCommentTitle.setTextColor(getColor(requireContext(), R.color.comment_title_error))
     }
 
-    override fun resetCommentEmptyError() {
-        binding.tvCommentTitle.text =
-            requireActivity().getResString(R.string.prof_info_will_be_visible_commenting)
-        binding.tvCommentTitle.setTextColor(Color.BLACK)
+    override fun clearError() {
+        binding.tvCommentTitle.setTextColor(getColor(requireContext(), R.color.comment_title_black))
     }
 
     override fun navigateBack() {
